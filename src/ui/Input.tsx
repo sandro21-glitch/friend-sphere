@@ -5,9 +5,18 @@ type InputTypes = {
   type: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   value?: string;
+  placeholder?: string;
 };
 
-const Input = ({ id, name, type, className, onChange, value }: InputTypes) => {
+const Input = ({
+  id,
+  name,
+  type,
+  className,
+  onChange,
+  value,
+  placeholder,
+}: InputTypes) => {
   return (
     <input
       type={type}
@@ -16,6 +25,7 @@ const Input = ({ id, name, type, className, onChange, value }: InputTypes) => {
       className={`w-full border p-3 rounded-lg outline-none ${className}`}
       onChange={onChange}
       value={value}
+      placeholder={placeholder}
     />
   );
 };
