@@ -7,7 +7,7 @@ import Logo from "../ui/Logo";
 const LoginPage = () => {
   return (
     <FormLayout>
-      <Logo />
+      <Logo height="4rem" />
       <LoginFormLinks />
       <LoginFormInputs />
       <LoginBtn />
