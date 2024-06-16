@@ -1,9 +1,13 @@
 import logo from "../assets/images/logo-no-background.svg";
 
-const Logo = () => {
+type LogoTypes = {
+  height?: string;
+};
+
+const Logo = ({ height }: LogoTypes) => {
   return (
-    <div className="mb-5 flex justify-center">
-      <img src={logo} alt="logo" className="h-[4rem]" />
+    <div className="flex justify-center ">
+      <img src={logo} alt="logo" style={{ height: height }} />
     </div>
   );
 };
