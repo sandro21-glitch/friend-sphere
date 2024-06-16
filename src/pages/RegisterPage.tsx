@@ -7,7 +7,7 @@ import Logo from "../ui/Logo";
 const RegisterPage = () => {
   return (
     <FormLayout>
-      <Logo />
+      <Logo height="4rem" />
       <RegFormLinks />
       <RegFormInputs />
       <SignUpBtn />
