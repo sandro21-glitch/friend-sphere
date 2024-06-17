@@ -11,7 +11,7 @@ const Navbar = () => {
           name="search"
           type="text"
           placeholder="Search for people, posts or communities"
-          className="w-[660px] py-2 rounded-full text-[14px]"
+          className="max-w-[660px] py-2 rounded-full text-[14px]"
         />
         <FaUserCircle className="min-w-7 min-h-7 cursor-pointer text-gray-400" />
       </nav>
