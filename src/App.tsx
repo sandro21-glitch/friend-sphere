@@ -3,7 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Error from "./pages/Error";
 import Dashboard from "./pages/Dashboard";
-import PostFeed from "./features/Dashboard/PostFeed";
+import PostFeed from "./features/Dashboard/rightPanel/PostFeed";
 
 const router = createBrowserRouter([
   {
