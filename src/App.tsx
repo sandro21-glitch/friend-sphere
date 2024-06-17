@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Error from "./pages/Error";
 import Dashboard from "./pages/Dashboard";
+import PostFeed from "./features/Dashboard/PostFeed";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
-        children: [],
+        children: [{ index: true, element: <PostFeed /> }],
       },
     ],
   },
