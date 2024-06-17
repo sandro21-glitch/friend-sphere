@@ -83,7 +83,12 @@ p {
     line-height: 1;
   }
 }
-
+hr {
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-color: #d1d5db;
+}
 .section-x {
   padding: 0 15px;
 }
