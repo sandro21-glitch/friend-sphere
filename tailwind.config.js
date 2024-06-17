@@ -8,6 +8,7 @@ export default {
         "sky-blue": "#B5E8F6",
         "deep-blue": "#1F299C",
         "azure-blue": "#007FFF",
+        "dashboard-bg": "#f7fafc",
       },
     },
   },
