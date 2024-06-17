@@ -3,7 +3,7 @@ import Logo from "./Logo";
 import { FaUserCircle } from "react-icons/fa";
 const Navbar = () => {
   return (
-    <header className="p-[.5rem] border-b bg-white">
+    <header className="p-[.5rem] border-b bg-white sticky inset-0 z-[999999]">
       <nav className=" section-center section-x flex items-center justify-between gap-10">
         <Logo height="2.5rem" />
         <Input
