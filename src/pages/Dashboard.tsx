@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../ui/Navbar";
 import LeftPanel from "../features/Dashboard/LeftPanel";
+import RightPanel from "../features/Dashboard/RightPanel";
 
 const Dashboard = () => {
   return (
@@ -12,9 +13,7 @@ const Dashboard = () => {
       >
         <LeftPanel />
         <Outlet />
-        <div className="bg-red-900 col-span-1 h-[85vh] sticky top-[5rem] border">
-          right
-        </div>
+        <RightPanel />
       </section>
     </main>
   );
