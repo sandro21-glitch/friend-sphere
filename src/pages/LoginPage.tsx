@@ -23,13 +23,15 @@ const LoginPage = () => {
 
   const handleLoginUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const resultAction = await dispatch(loginUser(userLoginForm));
-      if (loginUser.fulfilled.match(resultAction)) {
-        navigate("/home");
+    const resultAction = await dispatch(loginUser(userLoginForm));
+    if (loginUser.fulfilled.match(resultAction)) {
+      navigate("/home");
+    } else if (loginUser.rejected.match(resultAction)) {
+      if (resultAction.payload) {
+        console.error("Login error:", resultAction.payload);
+      } else {
+        console.error("Login error:", resultAction.error.message);
       }
-    } catch (error) {
-      console.error("Unexpected login error:", error);
     }
   };
 
