@@ -16,6 +16,7 @@ export interface UserData {
   isAdmin: boolean;
   location: string;
   interests: string[];
+  bio: string;
 }
 
 export interface userFormData {
