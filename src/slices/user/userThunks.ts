@@ -75,16 +75,6 @@ export const loginUser = createAsyncThunk(
       }
 
       const userProfile = userSnapshot.val();
-      // const {
-      //   email,
-      //   password,
-      //   name,
-      //   followers,
-      //   following,
-      //   registeredDate,
-      //   joinedGroups,
-      //   isAdmin,
-      // } = userProfile;
 
       return { userProfile };
     } catch (error: any) {
