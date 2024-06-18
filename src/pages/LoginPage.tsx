@@ -6,23 +6,26 @@ import FormLayout from "../ui/FormLayour";
 import Logo from "../ui/Logo";
 import { loginUser } from "../slices/user/userThunks";
 import { useAppDispatch } from "../hooks/reduxHooks";
+import { useNavigate } from "react-router-dom";
 
 type LoginFormType = {
   email: string;
   password: string;
 };
 const LoginPage = () => {
-  const dispatch = useAppDispatch();
   const [userLoginForm, setUserLoginForm] = useState<LoginFormType>({
     email: "",
     password: "",
   });
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const handleLoginUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await dispatch(loginUser(userLoginForm));
-      console.log("login successful!");
+      navigate("/home");
     } catch (error) {
       console.error("login error:", error);
     }
