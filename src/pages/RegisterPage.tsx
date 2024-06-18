@@ -5,7 +5,7 @@ import SignUpBtn from "../features/registerPage/SignUpBtn";
 import FormLayout from "../ui/FormLayour";
 import Logo from "../ui/Logo";
 import { useAppDispatch } from "../hooks/reduxHooks";
-import { registerUser } from "../slices/user/authSlice";
+import { registerUser } from "../slices/user/userThunks";
 interface RegisterUser {
   name: string;
   email: string;
