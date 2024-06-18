@@ -14,6 +14,8 @@ export interface UserData {
   registeredDate: string;
   joinedGroups: string[];
   isAdmin: boolean;
+  location: string;
+  interests: string[];
 }
 
 export interface userFormData {

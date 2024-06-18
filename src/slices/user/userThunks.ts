@@ -37,6 +37,8 @@ export const registerUser = createAsyncThunk(
         registeredDate: new Date().toISOString(),
         joinedGroups: [],
         isAdmin: false,
+        location: "",
+        interests: [],
       };
 
       await set(ref(database, `users/${uid}`), userProfile);
