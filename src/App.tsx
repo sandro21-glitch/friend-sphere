@@ -1,10 +1,11 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Error from "./pages/Error";
 import Dashboard from "./pages/Dashboard";
 import PostFeed from "./features/Dashboard/PostFeed";
-
+import store from "./store";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,7 +35,11 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  );
 };
 
 export default App;
