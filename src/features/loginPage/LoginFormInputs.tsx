@@ -1,6 +1,14 @@
 import Input from "../../ui/Input";
 
-const LoginFormInputs = () => {
+type LoginFormTypes = {
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  userLoginForm: {
+    email: string;
+    password: string;
+  };
+};
+
+const LoginFormInputs = ({ handleChange, userLoginForm }: LoginFormTypes) => {
   return (
     <div className="mb-5">
       <div className="mb-3">
@@ -9,6 +17,8 @@ const LoginFormInputs = () => {
           name="email"
           type="email"
           placeholder="Email Address"
+          value={userLoginForm.email}
+          onChange={handleChange}
         />
       </div>
       <div>
@@ -17,6 +27,8 @@ const LoginFormInputs = () => {
           name="password"
           type="password"
           placeholder="Password"
+          value={userLoginForm.password}
+          onChange={handleChange}
         />
       </div>
     </div>
