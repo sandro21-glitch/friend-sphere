@@ -1,55 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { auth, database } from "../../config/firebase";
-import { ref, set } from "firebase/database";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createSlice } from "@reduxjs/toolkit";
 import { UserData } from "./userTypes";
-import { nanoid } from "nanoid";
+import { registerUser } from "./userThunks";
 // import type { PayloadAction } from '@reduxjs/toolkit'
 // import type { RootState } from "../store";
 
 // Define async thunk to register user
-export interface userFormData {
-  name: string;
-  email: string;
-  password: string;
-}
-export const registerUser = createAsyncThunk(
-  "auth/registerUser",
-  async (userData: userFormData, { rejectWithValue }) => {
-    const { email, password, name } = userData;
-
-    if (!email) {
-      return rejectWithValue("Email is required");
-    }
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      const { uid } = userCredential.user;
-
-      const userProfile: UserData = {
-        uid: nanoid(),
-        email,
-        password,
-        name,
-        followers: [],
-        following: [],
-        registeredDate: new Date().toISOString(),
-        joinedGroups: [],
-      };
-
-      await set(ref(database, `users/${uid}`), userProfile);
-
-      return userProfile;
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Registration failed");
-    }
-  }
-);
 
 interface AuthState {
   userData: UserData | null;
@@ -71,6 +26,7 @@ export const authSlice = createSlice({
     builder
       .addCase(registerUser.fulfilled, (state, action) => {
         state.userData = action.payload;
+        state.loading = false;
       })
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
