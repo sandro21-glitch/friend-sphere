@@ -6,7 +6,7 @@ import { SlUserFollowing } from "react-icons/sl";
 export const panelItems = [
   {
     name: "Home",
-    path: "/dashboard",
+    path: "/home",
     icon: React.createElement(IoHomeOutline, null),
   },
   {
