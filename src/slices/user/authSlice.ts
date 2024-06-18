@@ -76,7 +76,9 @@ export const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.error = (action.payload as string) || "Registration failed";
+        const authError = action.payload as string;
+        state.error =
+          authError.replace("Firebase", "") || "Registration failed";
         state.loading = false;
       });
   },
