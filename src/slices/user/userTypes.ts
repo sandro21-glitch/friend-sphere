@@ -13,6 +13,7 @@ export interface UserData {
   }[];
   registeredDate: string;
   joinedGroups: string[];
+  isAdmin: boolean;
 }
 
 export interface userFormData {
