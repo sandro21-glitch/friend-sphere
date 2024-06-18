@@ -1,12 +1,15 @@
 type FormLayoutProps = {
   children: React.ReactNode;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 };
-const FormLayout = ({ children }: FormLayoutProps) => {
+const FormLayout = ({ children, onSubmit }: FormLayoutProps) => {
   return (
     <section className="bg-white min-h-screen flex justify-center items-center">
       <div className="flex items-center justify-center section-center w-full">
         <div className="w-full max-w-[28rem] ">
-          <form className="w-full">{children}</form>
+          <form className="w-full" onSubmit={onSubmit}>
+            {children}
+          </form>
         </div>
       </div>
     </section>
