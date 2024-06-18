@@ -6,24 +6,27 @@ import FormLayout from "../ui/FormLayour";
 import Logo from "../ui/Logo";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { registerUser } from "../slices/user/userThunks";
+import { useNavigate } from "react-router-dom";
 interface RegisterUser {
   name: string;
   email: string;
   password: string;
 }
 const RegisterPage = () => {
-  const dispatch = useAppDispatch();
   const [registerUserForm, setRegisterUserForm] = useState<RegisterUser>({
     name: "",
     email: "",
     password: "",
   });
+  
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await dispatch(registerUser(registerUserForm));
-      console.log("Registration successful!");
+      navigate("/home");
     } catch (error) {
       console.error("Registration error:", error);
     }
