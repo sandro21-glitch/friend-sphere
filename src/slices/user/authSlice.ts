@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserData } from "./userTypes";
-import { registerUser } from "./userThunks";
+import { loginUser, registerUser } from "./userThunks";
 // import type { PayloadAction } from '@reduxjs/toolkit'
 // import type { RootState } from "../store";
 
@@ -23,6 +23,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    //register
     builder
       .addCase(registerUser.fulfilled, (state, action) => {
         state.userData = action.payload;
@@ -35,6 +36,20 @@ export const authSlice = createSlice({
         const authError = action.payload as string;
         state.error =
           authError.replace("Firebase", "") || "Registration failed";
+        state.loading = false;
+      });
+    //login
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.userData = action.payload.userProfile;
+        state.loading = false;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        const authError = action.payload as string;
+        state.error = authError.replace("Firebase", "") || "Login failed";
         state.loading = false;
       });
   },
