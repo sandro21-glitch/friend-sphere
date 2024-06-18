@@ -27,12 +27,6 @@ const LoginPage = () => {
       const resultAction = await dispatch(loginUser(userLoginForm));
       if (loginUser.fulfilled.match(resultAction)) {
         navigate("/home");
-      } else {
-        if (resultAction.payload) {
-          console.error("login error:", resultAction.payload);
-        } else {
-          console.error("login error:", resultAction.error.message);
-        }
       }
     } catch (error) {
       console.error("Unexpected login error:", error);
