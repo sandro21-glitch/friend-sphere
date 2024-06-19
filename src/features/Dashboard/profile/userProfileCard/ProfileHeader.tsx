@@ -2,7 +2,7 @@ import { FaUserEdit } from "react-icons/fa";
 
 const ProfileHeader = () => {
   return (
-    <div className="flex justify-center items-center flex-col mb-10">
+    <div className="flex justify-center items-center flex-col mb-3">
       <img
         src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
         alt="user image"
