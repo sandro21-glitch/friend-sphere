@@ -1,9 +1,10 @@
-
-
 const UserInterests = () => {
   return (
-    <div>UserInterests</div>
-  )
-}
+    <div>
+      <p className="text-[16px] font-semibold">Interests</p>
+      <p className="text-[14px]">✏️ Design</p>
+    </div>
+  );
+};
 
-export default UserInterests
+export default UserInterests;
