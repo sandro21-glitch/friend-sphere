@@ -8,7 +8,7 @@ const CommunityItemsHeader = () => {
         Communities
       </div>
       <div className="relative">
-        <Link to="/" className="text-azure-blue">
+        <Link to="/" className="text-azure-blue text-[13px]">
           See all
         </Link>
         <span
