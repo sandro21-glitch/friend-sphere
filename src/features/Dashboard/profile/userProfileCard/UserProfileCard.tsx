@@ -5,11 +5,12 @@ import UserLocation from "./UserLocation";
 
 const UserProfileCard = () => {
   return (
-    <div className="w-full">
+    <div className="w-full bg-white  border rounded-md p-5 mb-5">
       <EditProfileBtn />
       <ProfileHeader />
       <UserLocation />
       <UserInterests />
+      <hr />
     </div>
   );
 };
