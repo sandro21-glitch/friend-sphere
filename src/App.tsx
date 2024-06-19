@@ -4,8 +4,9 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Error from "./pages/Error";
 import Dashboard from "./pages/Dashboard";
-import PostFeed from "./features/Dashboard/PostFeed";
 import store from "./store";
+import UserProfile from "./features/Dashboard/profile/UserProfile";
+import PostFeed from "./features/Dashboard/postFeed/PostFeed";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <PostFeed /> },
           { path: "/home", element: <PostFeed /> },
+          { path: "/profile", element: <UserProfile /> },
         ],
       },
     ],
