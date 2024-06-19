@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../ui/Navbar";
-import LeftPanel from "../features/Dashboard/LeftPanel";
-import RightPanel from "../features/Dashboard/RightPanel";
+import LeftPanel from "../features/Dashboard/leftPanel/LeftPanel";
+import RightPanel from "../features/Dashboard/rightPanel/RightPanel";
 
 const Dashboard = () => {
   return (
