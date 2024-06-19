@@ -1,9 +1,11 @@
 import UserProfileCard from "./userProfileCard/UserProfileCard";
+import ProfileSummary from "./userProfileSummary/ProfileSummary";
 
 const UserProfile = () => {
   return (
-    <div className="col-span-2 min-h-full h-full mt-5 bg-white border rounded-md p-5">
+    <div className="col-span-2 min-h-full h-full mt-5 ">
       <UserProfileCard />
+      <ProfileSummary />
     </div>
   );
 };
