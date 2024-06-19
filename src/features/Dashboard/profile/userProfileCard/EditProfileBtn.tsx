@@ -2,7 +2,7 @@ import { CiEdit } from "react-icons/ci";
 import { GoTriangleDown } from "react-icons/go";
 const EditProfileBtn = () => {
   return (
-    <div className="flex justify-end w-full">
+    <div className="flex justify-end w-full mb-5">
       <div className="relative group ">
         <CiEdit className="text-[25px] cursor-pointer" />
         <span
