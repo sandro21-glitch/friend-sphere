@@ -3,7 +3,7 @@ import { panelItems } from "../../../constants/panelNavItems";
 
 const PanelNavigation = () => {
   return (
-    <ul className="flex flex-col gap-5">
+    <ul className="flex flex-col gap-3">
       {panelItems.map((item, index) => {
         return (
           <li
