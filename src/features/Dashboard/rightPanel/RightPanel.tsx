@@ -1,4 +1,4 @@
-import Connections from "./rightPanel/Connections";
+import Connections from "./Connections";
 
 const RightPanel = () => {
   return (

@@ -1,4 +1,4 @@
-import FollowingUserPosts from "./postFeed/FollowingUserPosts";
+import FollowingUserPosts from "./FollowingUserPosts";
 
 const PostFeed = () => {
   return (
