@@ -18,9 +18,9 @@ const RegisterPage = () => {
     email: "",
     password: "",
   });
-  
+
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
