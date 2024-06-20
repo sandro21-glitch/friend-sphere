@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../ui/Navbar";
 import LeftPanel from "../features/Dashboard/leftPanel/LeftPanel";
 import RightPanel from "../features/Dashboard/rightPanel/RightPanel";
+import Modals from "../features/Dialogs/Modals";
 
 const Dashboard = () => {
   return (
@@ -15,6 +16,7 @@ const Dashboard = () => {
         <Outlet />
         <RightPanel />
       </section>
+      <Modals />
     </main>
   );
 };
