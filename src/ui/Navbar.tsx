@@ -1,10 +1,11 @@
+import UserMenuPopup from "../features/Dialogs/UserMenuPopup";
 import Input from "./Input";
 import Logo from "./Logo";
 import { FaUserCircle } from "react-icons/fa";
 const Navbar = () => {
   return (
     <header className="p-[.5rem] border-b bg-white sticky inset-0 z-[999999]">
-      <nav className=" section-center section-x flex items-center justify-between gap-10">
+      <nav className=" section-center section-x flex items-center justify-between gap-10 relative">
         <Logo height="2.5rem" />
         <Input
           id="search"
@@ -14,6 +15,7 @@ const Navbar = () => {
           className="max-w-[660px] py-2 rounded-full text-[14px]"
         />
         <FaUserCircle className="min-w-7 min-h-7 cursor-pointer text-gray-400" />
+        <UserMenuPopup />
       </nav>
     </header>
   );
