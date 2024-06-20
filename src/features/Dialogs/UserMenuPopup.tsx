@@ -23,7 +23,7 @@ const UserMenuPopup = () => {
           />
         </Link>
         <Link to="/profile" className="text-center">
-          <h2 className="text-[16px] font-semibold cursor-pointer">Username</h2>
+          <h2 className="text-[16px] font-semibold cursor-pointer hover:underline">Username</h2>
           <p className="text-gray-500 text-[14px]">demouser@socialecho.com</p>
         </Link>
         <hr />
