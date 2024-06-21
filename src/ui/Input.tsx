@@ -6,6 +6,7 @@ type InputTypes = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   value?: string;
   placeholder?: string;
+  defaultValue?: string;
 };
 
 const Input = ({
@@ -16,6 +17,7 @@ const Input = ({
   onChange,
   value,
   placeholder,
+  defaultValue,
 }: InputTypes) => {
   return (
     <input
@@ -26,6 +28,7 @@ const Input = ({
       onChange={onChange}
       value={value}
       placeholder={placeholder}
+      defaultValue={defaultValue}
     />
   );
 };
