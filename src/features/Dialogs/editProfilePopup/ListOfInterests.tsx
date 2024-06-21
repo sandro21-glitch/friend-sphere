@@ -6,7 +6,10 @@ type ListOfInterestsProps = {
   interestList: string[];
 };
 
-const ListOfInterests: React.FC<ListOfInterestsProps> = ({ setInterestList, interestList }) => {
+const ListOfInterests: React.FC<ListOfInterestsProps> = ({
+  setInterestList,
+  interestList,
+}) => {
   const handlePushInterest = (interest: string) => {
     if (interestList.length < 5 && !interestList.includes(interest)) {
       setInterestList((prev) => [...prev, interest]);
