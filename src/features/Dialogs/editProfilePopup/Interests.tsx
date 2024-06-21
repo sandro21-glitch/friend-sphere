@@ -11,23 +11,25 @@ const Interests = ({ interestList, setInterestList }: InterestTypes) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
-    // Check if input value contains a comma
-    if (inputValue.includes(",")) {
+    if (inputValue.endsWith(",")) {
+      const newInterests = [...interestList, ""];
+      if (inputValue !== "") {
+        setInterestList(newInterests);
+      }
+    } else {
       const newInterests = inputValue.split(",").map((item) => item.trim());
-      const filteredInterests = newInterests.filter((item) => item !== "");
-
-      // Add items to interestList that are not already in it
-      const uniqueInterests = Array.from(new Set([...interestList, ...filteredInterests]));
-
-      setInterestList(uniqueInterests);
+      setInterestList(newInterests.filter((item) => item !== ""));
     }
   };
 
   return (
     <div className="mb-3">
-      <label htmlFor="interests" className="text-[14px] flex items-center gap-1">
+      <label
+        htmlFor="interests"
+        className="text-[14px] flex items-center gap-1"
+      >
         <LiaEditSolid />
-        Interests (Type text and separate by comma to add)
+        Interests (Separated by comma)
       </label>
       <Input
         id="interests"
