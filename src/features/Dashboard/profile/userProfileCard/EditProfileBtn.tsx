@@ -1,9 +1,15 @@
 import { CiEdit } from "react-icons/ci";
 import { GoTriangleDown } from "react-icons/go";
+import { useAppDispatch } from "../../../../hooks/reduxHooks";
+import { setUpdateProfileModal } from "../../../../slices/modals/modalSlice";
 const EditProfileBtn = () => {
+  const dispatch = useAppDispatch();
   return (
     <div className="flex justify-end w-full mb-5">
-      <div className="relative group ">
+      <div
+        className="relative group "
+        onClick={() => dispatch(setUpdateProfileModal(true))}
+      >
         <CiEdit className="text-[25px] cursor-pointer" />
         <span
           className="absolute -top-9 -right-5 group-hover:block hidden w-fit text-nowrap
