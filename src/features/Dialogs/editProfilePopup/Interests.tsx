@@ -11,11 +11,9 @@ const Interests = ({ interestList, setInterestList }: InterestTypes) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
-    if (inputValue.endsWith(",")) {
+    if (interestList.length < 5 && inputValue.endsWith(',')) {
       const newInterests = [...interestList, ""];
-      if (inputValue !== "") {
-        setInterestList(newInterests);
-      }
+      setInterestList(newInterests);
     } else {
       const newInterests = inputValue.split(",").map((item) => item.trim());
       setInterestList(newInterests.filter((item) => item !== ""));
@@ -36,7 +34,7 @@ const Interests = ({ interestList, setInterestList }: InterestTypes) => {
         name="interests"
         type="text"
         value={interestList.join(", ")}
-        onChange={(e) => handleInputChange(e)}
+        onChange={handleInputChange}
         className="border-b-2 border-l-0 border-r-0 border-t-0 rounded-full text-[14px]"
       />
     </div>
