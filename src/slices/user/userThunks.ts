@@ -1,6 +1,5 @@
 import { get, ref, set } from "firebase/database";
 import { auth, database } from "../../config/firebase";
-import { nanoid } from "nanoid";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -8,7 +7,7 @@ import {
 import { UserData, userFormData } from "./userTypes";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-//register user
+// Define async thunk to register user
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (userData: userFormData, { rejectWithValue }) => {
@@ -28,7 +27,7 @@ export const registerUser = createAsyncThunk(
       const { uid } = userCredential.user;
 
       const userProfile: UserData = {
-        uid: nanoid(),
+        uid, // UID from Firebase Authentication
         email,
         password,
         name,
