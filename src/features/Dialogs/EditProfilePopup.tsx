@@ -10,7 +10,6 @@ import { updateUserProfile } from "../../slices/user/userDataThunks";
 
 const EditProfilePopup = () => {
   const { userData } = useAppSelector((store) => store.auth);
-
   if (!userData) return null;
 
   const [interestList, setInterestList] = useState<string[]>(
