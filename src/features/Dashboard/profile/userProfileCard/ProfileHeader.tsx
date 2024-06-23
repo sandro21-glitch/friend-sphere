@@ -1,6 +1,9 @@
 import { FaUserEdit } from "react-icons/fa";
+import { useAppSelector } from "../../../../hooks/reduxHooks";
 
 const ProfileHeader = () => {
+  const { userData } = useAppSelector((store) => store.auth);
+
   return (
     <div className="flex justify-center items-center flex-col mb-3">
       <img
@@ -12,7 +15,7 @@ const ProfileHeader = () => {
         <h2 className="text-[1.1rem] mb-1 font-semibold">Username</h2>
         <p className="text-[14px] text-black flex items-center gap-1">
           <FaUserEdit />
-          bio
+          {userData?.bio || ""}
         </p>
         <hr />
       </div>
