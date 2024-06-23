@@ -1,7 +1,9 @@
-import { useAppDispatch } from "../../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { setUpdateProfileModal } from "../../../slices/modals/modalSlice";
 
 const EditProfileActions = () => {
+  const { loading } = useAppSelector((store) => store.userData);
+
   const dispatch = useAppDispatch();
   const handleCancelUpdate = () => {
     dispatch(setUpdateProfileModal(false));
@@ -20,7 +22,7 @@ const EditProfileActions = () => {
         type="submit"
         className="bg-azure-blue hover:bg-deep-blue transition-colors ease-in duration-150 border text-white py-2 px-3 rounded-md text-[14px]"
       >
-        Update
+        {loading ? "Updating..." : "Update"}
       </button>
     </div>
   );
