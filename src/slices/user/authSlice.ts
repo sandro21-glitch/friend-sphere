@@ -4,8 +4,6 @@ import { loginUser, registerUser } from "./userThunks";
 // import type { PayloadAction } from '@reduxjs/toolkit'
 // import type { RootState } from "../store";
 
-// Define async thunk to register user
-
 interface AuthState {
   userData: UserData | null;
   loading: boolean | null;
@@ -21,7 +19,11 @@ const initialState: AuthState = {
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, action) => {
+      state.userData = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     //register
     builder
@@ -55,7 +57,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const {} = authSlice.actions;
+export const { setUser } = authSlice.actions;
 
 // export const selectCount = (state: RootState) => state.counter.value;
 
