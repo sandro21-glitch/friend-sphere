@@ -3,10 +3,6 @@ import { setUpdateProfileModal } from "../../../slices/modals/modalSlice";
 
 const EditProfileActions = () => {
   const dispatch = useAppDispatch();
-
-  const handleUpdateProfile = () => {
-    dispatch(setUpdateProfileModal(false));
-  };
   const handleCancelUpdate = () => {
     dispatch(setUpdateProfileModal(false));
   };
@@ -21,8 +17,7 @@ const EditProfileActions = () => {
         Cancel
       </button>
       <button
-        type="button"
-        onClick={handleUpdateProfile}
+        type="submit"
         className="bg-azure-blue hover:bg-deep-blue transition-colors ease-in duration-150 border text-white py-2 px-3 rounded-md text-[14px]"
       >
         Update
