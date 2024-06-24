@@ -5,7 +5,7 @@ import SignUpBtn from "../features/registerPage/SignUpBtn";
 import FormLayout from "../ui/FormLayour";
 import Logo from "../ui/Logo";
 import { useAppDispatch } from "../hooks/reduxHooks";
-import { registerUser } from "../slices/user/userThunks";
+import { registerUser } from "../slices/user/authThunks";
 import { useNavigate } from "react-router-dom";
 interface RegisterUser {
   name: string;
