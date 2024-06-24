@@ -1,9 +1,11 @@
-import { IoIosLogOut } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { useAppDispatch } from "../../hooks/reduxHooks";
-import { setUserProfileModal } from "../../slices/modals/modalSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { setUserProfileModal } from "../../../slices/modals/modalSlice";
+import LogoutBtn from "./LogoutBtn";
 
 const UserMenuPopup = () => {
+  const { userData } = useAppSelector((store) => store.auth);
+
   const dispatch = useAppDispatch();
   const handleClosePopup = () => {
     dispatch(setUserProfileModal(false));
@@ -23,17 +25,13 @@ const UserMenuPopup = () => {
           />
         </Link>
         <Link to="/profile" className="text-center">
-          <h2 className="text-[16px] font-semibold cursor-pointer hover:underline">Username</h2>
-          <p className="text-gray-500 text-[14px]">demouser@socialecho.com</p>
+          <h2 className="text-[16px] font-semibold cursor-pointer hover:underline">
+            {userData?.name}
+          </h2>
+          <p className="text-gray-500 text-[14px]">{userData?.email}</p>
         </Link>
         <hr />
-        <button
-          className="text-red-500 hover:text-red-700 transition-colors ease-in duration-200 mb-2 text-[14px]
-        flex items-center gap-1"
-        >
-          Logout
-          <IoIosLogOut />
-        </button>
+        <LogoutBtn />
       </div>
     </div>
   );
