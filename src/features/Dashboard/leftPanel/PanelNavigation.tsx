@@ -11,7 +11,7 @@ const PanelNavigation = () => {
             className="hover:text-azure-blue transition-colors ease-in duration-150"
           >
             <Link
-              to={`/dashboard/${item.path}`}
+              to={`${item.path}`}
               className="flex items-center gap-2 text-[18px] "
             >
               {item.icon} {item.name}
