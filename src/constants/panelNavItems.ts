@@ -6,22 +6,22 @@ import { SlUserFollowing } from "react-icons/sl";
 export const panelItems = [
   {
     name: "Home",
-    path: "/home",
+    path: "home",
     icon: React.createElement(IoHomeOutline, null),
   },
   {
     name: "Profile",
-    path: "/profile",
+    path: "profile",
     icon: React.createElement(CgProfile, null),
   },
   {
     name: "Saved",
-    path: "/saved",
+    path: "saved",
     icon: React.createElement(GoTag, null),
   },
   {
     name: "Following",
-    path: "/following",
+    path: "following",
     icon: React.createElement(SlUserFollowing, null),
   },
 ];
