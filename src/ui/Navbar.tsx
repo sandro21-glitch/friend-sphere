@@ -1,4 +1,4 @@
-import UserMenuPopup from "../features/Dialogs/UserMenuPopup";
+import UserMenuPopup from "../features/Dialogs/menuPopup/UserMenuPopup";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import { setUserProfileModal } from "../slices/modals/modalSlice";
 import Input from "./Input";
