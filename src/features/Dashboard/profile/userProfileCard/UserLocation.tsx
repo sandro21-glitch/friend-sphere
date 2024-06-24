@@ -8,7 +8,7 @@ const UserLocation = () => {
       <p className="text-[16px] font-semibold">Location</p>
       <p className="text-[14px] flex items-center gap-1">
         <CiLocationOn />
-        {userData?.location || "Somewhere"}
+        {userData?.location || "Location not added"}
       </p>
     </div>
   );
