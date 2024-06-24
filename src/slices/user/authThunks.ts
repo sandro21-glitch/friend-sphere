@@ -84,3 +84,35 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+//login as demo user
+export const loginDemoUser = createAsyncThunk(
+  "auth/loginDemoUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        "demoUser@friendsphere.com",
+        "demoU2024"
+      );
+      const { uid, email } = userCredential.user;
+      if (!email) {
+        throw new Error("Email cannot be null");
+      }
+
+      // Fetch the user's profile data
+      const userRef = ref(database, `users/${uid}`);
+      const userSnapshot = await get(userRef);
+
+      if (!userSnapshot.exists()) {
+        throw new Error("User profile does not exist");
+      }
+
+      const userProfile = userSnapshot.val();
+
+      return { userProfile };
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Login failed");
+    }
+  }
+);
