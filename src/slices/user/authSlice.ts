@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserData } from "./userTypes";
-import { loginDemoUser, loginUser, registerUser } from "./authThunks";
+import {
+  loginDemoUser,
+  loginUser,
+  registerUser,
+  signOutUser,
+} from "./authThunks";
 // import type { PayloadAction } from '@reduxjs/toolkit'
 // import type { RootState } from "../store";
 
@@ -67,6 +72,19 @@ export const authSlice = createSlice({
         const authError = action.payload as string;
         state.error = authError.replace("Firebase", "") || "Login failed";
         state.loading = false;
+      })
+      // Sign Out User
+      .addCase(signOutUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(signOutUser.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+        state.userData = null;
+      })
+      .addCase(signOutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = (action.payload as string) || "something went wrong";
       });
   },
 });
