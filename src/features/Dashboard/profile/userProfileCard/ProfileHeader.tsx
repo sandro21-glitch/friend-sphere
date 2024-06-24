@@ -15,7 +15,7 @@ const ProfileHeader = () => {
         <h2 className="text-[1.1rem] mb-1 font-semibold">Username</h2>
         <p className="text-[14px] text-black flex items-center gap-1">
           <FaUserEdit />
-          {userData?.bio || ""}
+          {userData?.bio || "Bio not added"}
         </p>
         <hr />
       </div>
