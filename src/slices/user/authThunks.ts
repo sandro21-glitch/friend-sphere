@@ -92,8 +92,8 @@ export const loginDemoUser = createAsyncThunk(
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        "demoUser@friendsphere.com",
-        "demoU2024"
+        import.meta.env.VITE_DEMOUSER_EMAIL,
+        import.meta.env.VITE_DEMOUSER_PASSWORD
       );
       const { uid, email } = userCredential.user;
       if (!email) {
@@ -113,6 +113,18 @@ export const loginDemoUser = createAsyncThunk(
       return { userProfile };
     } catch (error: any) {
       return rejectWithValue(error.message || "Login failed");
+    }
+  }
+);
+
+// Sign out user thunk
+export const signOutUser = createAsyncThunk(
+  "auth/signOut",
+  async (_, { rejectWithValue }) => {
+    try {
+      await auth.signOut();
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Sign out failed");
     }
   }
 );
