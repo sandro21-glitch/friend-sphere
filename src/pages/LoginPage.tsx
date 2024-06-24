@@ -4,7 +4,7 @@ import LoginFormInputs from "../features/loginPage/LoginFormInputs";
 import LoginFormLinks from "../features/loginPage/LoginFormLinks";
 import FormLayout from "../ui/FormLayour";
 import Logo from "../ui/Logo";
-import { loginUser } from "../slices/user/userThunks";
+import { loginUser } from "../slices/user/authThunks";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { useNavigate } from "react-router-dom";
 
