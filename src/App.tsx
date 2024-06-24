@@ -28,8 +28,8 @@ const router = createBrowserRouter([
         element: <Dashboard />,
         children: [
           { index: true, element: <PostFeed /> },
-          { path: "/home", element: <PostFeed /> },
-          { path: "/profile", element: <UserProfile /> },
+          { path: "home", element: <PostFeed /> },
+          { path: "profile", element: <UserProfile /> },
         ],
       },
     ],
