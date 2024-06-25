@@ -11,7 +11,7 @@ import { setUser } from "../slices/user/authSlice";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
-  const { userData } = useAppSelector((state) => state.auth); // Assuming you have user data in Redux store
+  const { userData } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const userRef = ref(database, `users/${userData?.uid}`);
@@ -22,8 +22,6 @@ const Dashboard = () => {
         console.log("No data available");
       }
     });
-
-    // Cleanup listener on component unmount
     return () => unsubscribe();
   }, [userData?.uid, dispatch]);
 
