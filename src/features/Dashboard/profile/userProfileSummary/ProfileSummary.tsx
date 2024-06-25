@@ -1,10 +1,9 @@
+import Summary from "./Summary";
+
 const ProfileSummary = () => {
   return (
     <div className="bg-white  border rounded-md p-5 flex flex-col gap-2">
-      <div className="flex justify-between items-center">
-        <h3 className="text-[20px]">Profile Summary</h3>
-        <p className="text-[14px]">Joined 293 days ago (August 30, 2023)</p>
-      </div>
+      <Summary />
       <div className="flex justify-between items-center text-[14px]">
         <p className="text-gray-500">Total Posts</p>
         <p>3</p>
