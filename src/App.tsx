@@ -8,6 +8,7 @@ import store from "./store";
 import UserProfile from "./features/Dashboard/profile/UserProfile";
 import PostFeed from "./features/Dashboard/postFeed/PostFeed";
 import ProtectedRoute from "./ui/ProtectedRoute";
+import PublicRoute from "./ui/PublicRoute";
 
 const router = createBrowserRouter([
   {
@@ -15,16 +16,21 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        index: true,
-        element: <LoginPage />,
-      },
-      {
-        path: "signin",
-        element: <LoginPage />,
-      },
-      {
-        path: "signup",
-        element: <RegisterPage />,
+        element: <PublicRoute />,
+        children: [
+          {
+            index: true,
+            element: <LoginPage />,
+          },
+          {
+            path: "signin",
+            element: <LoginPage />,
+          },
+          {
+            path: "signup",
+            element: <RegisterPage />,
+          },
+        ],
       },
       {
         element: <ProtectedRoute />,
