@@ -20,7 +20,12 @@ const UserInterests = () => {
             );
           })}
         </ul>
-      ) : null}
+      ) : (
+        <p className="text-[14px]">
+          No interests have been set yet. Add some interests to let people know
+          more about you.
+        </p>
+      )}
     </div>
   );
 };
