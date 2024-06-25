@@ -7,6 +7,8 @@ import Dashboard from "./pages/Dashboard";
 import store from "./store";
 import UserProfile from "./features/Dashboard/profile/UserProfile";
 import PostFeed from "./features/Dashboard/postFeed/PostFeed";
+import ProtectedRoute from "./ui/ProtectedRoute";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -25,11 +27,17 @@ const router = createBrowserRouter([
         element: <RegisterPage />,
       },
       {
-        element: <Dashboard />,
+        element: <ProtectedRoute />,
         children: [
-          { index: true, element: <PostFeed /> },
-          { path: "home", element: <PostFeed /> },
-          { path: "profile", element: <UserProfile /> },
+          {
+            path: "/",
+            element: <Dashboard />,
+            children: [
+              { index: true, element: <PostFeed /> },
+              { path: "home", element: <PostFeed /> },
+              { path: "profile", element: <UserProfile /> },
+            ],
+          },
         ],
       },
     ],
