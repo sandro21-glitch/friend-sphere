@@ -25,14 +25,10 @@ const Dashboard = () => {
         console.log("No data available");
       }
     });
-
+    dispatch(fetchCommunities());
     return () => unsubscribe();
   }, [userData?.uid, dispatch]);
 
-
-  useEffect(() => {
-    dispatch(fetchCommunities());
-  }, [dispatch]);
   return (
     <main className="relative bg-dashboard-bg">
       <Navbar />
