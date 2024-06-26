@@ -12,7 +12,7 @@ const ProfileHeader = () => {
         className="w-[5.5rem] h-[5.5rem] mb-5"
       />
       <div className=" flex items-center flex-col">
-        <h2 className="text-[1.1rem] mb-1 font-semibold">{userData?.name || 'Username'}</h2>
+        <h2 className="text-[1.1rem] mb-1 font-semibold">{userData?.name}</h2>
         <p className="text-[14px] text-black flex items-center gap-1">
           <FaUserEdit />
           {userData?.bio || "Bio not added"}
