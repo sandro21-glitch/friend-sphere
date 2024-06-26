@@ -19,7 +19,7 @@ export const fetchCommunities = createAsyncThunk(
           });
           resolve(communities);
         }, {
-          onlyOnce: true, // Ensure the listener is called only once
+          onlyOnce: true,
         });
       });
 
