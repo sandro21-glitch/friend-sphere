@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../ui/Navbar";
 import LeftPanel from "../features/Dashboard/leftPanel/LeftPanel";
 import RightPanel from "../features/Dashboard/rightPanel/RightPanel";
@@ -8,10 +8,13 @@ import { useEffect } from "react";
 import { database } from "../config/firebase";
 import { onValue, ref } from "firebase/database";
 import { setUser } from "../slices/user/authSlice";
+import { fetchCommunities } from "../slices/community/communityThunks";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
   const { userData } = useAppSelector((state) => state.auth);
+  const path = useLocation();
+  console.log(path);
 
   useEffect(() => {
     const userRef = ref(database, `users/${userData?.uid}`);
@@ -22,9 +25,14 @@ const Dashboard = () => {
         console.log("No data available");
       }
     });
+
     return () => unsubscribe();
   }, [userData?.uid, dispatch]);
 
+
+  useEffect(() => {
+    dispatch(fetchCommunities());
+  }, [dispatch]);
   return (
     <main className="relative bg-dashboard-bg">
       <Navbar />
