@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { database } from "../config/firebase";
 import { onValue, ref } from "firebase/database";
 import { setUser } from "../slices/user/authSlice";
-import { fetchCommunities } from "../slices/community/communityThunks";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -25,7 +24,6 @@ const Dashboard = () => {
         console.log("No data available");
       }
     });
-    dispatch(fetchCommunities());
     return () => unsubscribe();
   }, [userData?.uid, dispatch]);
 
