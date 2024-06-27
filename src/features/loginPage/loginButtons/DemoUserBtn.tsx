@@ -1,14 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../hooks/reduxHooks";
 import { loginDemoUser } from "../../../slices/user/authThunks";
+import { fetchCommunities } from "../../../slices/community/communityThunks";
 
 const DemoUserBtn = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const handleLoginDemo = async () => {
     try {
       const resultAction = await dispatch(loginDemoUser()).unwrap();
+
       if (resultAction) {
+        await dispatch(fetchCommunities());
         navigate("/home");
       }
     } catch (err) {
