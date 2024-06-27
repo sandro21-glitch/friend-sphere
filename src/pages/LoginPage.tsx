@@ -7,6 +7,7 @@ import Logo from "../ui/Logo";
 import { loginUser } from "../slices/user/authThunks";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { useNavigate } from "react-router-dom";
+import { fetchCommunities } from "../slices/community/communityThunks";
 
 type LoginFormType = {
   email: string;
@@ -23,15 +24,21 @@ const LoginPage = () => {
 
   const handleLoginUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const resultAction = await dispatch(loginUser(userLoginForm));
-    if (loginUser.fulfilled.match(resultAction)) {
-      navigate("/home");
-    } else if (loginUser.rejected.match(resultAction)) {
-      if (resultAction.payload) {
-        console.error("Login error:", resultAction.payload);
+
+    try {
+      const resultAction = await dispatch(loginUser(userLoginForm));
+
+      if (loginUser.fulfilled.match(resultAction)) {
+        await dispatch(fetchCommunities());
+        navigate("/home");
       } else {
-        console.error("Login error:", resultAction.error.message);
+        const errorMessage = resultAction.payload
+          ? resultAction.payload
+          : resultAction.error.message;
+        console.error("Login error:", errorMessage);
       }
+    } catch (error) {
+      console.error("Error during login:", error);
     }
   };
 
