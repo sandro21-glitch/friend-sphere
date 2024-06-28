@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { database } from "../config/firebase";
 import { onValue, ref } from "firebase/database";
 import { setUser } from "../slices/user/authSlice";
+import { fetchNonJoinedCommunities } from "../slices/community/communityThunks";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -26,6 +27,13 @@ const Dashboard = () => {
     });
     return () => unsubscribe();
   }, [userData?.uid, dispatch]);
+
+
+  useEffect(() => {
+    if (userData?.uid) {
+      dispatch(fetchNonJoinedCommunities(userData.uid));
+    }
+  }, [path, userData?.uid, dispatch]);
 
   return (
     <main className="relative bg-dashboard-bg">
