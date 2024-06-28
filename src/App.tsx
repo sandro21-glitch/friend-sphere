@@ -42,6 +42,7 @@ const router = createBrowserRouter([
               { index: true, element: <PostFeed /> },
               { path: "home", element: <PostFeed /> },
               { path: "profile", element: <UserProfile /> },
+              { path: "communities", element: <UserProfile /> },
             ],
           },
         ],
