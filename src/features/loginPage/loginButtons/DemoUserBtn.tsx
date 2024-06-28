@@ -1,19 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../hooks/reduxHooks";
 import { loginDemoUser } from "../../../slices/user/authThunks";
-import { fetchCommunities } from "../../../slices/community/communityThunks";
+import { fetchUserCommunities } from "../../../slices/community/communityThunks";
 
 const DemoUserBtn = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   const handleLoginDemo = async () => {
     try {
       const resultAction = await dispatch(loginDemoUser()).unwrap();
 
       if (resultAction) {
-        await dispatch(fetchCommunities());
-        navigate("/home");
+        const { uid } = resultAction.userProfile;
+
+        if (uid) {
+          await dispatch(fetchUserCommunities(uid));
+          navigate("/home");
+        } else {
+          console.error("User ID is undefined");
+        }
       }
     } catch (err) {
       console.log("Failed to log in as demo user. Please try again.", err);
