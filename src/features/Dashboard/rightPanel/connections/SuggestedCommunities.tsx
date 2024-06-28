@@ -1,5 +1,6 @@
 import { useAppSelector } from "../../../../hooks/reduxHooks";
-
+import { MdGroups } from "react-icons/md";
+import ConnectButton from "../../../../ui/ConnectButton";
 const SuggestedCommunities = () => {
   const { nonJoinedGroupData, nonJoinedGroups } = useAppSelector(
     (store) => store.communities
@@ -19,9 +20,29 @@ const SuggestedCommunities = () => {
     );
   }
   return (
-    <ul>
+    <ul className="flex flex-col gap-3">
       {nonJoinedGroupData?.map((group) => {
-        return <li>{group.name}</li>;
+        return (
+          <li className="flex justify-between items-start">
+            <div className="flex gap-5">
+              <img
+                src={group.banner}
+                alt={group.name}
+                className="w-[2rem] h-[2rem] object-cover rounded-full bg-center"
+              />
+              <div>
+                <h4 className="text-[.9rem]">{group.name}</h4>
+                <div className="flex gap-1 items-center text-[.8rem] text-gray-500">
+                  <MdGroups />
+                  <span>
+                    {group.members ? group.members.length : 0}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <ConnectButton name="join" join />
+          </li>
+        );
       })}
     </ul>
   );
