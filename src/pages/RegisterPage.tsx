@@ -7,6 +7,7 @@ import Logo from "../ui/Logo";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { registerUser } from "../slices/user/authThunks";
 import { useNavigate } from "react-router-dom";
+import { fetchCommunities } from "../slices/community/communityThunks";
 interface RegisterUser {
   name: string;
   email: string;
@@ -26,6 +27,7 @@ const RegisterPage = () => {
     event.preventDefault();
     try {
       await dispatch(registerUser(registerUserForm));
+      await dispatch(fetchCommunities());
       navigate("/home");
     } catch (error) {
       console.error("Registration error:", error);
