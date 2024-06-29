@@ -1,6 +1,5 @@
-import PanelCommunities from "./PanelCommunities";
-import PanelNavigation from "./PanelNavigation";
-
+import PanelCommunities from "./communityNavList/PanelCommunities";
+import PanelNavigation from "./navigation/PanelNavigation";
 
 const LeftPanel = () => {
   return (
