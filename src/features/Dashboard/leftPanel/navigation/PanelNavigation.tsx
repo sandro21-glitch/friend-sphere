@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { panelItems } from "../../../constants/panelNavItems";
+import { panelItems } from "../../../../constants/panelNavItems";
 
 const PanelNavigation = () => {
   return (

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../../hooks/reduxHooks";
-import SmallSpinner from "../../../ui/SmallSpinner";
+import { useAppSelector } from "../../../../hooks/reduxHooks";
+import SmallSpinner from "../../../../ui/SmallSpinner";
+
 
 const CommunityItemList = () => {
   const {
