@@ -1,9 +1,13 @@
-
+import UserCommunitiesList from "./UserCommunitiesList";
 
 const Community = () => {
   return (
-    <div>Community</div>
-  )
-}
+    <section className="col-span-2 min-h-full h-full mt-5 relative">
+      <div >
+        <UserCommunitiesList />
+      </div>
+    </section>
+  );
+};
 
-export default Community
+export default Community;
