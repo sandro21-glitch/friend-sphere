@@ -15,7 +15,8 @@ const LogoutBtn = () => {
         navigate("/signin");
       }
     } catch (error) {
-      console.log(error);
+      alert("Failed to logout. Please try again.");
+      console.error("Logout error:", error);
     }
   };
 
