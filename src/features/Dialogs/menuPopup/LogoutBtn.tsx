@@ -9,8 +9,9 @@ const LogoutBtn = () => {
 
   const handleLogout = async () => {
     try {
-      const logout = await dispatch(signOutUser());
-      if (logout) {
+      const resultAction = await dispatch(signOutUser());
+      if (signOutUser.fulfilled.match(resultAction)) {
+        dispatch({ type: "RESET_STATE" });
         navigate("/signin");
       }
     } catch (error) {
