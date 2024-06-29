@@ -22,7 +22,7 @@ const SingleUserCommunityItem = ({
         />
         <div>
           <h3 className="font-semibold text-[1.5rem]">{name}</h3>
-          <p>{membersLength} members</p>
+          <p className="text-gray-500">{membersLength} members</p>
         </div>
       </Link>
     </li>
