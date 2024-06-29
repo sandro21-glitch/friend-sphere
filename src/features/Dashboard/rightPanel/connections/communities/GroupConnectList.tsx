@@ -11,7 +11,7 @@ const GroupConnectList = ({ nonJoinedGroupData }: GroupConnectListTypes) => {
     <ul className="flex flex-col gap-3">
       {nonJoinedGroupData?.map((group) => {
         return (
-          <li className="flex justify-between items-start">
+          <li key={group.uid} className="flex justify-between items-start">
             <div className="flex gap-5">
               <img
                 src={group.banner}
