@@ -9,6 +9,7 @@ import UserProfile from "./features/Dashboard/profile/UserProfile";
 import PostFeed from "./features/Dashboard/postFeed/PostFeed";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import PublicRoute from "./ui/PublicRoute";
+import Community from "./features/Dashboard/communities/Community";
 
 const router = createBrowserRouter([
   {
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
               { index: true, element: <PostFeed /> },
               { path: "home", element: <PostFeed /> },
               { path: "profile", element: <UserProfile /> },
-              { path: "communities", element: <UserProfile /> },
+              { path: "communities", element: <Community /> },
             ],
           },
         ],
