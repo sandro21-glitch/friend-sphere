@@ -8,7 +8,12 @@ const UserCommunitiesList = () => {
     joinedGroups: { error, loading },
   } = useAppSelector((store) => store.communities);
 
-  if (loading) return <SmallSpinner />;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center w-full">
+        <SmallSpinner />
+      </div>
+    );
   if (error) return <p>error...</p>;
 
   return (
