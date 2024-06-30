@@ -15,7 +15,7 @@ const EditProfilePopup = () => {
   const [interestList, setInterestList] = useState<string[]>(
     userData.interests || []
   );
-  const [bio, setBio] = useState<string>(userData.bio || "testr");
+  const [bio, setBio] = useState<string>(userData.bio || "");
   const [location, setLocation] = useState<string>(userData.location || "");
 
   const dispatch = useAppDispatch();
