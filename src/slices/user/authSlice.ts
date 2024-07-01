@@ -35,6 +35,7 @@ export const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.userData = action.payload;
         state.loading = false;
+        state.error = null;
       })
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
@@ -53,6 +54,7 @@ export const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.userData = action.payload.userProfile;
         state.loading = false;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         const authError = action.payload as string;
@@ -67,6 +69,7 @@ export const authSlice = createSlice({
       .addCase(loginDemoUser.fulfilled, (state, action) => {
         state.userData = action.payload.userProfile;
         state.loading = false;
+        state.error = null;
       })
       .addCase(loginDemoUser.rejected, (state, action) => {
         const authError = action.payload as string;
