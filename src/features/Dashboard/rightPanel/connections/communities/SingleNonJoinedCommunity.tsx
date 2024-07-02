@@ -7,6 +7,14 @@ type NonJoinedCommunityTypes = {
 };
 
 const SingleNonJoinedCommunity = ({ group }: NonJoinedCommunityTypes) => {
+  // const userId = useAppSelector((store) => store.auth.userData?.uid);
+  // const dispatch = useAppDispatch();
+  // const handleJoinCommunity = () => {
+  //   if (userId) {
+  //     dispatch(joinCommunity({ userId, communityId: group.uid }));
+  //   }
+  // };
+
   return (
     <li key={group.uid} className="flex justify-between items-start">
       <div className="flex gap-5">
