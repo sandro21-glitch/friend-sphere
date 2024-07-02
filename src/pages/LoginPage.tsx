@@ -7,7 +7,7 @@ import Logo from "../ui/Logo";
 import { loginUser } from "../slices/user/authThunks";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { useNavigate } from "react-router-dom";
-import { fetchCommunities } from "../slices/community/communityThunks";
+import { fetchUserCommunities } from "../slices/community/communityThunks";
 
 type LoginFormType = {
   email: string;
@@ -29,8 +29,15 @@ const LoginPage = () => {
       const resultAction = await dispatch(loginUser(userLoginForm));
 
       if (loginUser.fulfilled.match(resultAction)) {
-        await dispatch(fetchCommunities());
-        navigate("/home");
+        const { uid } = resultAction.payload.userProfile;
+        if (uid) {
+          console.log(uid);
+
+          await dispatch(fetchUserCommunities(uid));
+          navigate("/home");
+        } else {
+          console.error("No UID returned after login");
+        }
       } else {
         const errorMessage = resultAction.payload
           ? resultAction.payload
