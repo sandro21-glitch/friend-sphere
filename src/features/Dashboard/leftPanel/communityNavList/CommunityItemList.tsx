@@ -12,10 +12,10 @@ const CommunityItemList = () => {
   if (loading) return <SmallSpinner />;
   return (
     <ul className="flex flex-col gap-1">
-      {communityData?.slice(0, 5).map((item, index) => {
+      {communityData?.slice(0, 5).map((item) => {
         return (
           <li
-            key={index}
+            key={item.uid}
             className="text-gray-600 hover:text-azure-blue transition-colors ease-in duration-150"
           >
             <Link to={`community/${item.name}`} state={{ id: item.uid }}>
