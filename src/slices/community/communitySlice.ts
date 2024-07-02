@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
   fetchNonJoinedCommunities,
   fetchUserCommunities,
+  joinGroup,
 } from "./communityThunks";
 
 export interface CommunityTypes {
@@ -93,6 +94,19 @@ export const communitiesSlice = createSlice({
         state.nonJoinedGroups.error =
           action?.error.message ?? "Error fetching communities";
         state.nonJoinedGroups.loading = false;
+      });
+    builder
+      .addCase(joinGroup.pending, (state) => {
+        state.joinedGroups.loading = true;
+      })
+      .addCase(joinGroup.fulfilled, (state, action) => {
+        state.joinedGroups.loading = false;
+        console.log(action.payload);
+      })
+      .addCase(joinGroup.rejected, (state, action) => {
+        state.joinedGroups.loading = false;
+        state.joinedGroups.error =
+          action?.error.message ?? "Error fetching communities";
       });
   },
 });
