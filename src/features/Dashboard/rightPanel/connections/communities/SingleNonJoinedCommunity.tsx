@@ -1,19 +1,24 @@
 import { MdGroups } from "react-icons/md";
 import { CommunityTypes } from "../../../../../slices/community/communitySlice";
 import ConnectButton from "../../../../../ui/ConnectButton";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../../hooks/reduxHooks";
+import { joinGroup } from "../../../../../slices/community/communityThunks";
 
 type NonJoinedCommunityTypes = {
   group: CommunityTypes;
 };
 
 const SingleNonJoinedCommunity = ({ group }: NonJoinedCommunityTypes) => {
-  // const userId = useAppSelector((store) => store.auth.userData?.uid);
-  // const dispatch = useAppDispatch();
-  // const handleJoinCommunity = () => {
-  //   if (userId) {
-  //     dispatch(joinCommunity({ userId, communityId: group.uid }));
-  //   }
-  // };
+  const uid = useAppSelector((store) => store.auth.userData?.uid);
+  const dispatch = useAppDispatch();
+  const handleJoinCommunity = () => {
+    if (uid) {
+      dispatch(joinGroup({ uid, communityUid: group.uid }));
+    }
+  };
 
   return (
     <li key={group.uid} className="flex justify-between items-start">
@@ -31,7 +36,7 @@ const SingleNonJoinedCommunity = ({ group }: NonJoinedCommunityTypes) => {
           </p>
         </div>
       </div>
-      <ConnectButton name="join" join />
+      <ConnectButton name="join" join onClick={handleJoinCommunity} />
     </li>
   );
 };
