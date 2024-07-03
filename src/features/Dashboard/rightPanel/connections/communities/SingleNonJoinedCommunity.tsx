@@ -5,7 +5,11 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../../hooks/reduxHooks";
-import { joinGroup } from "../../../../../slices/community/communityThunks";
+import {
+  fetchNonJoinedCommunities,
+  fetchUserCommunities,
+  joinGroup,
+} from "../../../../../slices/community/communityThunks";
 
 type NonJoinedCommunityTypes = {
   group: CommunityTypes;
@@ -14,9 +18,16 @@ type NonJoinedCommunityTypes = {
 const SingleNonJoinedCommunity = ({ group }: NonJoinedCommunityTypes) => {
   const uid = useAppSelector((store) => store.auth.userData?.uid);
   const dispatch = useAppDispatch();
-  const handleJoinCommunity = () => {
-    if (uid) {
-      dispatch(joinGroup({ uid, communityUid: group.uid }));
+
+  const handleJoinCommunity = async () => {
+    if (!uid) return;
+
+    try {
+      await dispatch(joinGroup({ uid, communityUid: group.uid }));
+      dispatch(fetchUserCommunities(uid));
+      dispatch(fetchNonJoinedCommunities(uid));
+    } catch (error) {
+      console.error("Error joining community:", error);
     }
   };
 
