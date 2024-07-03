@@ -44,6 +44,10 @@ interface CommunityState {
     loading: boolean;
     error: string | null;
   };
+  joinGroup: {
+    loading: boolean;
+    error: string | null;
+  };
 }
 
 const initialState: CommunityState = {
@@ -54,6 +58,10 @@ const initialState: CommunityState = {
     error: null,
   },
   nonJoinedGroups: {
+    loading: false,
+    error: null,
+  },
+  joinGroup: {
     loading: false,
     error: null,
   },
@@ -97,15 +105,22 @@ export const communitiesSlice = createSlice({
       });
     builder
       .addCase(joinGroup.pending, (state) => {
-        state.joinedGroups.loading = true;
+        state.joinGroup.loading = true;
       })
       .addCase(joinGroup.fulfilled, (state, action) => {
-        state.joinedGroups.loading = false;
-        console.log(action.payload);
+         // Add the joined group to communityData if it's not already there
+        if (state.communityData) {
+          state.communityData.push(action.payload.communityToUpdate);
+        }
+        // filter out the joined group from nonJoinedGroupData
+        if (state.nonJoinedGroupData) {
+          state.nonJoinedGroupData = state.nonJoinedGroupData.filter(
+            (group) => group.uid !== action.payload.communityUid
+          );
+        }
       })
       .addCase(joinGroup.rejected, (state, action) => {
-        state.joinedGroups.loading = false;
-        state.joinedGroups.error =
+        state.joinGroup.error =
           action?.error.message ?? "Error fetching communities";
       });
   },
