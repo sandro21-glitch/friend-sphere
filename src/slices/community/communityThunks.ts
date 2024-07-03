@@ -139,8 +139,8 @@ export const joinGroup = createAsyncThunk(
 
       // Perform the update operation in Firebase
       await update(communitiesRef, updates);
-
-      return { communityUid, uid };
+      
+      return { communityToUpdate, communityUid};
     } catch (error: any) {
       console.error('Error joining group:', error);
       return rejectWithValue(error.message || 'Error joining group');
