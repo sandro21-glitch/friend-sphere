@@ -50,6 +50,11 @@ interface CommunityState {
     error: string | null;
     communityId: string | null;
   };
+  leaveGroup: {
+    loading: boolean;
+    error: string | null;
+    communityId: string | null;
+  };
 }
 
 const initialState: CommunityState = {
@@ -64,6 +69,11 @@ const initialState: CommunityState = {
     error: null,
   },
   joinGroup: {
+    loading: false,
+    error: null,
+    communityId: null,
+  },
+  leaveGroup: {
     loading: false,
     error: null,
     communityId: null,
@@ -113,6 +123,7 @@ export const communitiesSlice = createSlice({
       .addCase(joinGroup.fulfilled, (state, action) => {
         state.joinGroup.loading = false;
         state.joinGroup.communityId = action.payload.communityUid;
+
         // add the joined group to communityData if it's not already there
         if (state.communityData) {
           state.communityData.push(action.payload.communityToUpdate);
@@ -131,14 +142,23 @@ export const communitiesSlice = createSlice({
           action?.error.message ?? "Error fetching communities";
       });
     builder
-      .addCase(leaveGroup.pending, () => {
-        console.log("loading");
+      .addCase(leaveGroup.pending, (state) => {
+        state.leaveGroup.loading = true;
       })
-      .addCase(leaveGroup.fulfilled, () => {
-        console.log("fulfilled");
+      .addCase(leaveGroup.fulfilled, (state, action) => {
+        state.leaveGroup.loading = false;
+        state.leaveGroup.communityId = action.payload.communityUid;
+        if (state.communityData) {
+          state.communityData = state.communityData?.filter(
+            (group) => group.uid !== action.payload.communityUid
+          );
+        }
       })
-      .addCase(leaveGroup.rejected, () => {
-        console.log("rejected");
+      .addCase(leaveGroup.rejected, (state, action) => {
+        state.leaveGroup.loading = false;
+        state.leaveGroup.error =
+          action?.error.message ?? "Error leaving community";
+        state.leaveGroup.communityId = null;
       });
   },
 });
