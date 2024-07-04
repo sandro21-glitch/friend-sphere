@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Bio from "./editProfilePopup/Bio";
-import Interests from "./editProfilePopup/Interests";
-import ListOfInterests from "./editProfilePopup/ListOfInterests";
-import Location from "./editProfilePopup/Location";
-import EditProfileActions from "./editProfilePopup/EditProfileActions";
-import { setUpdateProfileModal } from "../../slices/modals/modalSlice";
-import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { updateUserProfile } from "../../slices/user/userDataThunks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { updateUserProfile } from "../../../slices/user/userDataThunks";
+import { setUpdateProfileModal } from "../../../slices/modals/modalSlice";
+import Bio from "./Bio";
+import Interests from "./Interests";
+import ListOfInterests from "./ListOfInterests";
+import EditProfileActions from "./EditProfileActions";
+import Location from "./Location";
 
 const EditProfilePopup = () => {
   const { userData } = useAppSelector((store) => store.auth);
