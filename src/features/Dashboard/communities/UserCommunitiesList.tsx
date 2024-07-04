@@ -19,12 +19,13 @@ const UserCommunitiesList = () => {
   return (
     <ul className="flex flex-col gap-3">
       {communityData?.map((groupData) => {
-        const { banner, name, members } = groupData;
+        const { banner, name, members,uid } = groupData;
         return (
           <SingleUserCommunityItem
             key={groupData.uid}
             banner={banner}
             name={name}
+            id={uid}
             membersLength={members?.length ? members?.length : 0}
           />
         );
