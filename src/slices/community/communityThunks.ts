@@ -135,7 +135,7 @@ export const joinGroup = createAsyncThunk(
       updates[`${communityToUpdate.id}/members`] = updatedMembers;
 
       await update(communitiesRef, updates);
-
+      communityToUpdate.members = updatedMembers;
       return { communityToUpdate, communityUid };
     } catch (error: any) {
       console.error("Error joining group:", error);
