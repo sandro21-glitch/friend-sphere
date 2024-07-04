@@ -74,7 +74,6 @@ export const fetchNonJoinedCommunities = createAsyncThunk(
   "community/fetchNonJoinedCommunities",
   async (userId: string, { rejectWithValue }) => {
     try {
-      // Fetch all communities
       const communitiesRef = ref(database, "communities");
       const snapshot = await get(communitiesRef);
       const allCommunities: CommunityTypes[] = [];
@@ -90,7 +89,7 @@ export const fetchNonJoinedCommunities = createAsyncThunk(
           !community.members.some((member) => member.memberid === userId)
       );
 
-      // Randomly select three communities
+      // randomly select three communities
       const randomCommunities = nonJoinedCommunities
         .sort(() => 0.5 - Math.random())
         .slice(0, 3);
@@ -104,16 +103,18 @@ export const fetchNonJoinedCommunities = createAsyncThunk(
 
 //join group
 export const joinGroup = createAsyncThunk(
-  'community/joinGroup',
-  async ({ communityUid, uid }: { communityUid: string; uid: string }, { rejectWithValue }) => {
+  "community/joinGroup",
+  async (
+    { communityUid, uid }: { communityUid: string; uid: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const communitiesRef = ref(database, 'communities');
+      const communitiesRef = ref(database, "communities");
 
       // Fetch all communities
       const snapshot = await get(communitiesRef);
       const communities = snapshot.val() || {};
 
-      // Find the community that matches communityUid
       let communityToUpdate: any = null;
       Object.keys(communities).forEach((key) => {
         if (communities[key].uid === communityUid) {
@@ -125,20 +126,77 @@ export const joinGroup = createAsyncThunk(
         return rejectWithValue(`Community with uid ${communityUid} not found.`);
       }
 
-      // Update the members array locally
-      const updatedMembers = [...(communityToUpdate.members || []), { memberid: uid }];
+      const updatedMembers = [
+        ...(communityToUpdate.members || []),
+        { memberid: uid },
+      ];
 
-      // Prepare the update object for Firebase
       const updates: any = {};
       updates[`${communityToUpdate.id}/members`] = updatedMembers;
 
-      // Perform the update operation in Firebase
       await update(communitiesRef, updates);
-      
-      return { communityToUpdate, communityUid};
+
+      return { communityToUpdate, communityUid };
     } catch (error: any) {
-      console.error('Error joining group:', error);
-      return rejectWithValue(error.message || 'Error joining group');
+      console.error("Error joining group:", error);
+      return rejectWithValue(error.message || "Error joining group");
+    }
+  }
+);
+
+//leave community
+export const leaveGroup = createAsyncThunk(
+  "community/leaveGroup",
+  async (
+    { communityUid, uid }: { communityUid: string; uid: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const communitiesRef = ref(database, "communities");
+
+      // Fetch all communities
+      const snapshot = await get(communitiesRef);
+      const communities = snapshot.val() || {};
+
+      let communityToUpdate: any = null;
+      let memberIndex: number | undefined = undefined;
+
+      Object.keys(communities).forEach((key) => {
+        if (communities[key].uid === communityUid) {
+          communityToUpdate = { id: key, ...communities[key] };
+
+          // Find index of the user in members array
+          if (communityToUpdate.members) {
+            memberIndex = communityToUpdate.members.findIndex(
+              (member: { memberid: string }) => member.memberid === uid
+            );
+            // Define the type of member as { memberid: string } or the appropriate type for your case
+          }
+        }
+      });
+
+      if (
+        !communityToUpdate ||
+        memberIndex === undefined ||
+        memberIndex === -1
+      ) {
+        return rejectWithValue(
+          `User with uid ${uid} is not a member of community with uid ${communityUid}.`
+        );
+      }
+
+      // Remove user from members array
+      communityToUpdate.members.splice(memberIndex, 1);
+
+      const updates: any = {};
+      updates[`${communityToUpdate.id}/members`] = communityToUpdate.members;
+
+      await update(communitiesRef, updates);
+
+      return { communityToUpdate, communityUid };
+    } catch (error: any) {
+      console.error("Error leaving group:", error);
+      return rejectWithValue(error.message || "Error leaving group");
     }
   }
 );
