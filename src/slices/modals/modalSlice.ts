@@ -11,17 +11,18 @@ interface joinCommunityTypes {
     communityId: string;
   } | null;
 }
+interface LeaveCommunityTypes {
+  isModalOpen: boolean;
+  dataIds: {
+    communityId: string;
+    userId: string;
+  } | null;
+}
 interface ModalState {
   userProfileModal: boolean;
   updateProfileModal: boolean;
-  joinCommunity: {
-    isModalOpen: boolean;
-    communityData: {
-      membersCount: number;
-      communityName: string;
-      communityId: string;
-    } | null;
-  };
+  joinCommunity: joinCommunityTypes;
+  leaveCommunity: LeaveCommunityTypes;
 }
 
 const initialState: ModalState = {
@@ -30,6 +31,10 @@ const initialState: ModalState = {
   joinCommunity: {
     isModalOpen: false,
     communityData: null,
+  },
+  leaveCommunity: {
+    isModalOpen: false,
+    dataIds: null,
   },
 };
 
@@ -50,6 +55,10 @@ export const modalSlice = createSlice({
       state.joinCommunity.isModalOpen = action.payload.isModalOpen;
       state.joinCommunity.communityData = action.payload.communityData;
     },
+    setLeaveCommunity: (state, action:PayloadAction<LeaveCommunityTypes>) => {
+      state.leaveCommunity.isModalOpen = action.payload.isModalOpen;
+      state.leaveCommunity.dataIds = action.payload.dataIds;
+    },
   },
 });
 
@@ -57,6 +66,7 @@ export const {
   setUserProfileModal,
   setUpdateProfileModal,
   setJoinCommunityModal,
+  setLeaveCommunity,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;
