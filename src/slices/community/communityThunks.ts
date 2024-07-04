@@ -125,11 +125,6 @@ export const joinGroup = createAsyncThunk(
         return rejectWithValue(`Community with uid ${communityUid} not found.`);
       }
 
-      // Check if the user is already a member (optional step)
-      if (communityToUpdate.members && communityToUpdate.members.some((member: any) => member.memberid === uid)) {
-        return rejectWithValue('User is already a member of this community.');
-      }
-
       // Update the members array locally
       const updatedMembers = [...(communityToUpdate.members || []), { memberid: uid }];
 
