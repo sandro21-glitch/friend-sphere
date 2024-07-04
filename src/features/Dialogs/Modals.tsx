@@ -1,12 +1,16 @@
 import { useAppSelector } from "../../hooks/reduxHooks";
-import EditProfilePopup from "./EditProfilePopup";
+import EditProfilePopup from "./editProfilePopup/EditProfilePopup";
 import JoinCommunityPopup from "./joinCommunityPopup/JoinCommunityPopup";
+import LeaveGroupPopup from "./leaveGroup/LeaveGroupPopup";
 
 const Modals = () => {
-  const { updateProfileModal, joinCommunity } = useAppSelector(
+  const { updateProfileModal, joinCommunity, leaveCommunity } = useAppSelector(
     (store) => store.modals
   );
-  const isAnyModalOpen = updateProfileModal || joinCommunity.isModalOpen;
+  const isAnyModalOpen =
+    updateProfileModal ||
+    joinCommunity.isModalOpen ||
+    leaveCommunity.isModalOpen;
   if (!isAnyModalOpen) return null;
   return (
     <div className="w-full h-full absolute inset-0 flex items-center justify-center z-[9999] min-h-screen">
@@ -16,6 +20,8 @@ const Modals = () => {
           <EditProfilePopup />
         ) : joinCommunity.isModalOpen ? (
           <JoinCommunityPopup />
+        ) : leaveCommunity.isModalOpen ? (
+          <LeaveGroupPopup />
         ) : null}
       </div>
     </div>
