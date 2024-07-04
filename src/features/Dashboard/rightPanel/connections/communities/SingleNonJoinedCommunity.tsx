@@ -1,28 +1,27 @@
 import { MdGroups } from "react-icons/md";
 import { CommunityTypes } from "../../../../../slices/community/communitySlice";
 import ConnectButton from "../../../../../ui/ConnectButton";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../../../hooks/reduxHooks";
-import { joinGroup } from "../../../../../slices/community/communityThunks";
+import { useAppDispatch } from "../../../../../hooks/reduxHooks";
+import { setJoinCommunityModal } from "../../../../../slices/modals/modalSlice";
 
 type NonJoinedCommunityTypes = {
   group: CommunityTypes;
 };
 
 const SingleNonJoinedCommunity = ({ group }: NonJoinedCommunityTypes) => {
-  const uid = useAppSelector((store) => store.auth.userData?.uid);
+
   const dispatch = useAppDispatch();
-
-  const handleJoinCommunity = async () => {
-    if (!uid) return;
-
-    try {
-      await dispatch(joinGroup({ uid, communityUid: group.uid }));
-    } catch (error) {
-      console.error("Error joining community:", error);
-    }
+  const handleJoinCommunity = () => {
+    dispatch(
+      setJoinCommunityModal({
+        isModalOpen: true,
+        communityData: {
+          communityId: group.uid,
+          communityName: group.name,
+          membersCount: group.members?.length || 0,
+        },
+      })
+    );
   };
 
   return (
@@ -41,7 +40,7 @@ const SingleNonJoinedCommunity = ({ group }: NonJoinedCommunityTypes) => {
           </p>
         </div>
       </div>
-      <ConnectButton name="join" join onClick={handleJoinCommunity} />
+      <ConnectButton name="Join" join onClick={handleJoinCommunity} />
     </li>
   );
 };
