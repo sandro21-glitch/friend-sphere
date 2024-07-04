@@ -1,6 +1,7 @@
 import { RiGroup3Fill } from "react-icons/ri";
 import { useAppSelector } from "../../../hooks/reduxHooks";
 import GroupRules from "./groupInfo/GroupRules";
+import LeaveGroup from "./groupInfo/LeaveGroup";
 
 type GroupInfoTypes = {
   id: string;
@@ -25,14 +26,7 @@ const GroupInfo = ({ id }: GroupInfoTypes) => {
         className="h-[10rem] w-full object-cover rounded-md mb-3"
       />
       <p className="text-[16px] mb-3">{description}</p>
-      <button
-        type="button"
-        className="text-[14px] text-center w-full
-       border border-red-600 py-[4px] rounded-md text-red-600 hover:bg-red-500 hover:text-white 
-       transition-colors ease-in duration-150 mb-3"
-      >
-        Leave Community
-      </button>
+      <LeaveGroup groupId={id} />
       <GroupRules rules={rules} />
     </div>
   );
