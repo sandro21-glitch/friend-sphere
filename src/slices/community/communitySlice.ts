@@ -3,6 +3,7 @@ import {
   fetchNonJoinedCommunities,
   fetchUserCommunities,
   joinGroup,
+  leaveGroup,
 } from "./communityThunks";
 
 export interface CommunityTypes {
@@ -128,6 +129,16 @@ export const communitiesSlice = createSlice({
         state.joinGroup.communityId = null;
         state.joinGroup.error =
           action?.error.message ?? "Error fetching communities";
+      });
+    builder
+      .addCase(leaveGroup.pending, () => {
+        console.log("loading");
+      })
+      .addCase(leaveGroup.fulfilled, () => {
+        console.log("fulfilled");
+      })
+      .addCase(leaveGroup.rejected, () => {
+        console.log("rejected");
       });
   },
 });
