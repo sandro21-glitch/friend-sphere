@@ -47,6 +47,7 @@ interface CommunityState {
   joinGroup: {
     loading: boolean;
     error: string | null;
+    communityId: string | null;
   };
 }
 
@@ -64,6 +65,7 @@ const initialState: CommunityState = {
   joinGroup: {
     loading: false,
     error: null,
+    communityId: null,
   },
 };
 
@@ -108,7 +110,9 @@ export const communitiesSlice = createSlice({
         state.joinGroup.loading = true;
       })
       .addCase(joinGroup.fulfilled, (state, action) => {
-         // Add the joined group to communityData if it's not already there
+        state.joinGroup.loading = false;
+        state.joinGroup.communityId = action.payload.communityUid;
+        // add the joined group to communityData if it's not already there
         if (state.communityData) {
           state.communityData.push(action.payload.communityToUpdate);
         }
@@ -120,6 +124,8 @@ export const communitiesSlice = createSlice({
         }
       })
       .addCase(joinGroup.rejected, (state, action) => {
+        state.joinGroup.loading = false;
+        state.joinGroup.communityId = null;
         state.joinGroup.error =
           action?.error.message ?? "Error fetching communities";
       });
