@@ -34,7 +34,7 @@ const LeaveGroupActions = () => {
       <button
         type="button"
         onClick={handleCancelLeave}
-        className="border w-1/2 px-2 py-1 rounded-md text-gray-500 hover:bg-gray-200 text-[14px] transition-colors ease-in duration-150"
+        className="border w-1/2 px-2 py-2 rounded-md text-gray-500 hover:bg-gray-200 text-[14px] transition-colors ease-in duration-150"
       >
         Cancel
       </button>
