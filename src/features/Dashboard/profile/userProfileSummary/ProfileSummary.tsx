@@ -1,9 +1,10 @@
-import Summary from "./Summary";
+import SummaryDate from "./SummaryDate";
+
 
 const ProfileSummary = () => {
   return (
     <div className="bg-white  border rounded-md p-5 flex flex-col gap-2">
-      <Summary />
+      <SummaryDate />
       <div className="flex justify-between items-center text-[14px]">
         <p className="text-gray-500">Total Posts</p>
         <p>3</p>
