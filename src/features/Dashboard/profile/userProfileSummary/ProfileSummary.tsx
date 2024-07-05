@@ -1,4 +1,5 @@
 import SummaryDate from "./SummaryDate";
+import TotalCommunities from "./TotalCommunities";
 
 
 const ProfileSummary = () => {
@@ -9,10 +10,7 @@ const ProfileSummary = () => {
         <p className="text-gray-500">Total Posts</p>
         <p>3</p>
       </div>
-      <div className="flex justify-between items-center text-[14px]">
-        <p className="text-gray-500">Total Communities</p>
-        <p>9</p>
-      </div>
+      <TotalCommunities />
       <div className="flex justify-between items-center text-[14px]">
         <p className="text-gray-500">Posts in Communities</p>
         <p>3 in 3 communities</p>
