@@ -13,7 +13,7 @@ const Modals = () => {
     leaveCommunity.isModalOpen;
   if (!isAnyModalOpen) return null;
   return (
-    <div className="w-full h-full absolute inset-0 flex items-center justify-center z-[9999] min-h-screen">
+    <div className="w-full h-full fixed inset-0 flex items-center justify-center z-[9999] min-h-screen">
       <div className="fixed inset-0 bg-black opacity-30"></div>
       <div className="z-[9999]">
         {updateProfileModal ? (
