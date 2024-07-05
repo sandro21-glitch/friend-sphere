@@ -10,7 +10,7 @@ import PostFeed from "./features/Dashboard/postFeed/PostFeed";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import PublicRoute from "./ui/PublicRoute";
 import Community from "./features/Dashboard/communities/Community";
-import SingleComunityPage from "./features/Dashboard/singleCommunity/SingleComunityPage";
+import SingleComunityPage from "./features/Dashboard/singleCommunityFeed/SingleComunityPage";
 
 const router = createBrowserRouter([
   {
