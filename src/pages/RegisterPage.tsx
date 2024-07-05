@@ -7,12 +7,14 @@ import Logo from "../ui/Logo";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { registerUser } from "../slices/user/authThunks";
 import { useNavigate } from "react-router-dom";
-import { fetchCommunities } from "../slices/community/communityThunks";
+import { fetchUserCommunities } from "../slices/community/communityThunks";
+
 interface RegisterUser {
   name: string;
   email: string;
   password: string;
 }
+
 const RegisterPage = () => {
   const [registerUserForm, setRegisterUserForm] = useState<RegisterUser>({
     name: "",
@@ -26,11 +28,24 @@ const RegisterPage = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await dispatch(registerUser(registerUserForm));
-      await dispatch(fetchCommunities());
-      navigate("/home");
+      const resultAction = await dispatch(registerUser(registerUserForm));
+
+      if (registerUser.fulfilled.match(resultAction)) {
+        const { uid } = resultAction.payload;
+        if (uid) {
+          await dispatch(fetchUserCommunities(uid));
+          navigate("/home");
+        } else {
+          console.error("No UID returned after registration");
+        }
+      } else {
+        const errorMessage = resultAction.payload
+          ? resultAction.payload
+          : resultAction.error.message;
+        console.error("Registration error:", errorMessage);
+      }
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error("Error during registration:", error);
     }
   };
 
