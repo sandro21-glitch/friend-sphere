@@ -1,6 +1,6 @@
 import { useAppSelector } from "../../../../hooks/reduxHooks";
 
-const Summary: React.FC = () => {
+const SummaryDate: React.FC = () => {
   const registerDate = useAppSelector(
     (store) => store.auth.userData?.registeredDate
   );
@@ -46,4 +46,4 @@ const Summary: React.FC = () => {
   );
 };
 
-export default Summary;
+export default SummaryDate;
