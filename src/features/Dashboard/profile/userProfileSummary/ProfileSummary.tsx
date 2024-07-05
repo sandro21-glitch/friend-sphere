@@ -1,7 +1,6 @@
 import SummaryDate from "./SummaryDate";
 import TotalCommunities from "./TotalCommunities";
 
-
 const ProfileSummary = () => {
   return (
     <div className="bg-white  border rounded-md p-5 flex flex-col gap-2">
