@@ -20,8 +20,8 @@ const GroupHeader = ({ postPage, setPostPage }: GroupHeaderTypes) => {
         onClick={() => setPostPage("following")}
         className={`p-2 rounded-md w-full text-center cursor-pointer ${
           postPage === "following"
-            ? "bg-azure-blue"
-            : "border-b-2 border-transparent hover:border-gray-400"
+            ? "bg-azure-blue text-white"
+            : "border-b-2 border-transparent hover:border-gray-400 text-gray-500"
         }`}
       >
         You're following
