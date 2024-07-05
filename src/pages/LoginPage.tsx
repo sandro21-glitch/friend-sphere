@@ -31,8 +31,6 @@ const LoginPage = () => {
       if (loginUser.fulfilled.match(resultAction)) {
         const { uid } = resultAction.payload.userProfile;
         if (uid) {
-          console.log(uid);
-
           await dispatch(fetchUserCommunities(uid));
           navigate("/home");
         } else {
