@@ -3,13 +3,14 @@ import JoinCommunityPopupActions from "./JoinCommunityPopupActions";
 import JoinCommunityPopupHeader from "./JoinCommunityPopupHeader";
 
 const JoinCommunityPopup = () => {
-    const joinCommunity = useAppSelector((store) => store.modals.joinCommunity);
+  const joinCommunity = useAppSelector((store) => store.modals.joinCommunity);
 
   if (!joinCommunity.communityData) {
     return null;
   }
 
-  const { communityId, communityName, membersCount } = joinCommunity.communityData;
+  const { communityId, communityName, membersCount } =
+    joinCommunity.communityData;
 
   return (
     <div className="w-full max-w-[28rem] h-auto bg-white p-5 flex justify-center flex-col items-center rounded-md">
