@@ -8,21 +8,23 @@ import { CommunityTypes } from "../community/communitySlice";
 interface AddPostPayload {
   communityId: string;
   post: {
+    userName: string;
+    postId: string;
     userId: string;
     userPost: string;
-    likedBy: string[];
+    likedBy: string[] | null;
     postComments:
       | {
           userComment: string;
           userId: string;
         }[]
       | null;
+    createdAt: string;
+    groupName: string;
   };
 }
-
-// add community post
 export const addPostToCommunity = createAsyncThunk<
-  { post: any; communityId: string },
+  { post: UserPostTypes; communityId: string },
   AddPostPayload,
   { state: RootState }
 >("communities/addPostToCommunity", async (payload) => {

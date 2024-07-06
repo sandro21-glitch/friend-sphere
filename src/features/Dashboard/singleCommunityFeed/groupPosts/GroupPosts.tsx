@@ -6,7 +6,7 @@ const GroupPosts = () => {
   if (!groupPosts) return <p>No posts</p>;
   return (
     <div className="py-5 px-2">
-      <ul>
+      <ul className="flex flex-col gap-5">
         {groupPosts?.map((post) => {
           return <SingleGroupPost key={post.postId} post={post} />;
         })}

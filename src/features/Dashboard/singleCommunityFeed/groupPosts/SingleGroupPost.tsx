@@ -1,12 +1,19 @@
 import { BiComment, BiLike } from "react-icons/bi";
 import { UserPostTypes } from "../../../../slices/posts/postsSlice";
+import { formatDistanceToNow, parseISO } from "date-fns";
 
 type SinglePostTypes = {
   post: UserPostTypes;
 };
-
 const SingleGroupPost = ({ post }: SinglePostTypes) => {
-  const { createdAt, userPost, userName, groupName, likedBy,postComments } = post;
+  const { createdAt, userPost, userName, groupName, likedBy, postComments } = post;
+
+  // Parse the createdAt string into a Date object
+  const parsedCreatedAt = parseISO(createdAt);
+
+  // Format the distance to now in a human-readable format
+  const createdAtDistance = formatDistanceToNow(parsedCreatedAt, { addSuffix: true });
+
   return (
     <li className="border rounded-md p-4">
       <div className="flex justify-between items-start mb-3">
@@ -16,12 +23,12 @@ const SingleGroupPost = ({ post }: SinglePostTypes) => {
             alt="user img"
             className="w-14 h-14 rounded-full"
           />
-          <div>
+          <div className="leading-5">
             <p className="font-semibold text-[18px]">{userName}</p>
             <p className="text-[14px]">{groupName}</p>
           </div>
         </div>
-        <p className="text-[16px]">{createdAt}</p>
+        <p className="text-[16px]">{createdAtDistance}</p> {/* Display the formatted distance */}
       </div>
       <p className="mb-5">{userPost}</p>
       <div className="flex items-center gap-4">

@@ -34,7 +34,7 @@ export interface CommunityTypes {
           userId: string;
         }[]
       | null;
-    createdAt: number;
+    createdAt: string;
   }[];
 }
 

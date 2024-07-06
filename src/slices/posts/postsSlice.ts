@@ -13,7 +13,7 @@ export interface UserPostTypes {
         userId: string;
       }[]
     | null;
-  createdAt: number;
+  createdAt: string;
   groupName: string;
 }
 
@@ -53,8 +53,9 @@ export const postsSlice = createSlice({
       })
       .addCase(addPostToCommunity.fulfilled, (state, action) => {
         state.loading.adding = false;
-        // You may want to update the local state here if necessary
-        console.log(action.payload);
+        if (state.communityPosts) {
+          state.communityPosts.push(action.payload.post);
+        }
       })
       .addCase(addPostToCommunity.rejected, (state, action) => {
         state.loading.adding = false;
