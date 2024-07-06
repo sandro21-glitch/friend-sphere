@@ -2,6 +2,7 @@ import { useState } from "react";
 import CreatePostBtn from "./CreatePostBtn";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { addPostToCommunity } from "../../../../slices/posts/postThunks";
+import { nanoid } from "nanoid";
 
 type GroupPostFormTypes = {
   groupId: string;
@@ -11,7 +12,12 @@ const GroupPostForm = ({ groupId }: GroupPostFormTypes) => {
   const [postText, setPostText] = useState("");
   const dispatch = useAppDispatch();
   const userId = useAppSelector((store) => store.auth.userData?.uid || null);
-
+  const userName = useAppSelector((store) => store.auth.userData?.name || null);
+  const groupName = useAppSelector(
+    (store) =>
+      store.communities.communityData?.find((group) => group.uid === groupId)
+        ?.name
+  );
   const handleAddPost = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -20,6 +26,9 @@ const GroupPostForm = ({ groupId }: GroupPostFormTypes) => {
     }
 
     const newPost = {
+      postId: nanoid(),
+      userName,
+      groupName,
       userId,
       userPost: postText,
       likedBy: [],
