@@ -50,7 +50,7 @@ export const addPostToCommunity = createAsyncThunk<
 
   const newPost = {
     ...post,
-    createdAt: new Date().toISOString(), 
+    createdAt: new Date().toISOString(),
   };
 
   const communityRef = ref(database, `communities/${communityKey}/posts`);
@@ -87,14 +87,17 @@ export const fetchCommunityPosts = createAsyncThunk<
           snapshot.forEach((childSnapshot) => {
             const community = childSnapshot.val() as CommunityTypes;
             if (community.uid === communityId) {
-              const communityPosts = community.posts || []; // Assuming posts are stored under 'posts' key in each community
-              communityPosts.forEach((post:UserPostTypes) => {
+              const communityPosts = community.posts || [];
+              communityPosts.forEach((post: UserPostTypes) => {
                 posts.push({
                   userId: post.userId,
                   userPost: post.userPost,
                   likedBy: post.likedBy,
                   postComments: post.postComments,
                   createdAt: post.createdAt,
+                  userName: post.userName,
+                  postId: post.postId,
+                  groupName: post.groupName,
                 });
               });
             }
