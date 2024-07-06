@@ -24,7 +24,7 @@ export interface CommunityTypes {
   posts: {
     userid: string;
     userPost: string;
-    postLikes: number;
+    likedBy: string[];
     postComments:
       | {
           userComment: string;
