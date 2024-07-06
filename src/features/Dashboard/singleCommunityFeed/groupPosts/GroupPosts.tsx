@@ -1,9 +1,18 @@
-
+import { useAppSelector } from "../../../../hooks/reduxHooks";
+import SingleGroupPost from "./SingleGroupPost";
 
 const GroupPosts = () => {
+  const groupPosts = useAppSelector((store) => store.posts.communityPosts);
+  if (!groupPosts) return <p>No posts</p>;
   return (
-    <div>GroupPosts</div>
-  )
-}
+    <div className="py-5 px-2">
+      <ul>
+        {groupPosts?.map((post) => {
+          return <SingleGroupPost key={post.postId} post={post} />;
+        })}
+      </ul>
+    </div>
+  );
+};
 
-export default GroupPosts
+export default GroupPosts;
