@@ -6,13 +6,12 @@ type SinglePostTypes = {
   post: UserPostTypes;
 };
 const SingleGroupPost = ({ post }: SinglePostTypes) => {
-  const { createdAt, userPost, userName, groupName, likedBy, postComments } = post;
-
-  // Parse the createdAt string into a Date object
-  const parsedCreatedAt = parseISO(createdAt);
+  const { createdAt, userPost, userName, groupName, likedBy, postComments } =
+    post;
+  const parsedDate = parseISO(createdAt);
 
   // Format the distance to now in a human-readable format
-  const createdAtDistance = formatDistanceToNow(parsedCreatedAt, { addSuffix: true });
+  const timeAgo = formatDistanceToNow(parsedDate, { addSuffix: true });
 
   return (
     <li className="border rounded-md p-4">
@@ -28,7 +27,7 @@ const SingleGroupPost = ({ post }: SinglePostTypes) => {
             <p className="text-[14px]">{groupName}</p>
           </div>
         </div>
-        <p className="text-[16px]">{createdAtDistance}</p> {/* Display the formatted distance */}
+        <p className="text-[16px]">{timeAgo}</p>
       </div>
       <p className="mb-5">{userPost}</p>
       <div className="flex items-center gap-4">
