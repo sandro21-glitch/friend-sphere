@@ -22,6 +22,9 @@ export interface CommunityTypes {
       }[]
     | null;
   posts: {
+    userName: string;
+    groupName: string;
+    postId: string;
     userId: string;
     userPost: string;
     likedBy: string[] | null;
