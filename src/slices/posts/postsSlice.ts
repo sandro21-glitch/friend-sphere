@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addPostToCommunity, fetchCommunityPosts } from "./postThunks";
 
 export interface UserPostTypes {
+  userName: string;
+  postId: string;
   userId: string;
   userPost: string;
   likedBy: string[] | null;
@@ -12,6 +14,7 @@ export interface UserPostTypes {
       }[]
     | null;
   createdAt: number;
+  groupName: string;
 }
 
 interface PostsState {
