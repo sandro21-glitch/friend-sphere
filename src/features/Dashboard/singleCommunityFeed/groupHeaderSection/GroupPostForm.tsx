@@ -18,7 +18,7 @@ const GroupPostForm = ({ groupId }: GroupPostFormTypes) => {
       store.communities.communityData?.find((group) => group.uid === groupId)
         ?.name
   );
-  const handleAddPost = (e: React.FormEvent) => {
+  const handleAddPost = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!userId) {
@@ -35,7 +35,7 @@ const GroupPostForm = ({ groupId }: GroupPostFormTypes) => {
       postComments: null,
     };
 
-    dispatch(addPostToCommunity({ communityId: groupId, post: newPost }));
+    await dispatch(addPostToCommunity({ communityId: groupId, post: newPost }));
     setPostText("");
   };
 
