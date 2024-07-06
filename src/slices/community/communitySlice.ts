@@ -22,16 +22,17 @@ export interface CommunityTypes {
       }[]
     | null;
   posts: {
-    userid: string;
+    userId: string;
     userPost: string;
-    likedBy: string[];
+    likedBy: string[] | null;
     postComments:
       | {
           userComment: string;
-          userid: string;
+          userId: string;
         }[]
       | null;
-  };
+    createdAt: number;
+  }[];
 }
 
 interface CommunityState {
