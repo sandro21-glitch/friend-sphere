@@ -1,26 +1,29 @@
-import { BiComment, BiLike } from "react-icons/bi";
-import { useAppDispatch } from "../../../../hooks/reduxHooks";
+import { BiComment, BiLike, BiSolidLike } from "react-icons/bi";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { likePost } from "../../../../slices/posts/postThunks";
 
 type PostActionTypes = {
-  likedByLength: number;
+  likedBy: string[];
   postCommentLength: number;
-  userId: string;
   postId: string;
   communityId: string;
 };
 
 const PostActions = ({
-  likedByLength,
+  likedBy,
   postCommentLength,
-  userId,
   postId,
   communityId,
 }: PostActionTypes) => {
+  const userId = useAppSelector((store) => store.auth.userData?.uid);
   const dispatch = useAppDispatch();
   const handleLikePost = () => {
-    dispatch(likePost({ postId, userId, communityId }));
+    if (userId) {
+      dispatch(likePost({ postId, userId, communityId }));
+    }
   };
+
+  const isPostLiked = likedBy.some((likedId) => likedId === userId);
 
   return (
     <div className="flex items-center gap-4">
@@ -29,8 +32,14 @@ const PostActions = ({
         onClick={handleLikePost}
         className="flex items-center gap-1"
       >
-        <BiLike className=" text-[1.5rem]" />
-        <span className="text-[16px] font-semibold">{likedByLength}</span>
+        {isPostLiked ? (
+          <BiSolidLike className=" text-[1.5rem]" />
+        ) : (
+          <BiLike className=" text-[1.5rem]" />
+        )}
+        <span className="text-[16px] font-semibold">
+          {likedBy?.length || 0}
+        </span>
       </button>
       <button className="flex items-center gap-1">
         <BiComment className="text-[1.3rem]" />
