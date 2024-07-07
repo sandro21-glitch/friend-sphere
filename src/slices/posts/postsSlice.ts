@@ -88,13 +88,30 @@ export const postsSlice = createSlice({
       .addCase(likePost.pending, (state) => {
         state.loading.liking = true;
       })
-      .addCase(likePost.fulfilled, (state) => {
+      .addCase(likePost.fulfilled, (state, action) => {
         state.loading.liking = false;
+        const { postId, userId } = action.payload;
+        if (state.communityPosts) {
+          state.communityPosts = state.communityPosts?.map((post) =>
+            post.postId === postId
+              ? {
+                  ...post,
+                  likedBy: post.likedBy
+                    ? post.likedBy.includes(userId)
+                      ? post.likedBy.filter((id) => id !== userId) // remove userId if already liked
+                      : [...post.likedBy, userId] // add userId if not liked
+                    : [userId],
+                }
+              : post
+          );
+        }
       })
+
       .addCase(likePost.rejected, (state, action) => {
         state.loading.liking = false;
-        state.error.likingError =
-          (action.payload as string) || "Liking post rejected";
+        state.error.likingError = action.payload
+          ? action.payload.toString()
+          : "Unknown error";
       });
   },
 });
