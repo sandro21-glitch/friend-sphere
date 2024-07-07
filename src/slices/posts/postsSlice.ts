@@ -112,6 +112,7 @@ export const postsSlice = createSlice({
         state.error.likingError = action.payload
           ? action.payload.toString()
           : "Unknown error";
+        alert(state.error.likingError);
       });
   },
 });
