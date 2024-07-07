@@ -62,7 +62,11 @@ export const postsSlice = createSlice({
       .addCase(addPostToCommunity.fulfilled, (state, action) => {
         state.loading.adding = false;
         if (state.communityPosts) {
-          state.communityPosts.push(action.payload.post);
+          const newPost = {
+            ...action.payload.post,
+            createdAt: new Date().toISOString(),
+          };
+          state.communityPosts.push(newPost);
         }
       })
       .addCase(addPostToCommunity.rejected, (state, action) => {
