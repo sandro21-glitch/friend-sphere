@@ -15,6 +15,9 @@ const PostActions = ({
   postId,
   communityId,
 }: PostActionTypes) => {
+  const {
+    loading: { liking },
+  } = useAppSelector((store) => store.posts);
   const userId = useAppSelector((store) => store.auth.userData?.uid);
   const dispatch = useAppDispatch();
   const handleLikePost = () => {
@@ -30,7 +33,9 @@ const PostActions = ({
       <button
         type="button"
         onClick={handleLikePost}
-        className="flex items-center gap-1"
+        className={`flex items-center gap-1 ${
+          liking ? "cursor-wait" : "cursor-pointers"
+        }`}
       >
         {isPostLiked ? (
           <BiSolidLike className=" text-[1.5rem]" />
