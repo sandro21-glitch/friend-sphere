@@ -1,5 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addPostToCommunity, fetchCommunityPosts } from "./postThunks";
+import {
+  addPostToCommunity,
+  fetchCommunityPosts,
+  likePost,
+} from "./postThunks";
 
 export interface UserPostTypes {
   userName: string;
@@ -22,10 +26,12 @@ interface PostsState {
   loading: {
     fetching: boolean;
     adding: boolean;
+    liking: boolean;
   };
   error: {
     fetchingError: string | null;
     addingError: string | null;
+    likingError: string | null;
   };
 }
 [];
@@ -35,10 +41,12 @@ const initialState: PostsState = {
   loading: {
     fetching: false,
     adding: false,
+    liking: false,
   },
   error: {
     fetchingError: null,
     addingError: null,
+    likingError: null,
   },
 };
 
@@ -75,6 +83,18 @@ export const postsSlice = createSlice({
       .addCase(fetchCommunityPosts.rejected, (state, action) => {
         state.loading.fetching = false;
         state.error.fetchingError = action.payload || "fetching posts rejected";
+      });
+    builder
+      .addCase(likePost.pending, (state) => {
+        state.loading.liking = true;
+      })
+      .addCase(likePost.fulfilled, (state) => {
+        state.loading.liking = false;
+      })
+      .addCase(likePost.rejected, (state, action) => {
+        state.loading.liking = false;
+        state.error.likingError =
+          (action.payload as string) || "Liking post rejected";
       });
   },
 });
