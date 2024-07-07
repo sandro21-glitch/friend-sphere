@@ -122,57 +122,66 @@ export const fetchCommunityPosts = createAsyncThunk<
     return rejectWithValue(error.message || "Error fetching community posts");
   }
 });
-
-//like post
+// like post
 export const likePost = createAsyncThunk<
   { postId: string; communityId: string; userId: string },
   LikePostPayload,
   { state: RootState }
->("posts/likePost", async (payload) => {
+>("posts/likePost", async (payload, thunkAPI) => {
   const { communityId, postId, userId } = payload;
-  const communitiesRef = ref(database, "communities");
-  const snapshot = await get(communitiesRef);
 
-  if (!snapshot.exists()) {
-    throw new Error("Communities not found");
-  }
+  try {
+    const communitiesRef = ref(database, "communities");
+    const snapshot = await get(communitiesRef);
 
-  let communityKey: string | null = null;
-  let postKey: string | null = null;
-
-  snapshot.forEach((childSnapshot) => {
-    const community = childSnapshot.val();
-    if (community.uid === communityId) {
-      communityKey = childSnapshot.key;
-      const posts = community.posts || [];
-      posts.forEach((post: UserPostTypes, index: number) => {
-        if (post.postId === postId) {
-          postKey = index.toString();
-        }
-      });
+    if (!snapshot.exists()) {
+      throw new Error("Communities not found");
     }
-  });
 
-  if (!communityKey || !postKey) {
-    throw new Error("Community or post not found");
-  }
+    let communityKey: string | null = null;
+    let postKey: string | null = null;
 
-  const postRef = ref(
-    database,
-    `communities/${communityKey}/posts/${postKey}/likedBy`
-  );
-  const postSnapshot = await get(postRef);
-  const likedBy = postSnapshot.exists() ? postSnapshot.val() : [];
+    snapshot.forEach((childSnapshot) => {
+      const community = childSnapshot.val();
+      if (community.uid === communityId) {
+        communityKey = childSnapshot.key;
+        const posts = community.posts || [];
+        posts.forEach((post: UserPostTypes, index: number) => {
+          if (post.postId === postId) {
+            postKey = index.toString();
+          }
+        });
+      }
+    });
 
-  if (!likedBy.includes(userId)) {
-    likedBy.push(userId);
+    if (!communityKey || !postKey) {
+      throw new Error("Community or post not found");
+    }
+
+    const postRef = ref(
+      database,
+      `communities/${communityKey}/posts/${postKey}/likedBy`
+    );
+    const postSnapshot = await get(postRef);
+    let likedBy = postSnapshot.exists() ? postSnapshot.val() : [];
+
+    if (likedBy.includes(userId)) {
+      // Remove user's like
+      likedBy = likedBy.filter((id: string) => id !== userId);
+    } else {
+      // Add user's like
+      likedBy.push(userId);
+    }
+
     await update(
       ref(database, `communities/${communityKey}/posts/${postKey}`),
       {
         likedBy,
       }
     );
-  }
 
-  return { postId, communityId, userId };
+    return { postId, communityId, userId };
+  } catch (error:any) {
+    return thunkAPI.rejectWithValue(error.message || "Error liking/unliking post");
+  }
 });
