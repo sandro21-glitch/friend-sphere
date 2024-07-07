@@ -73,6 +73,11 @@ interface FetchCommunityPostsPayload {
   communityId: string;
 }
 
+interface LikePostPayload {
+  communityId: string;
+  postId: string;
+  userId: string;
+}
 export const fetchCommunityPosts = createAsyncThunk<
   UserPostTypes[],
   FetchCommunityPostsPayload,
@@ -116,4 +121,58 @@ export const fetchCommunityPosts = createAsyncThunk<
   } catch (error: any) {
     return rejectWithValue(error.message || "Error fetching community posts");
   }
+});
+
+//like post
+export const likePost = createAsyncThunk<
+  { postId: string; communityId: string; userId: string },
+  LikePostPayload,
+  { state: RootState }
+>("posts/likePost", async (payload) => {
+  const { communityId, postId, userId } = payload;
+  const communitiesRef = ref(database, "communities");
+  const snapshot = await get(communitiesRef);
+
+  if (!snapshot.exists()) {
+    throw new Error("Communities not found");
+  }
+
+  let communityKey: string | null = null;
+  let postKey: string | null = null;
+
+  snapshot.forEach((childSnapshot) => {
+    const community = childSnapshot.val();
+    if (community.uid === communityId) {
+      communityKey = childSnapshot.key;
+      const posts = community.posts || [];
+      posts.forEach((post: UserPostTypes, index: number) => {
+        if (post.postId === postId) {
+          postKey = index.toString();
+        }
+      });
+    }
+  });
+
+  if (!communityKey || !postKey) {
+    throw new Error("Community or post not found");
+  }
+
+  const postRef = ref(
+    database,
+    `communities/${communityKey}/posts/${postKey}/likedBy`
+  );
+  const postSnapshot = await get(postRef);
+  const likedBy = postSnapshot.exists() ? postSnapshot.val() : [];
+
+  if (!likedBy.includes(userId)) {
+    likedBy.push(userId);
+    await update(
+      ref(database, `communities/${communityKey}/posts/${postKey}`),
+      {
+        likedBy,
+      }
+    );
+  }
+
+  return { postId, communityId, userId };
 });
