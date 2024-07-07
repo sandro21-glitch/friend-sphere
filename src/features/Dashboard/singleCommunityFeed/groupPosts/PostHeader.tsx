@@ -17,7 +17,7 @@ const PostHeader = ({ groupName, timeAgo, userName }: PostHeaderTypes) => {
           <p className="text-[14px]">{groupName}</p>
         </div>
       </div>
-      <p className="text-[16px]">{timeAgo.replace("about", " ")}</p>
+      <p className="text-[14px] text-gray-500">{timeAgo.replace("about", " ")}</p>
     </div>
   );
 };
