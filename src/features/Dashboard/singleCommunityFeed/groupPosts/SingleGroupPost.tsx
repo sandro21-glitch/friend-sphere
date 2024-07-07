@@ -8,7 +8,7 @@ type SinglePostTypes = {
   post: UserPostTypes;
   communityId: string;
 };
-const SingleGroupPost = ({ post,communityId }: SinglePostTypes) => {
+const SingleGroupPost = ({ post, communityId }: SinglePostTypes) => {
   const {
     createdAt,
     userPost,
@@ -16,7 +16,6 @@ const SingleGroupPost = ({ post,communityId }: SinglePostTypes) => {
     groupName,
     likedBy,
     postComments,
-    userId,
     postId,
   } = post;
   const parsedDate = parseISO(createdAt);
@@ -25,13 +24,12 @@ const SingleGroupPost = ({ post,communityId }: SinglePostTypes) => {
   const timeAgo = formatDistanceToNow(parsedDate, { addSuffix: true });
 
   return (
-    <li className="border rounded-md p-4">
+    <li className="border rounded-md p-4 hover:shadow-lg transition-shadow ease-in duration-200">
       <PostHeader userName={userName} groupName={groupName} timeAgo={timeAgo} />
       <UserPost userPost={userPost} />
       <PostActions
-        likedByLength={likedBy?.length || 0}
+        likedBy={likedBy || []}
         postCommentLength={postComments?.length || 0}
-        userId={userId}
         postId={postId}
         communityId={communityId}
       />
