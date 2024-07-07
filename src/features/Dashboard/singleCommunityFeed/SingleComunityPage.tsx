@@ -43,7 +43,7 @@ const SingleComunityPage = () => {
     <section className="col-span-2 min-h-full h-full mt-5 bg-white">
       <GroupHeader postPage={postPage} setPostPage={setPostPage} />
       <GroupPostForm groupId={uid} />
-      <GroupPosts />
+      <GroupPosts communityId={communityData.uid} />
     </section>
   );
 };
