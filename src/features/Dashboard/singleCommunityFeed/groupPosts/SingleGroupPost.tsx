@@ -18,7 +18,7 @@ const SingleGroupPost = ({ post, communityId }: SinglePostTypes) => {
     likedBy,
     postComments,
     postId,
-    userId
+    userId,
   } = post;
   const parsedDate = parseISO(createdAt);
 
@@ -36,7 +36,11 @@ const SingleGroupPost = ({ post, communityId }: SinglePostTypes) => {
           postId={postId}
           communityId={communityId}
         />
-        <RemovePostBtn postUserId={userId} />
+        <RemovePostBtn
+          postUserId={userId}
+          communityId={communityId}
+          postId={postId}
+        />
       </div>
     </li>
   );
