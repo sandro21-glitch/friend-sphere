@@ -132,9 +132,12 @@ export const postsSlice = createSlice({
       })
       .addCase(removePost.fulfilled, (state, action) => {
         state.loading.removing = false;
-        // const { communityId, postId,userId } = action.payload;
-        console.log(action.payload);
-        
+        const { postId } = action.payload;
+        if (state.communityPosts) {
+          state.communityPosts = state.communityPosts.filter(
+            (post) => post.postId !== postId
+          );
+        }
       })
       .addCase(removePost.rejected, (state, action) => {
         state.loading.removing = false;
