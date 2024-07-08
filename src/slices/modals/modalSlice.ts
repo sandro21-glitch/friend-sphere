@@ -18,11 +18,20 @@ interface LeaveCommunityTypes {
     userId: string;
   } | null;
 }
+interface DeletePostModal {
+  isModalOpen: boolean;
+  dataIds: {
+    communityId: string;
+    postId: string;
+    userId: string;
+  } | null;
+}
 interface ModalState {
   userProfileModal: boolean;
   updateProfileModal: boolean;
   joinCommunity: joinCommunityTypes;
   leaveCommunity: LeaveCommunityTypes;
+  deletePostModal: DeletePostModal;
 }
 
 const initialState: ModalState = {
@@ -33,6 +42,10 @@ const initialState: ModalState = {
     communityData: null,
   },
   leaveCommunity: {
+    isModalOpen: false,
+    dataIds: null,
+  },
+  deletePostModal: {
     isModalOpen: false,
     dataIds: null,
   },
@@ -55,9 +68,13 @@ export const modalSlice = createSlice({
       state.joinCommunity.isModalOpen = action.payload.isModalOpen;
       state.joinCommunity.communityData = action.payload.communityData;
     },
-    setLeaveCommunity: (state, action:PayloadAction<LeaveCommunityTypes>) => {
+    setLeaveCommunity: (state, action: PayloadAction<LeaveCommunityTypes>) => {
       state.leaveCommunity.isModalOpen = action.payload.isModalOpen;
       state.leaveCommunity.dataIds = action.payload.dataIds;
+    },
+    setDeletePostModal: (state, action: PayloadAction<DeletePostModal>) => {
+      state.deletePostModal.isModalOpen = action.payload.isModalOpen;
+      state.deletePostModal.dataIds = action.payload.dataIds;
     },
   },
 });
@@ -67,6 +84,7 @@ export const {
   setUpdateProfileModal,
   setJoinCommunityModal,
   setLeaveCommunity,
+  setDeletePostModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;
