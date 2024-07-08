@@ -1,18 +1,36 @@
 import { GoTriangleDown } from "react-icons/go";
 import { RiDeleteBin3Line } from "react-icons/ri";
-import { useAppSelector } from "../../../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
+import { setDeletePostModal } from "../../../../slices/modals/modalSlice";
 
 type RemovePostBtnTypes = {
   postUserId: string;
+  communityId: string;
+  postId: string;
 };
 
-const RemovePostBtn = ({ postUserId }: RemovePostBtnTypes) => {
+const RemovePostBtn = ({
+  postUserId,
+  communityId,
+  postId,
+}: RemovePostBtnTypes) => {
   const currentUserId = useAppSelector((store) => store.auth.userData?.uid);
-
   if (currentUserId !== postUserId) return null;
 
+  const dispatch = useAppDispatch();
+
+  const handleRemovePost = () => {
+    dispatch(
+      setDeletePostModal({
+        isModalOpen: true,
+        dataIds: { communityId, postId, userId: postUserId },
+      })
+    );
+  };
+
+
   return (
-    <button className="relative group">
+    <button type="button" onClick={handleRemovePost} className="relative group">
       <RiDeleteBin3Line className="text-red-600 text-[1.5rem]" />
       <span
         className="absolute -top-9 -left-[26px] group-hover:block hidden w-fit text-nowrap
