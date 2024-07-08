@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { database } from "../../config/firebase";
-import { get, onValue, ref, update } from "firebase/database";
+import { get, onValue, ref, remove, update } from "firebase/database";
 import { RootState } from "../../store";
 import { UserPostTypes } from "./postsSlice";
 import { CommunityTypes } from "../community/communitySlice";
@@ -122,6 +122,7 @@ export const fetchCommunityPosts = createAsyncThunk<
     return rejectWithValue(error.message || "Error fetching community posts");
   }
 });
+
 // like post
 export const likePost = createAsyncThunk<
   { postId: string; communityId: string; userId: string },
@@ -181,7 +182,74 @@ export const likePost = createAsyncThunk<
     );
 
     return { postId, communityId, userId };
-  } catch (error:any) {
-    return thunkAPI.rejectWithValue(error.message || "Error liking/unliking post");
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.message || "Error liking/unliking post"
+    );
+  }
+});
+
+// payload type for the removePost action
+interface RemovePostPayload {
+  communityId: string;
+  postId: string;
+  userId: string;
+}
+
+//return type for the removePost action
+interface RemovePostResponse {
+  postId: string;
+  communityId: string;
+  userId: string;
+}
+// remove post
+export const removePost = createAsyncThunk<
+  RemovePostResponse,
+  RemovePostPayload,
+  { state: RootState }
+>("posts/removePost", async (payload, thunkAPI) => {
+  const { communityId, postId, userId } = payload;
+
+  try {
+    const communitiesRef = ref(database, "communities");
+    const snapshot = await get(communitiesRef);
+
+    if (!snapshot.exists()) {
+      throw new Error("Communities not found");
+    }
+
+    let communityKey: string | null = null;
+    let postKey: string | null = null;
+    let postOwnerId: string | null = null;
+
+    snapshot.forEach((childSnapshot) => {
+      const community = childSnapshot.val();
+      if (community.uid === communityId) {
+        communityKey = childSnapshot.key;
+        const posts = community.posts || [];
+        posts.forEach((post: UserPostTypes, index: number) => {
+          if (post.postId === postId) {
+            postKey = index.toString();
+            postOwnerId = post.userId; // Get the owner ID of the post
+          }
+        });
+      }
+    });
+
+    if (!communityKey || !postKey) {
+      throw new Error("Community or post not found");
+    }
+
+    // Check if the user is the owner of the post
+    if (postOwnerId !== userId) {
+      throw new Error("You are not authorized to delete this post");
+    }
+
+    // Remove the post from the database
+    await remove(ref(database, `communities/${communityKey}/posts/${postKey}`));
+
+    return { postId, communityId, userId };
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message || "Error removing post");
   }
 });
