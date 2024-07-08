@@ -23,6 +23,8 @@ interface AddPostPayload {
     groupName: string;
   };
 }
+
+//add post to the group
 export const addPostToCommunity = createAsyncThunk<
   { post: UserPostTypes; communityId: string },
   AddPostPayload,
