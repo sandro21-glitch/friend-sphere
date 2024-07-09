@@ -32,6 +32,7 @@ export interface CommunityTypes {
       | {
           userComment: string;
           userId: string;
+          userName: string;
         }[]
       | null;
     createdAt: string;
