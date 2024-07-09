@@ -17,6 +17,8 @@ interface AddPostPayload {
       | {
           userComment: string;
           userId: string;
+          userName: string;
+          postedAt: string;
         }[]
       | null;
     createdAt: string;
@@ -55,6 +57,12 @@ export const addPostToCommunity = createAsyncThunk<
   const newPost = {
     ...post,
     createdAt: new Date().toISOString(),
+    postComments: post.postComments
+    ? post.postComments.map((comment) => ({
+        ...comment,
+        postedAt: comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
+      }))
+    : null,
   };
 
   const communityRef = ref(database, `communities/${communityKey}/posts`);
@@ -97,17 +105,23 @@ export const fetchCommunityPosts = createAsyncThunk<
             const community = childSnapshot.val() as CommunityTypes;
             if (community.uid === communityId) {
               const communityPosts = community.posts || [];
-              communityPosts.forEach((post: UserPostTypes) => {
-                posts.push({
+              communityPosts.forEach((post: any) => {
+                const updatedPost: UserPostTypes = {
                   userId: post.userId,
                   userPost: post.userPost,
                   likedBy: post.likedBy,
-                  postComments: post.postComments,
+                  postComments: post.postComments
+                    ? post.postComments.map((comment: any) => ({
+                        ...comment,
+                        postedAt: comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
+                      }))
+                    : null,
                   createdAt: post.createdAt,
                   userName: post.userName,
                   postId: post.postId,
                   groupName: post.groupName,
-                });
+                };
+                posts.push(updatedPost);
               });
             }
           });
@@ -253,5 +267,77 @@ export const removePost = createAsyncThunk<
     return { postId, communityId, userId };
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message || "Error removing post");
+  }
+});
+
+interface AddCommentResponse {}
+interface AddCommentPayload {
+  postId: string;
+  comment: string;
+  communityId: string;
+}
+
+//add comment to post
+export const addCommentToPost = createAsyncThunk<
+  AddCommentResponse,
+  AddCommentPayload,
+  { state: RootState }
+>("posts/addCommentToPost", async (payload, thunkAPI) => {
+  const { communityId, postId, comment } = payload;
+
+  try {
+    const communitiesRef = ref(database, "communities");
+    const snapshot = await get(communitiesRef);
+
+    if (!snapshot.exists()) {
+      throw new Error("Communities not found");
+    }
+
+    let communityKey: string | null = null;
+    let postKey: string | null = null;
+
+    snapshot.forEach((childSnapshot) => {
+      const community = childSnapshot.val();
+      if (community.uid === communityId) {
+        communityKey = childSnapshot.key;
+        const posts = community.posts || [];
+        posts.forEach((post: UserPostTypes, index: number) => {
+          if (post.postId === postId) {
+            postKey = index.toString();
+          }
+        });
+      }
+    });
+
+    if (!communityKey || !postKey) {
+      throw new Error("Community or post not found");
+    }
+
+    const postRef = ref(
+      database,
+      `communities/${communityKey}/posts/${postKey}/postComments`
+    );
+    const postSnapshot = await get(postRef);
+    const postComments = postSnapshot.exists() ? postSnapshot.val() : [];
+
+    const newComment = {
+      ...comment,
+      createdAt: new Date().toISOString(),
+    };
+
+    const updatedComments = [...postComments, newComment];
+
+    await update(
+      ref(database, `communities/${communityKey}/posts/${postKey}`),
+      {
+        postComments: updatedComments,
+      }
+    );
+
+    return { postId, communityId, comment: newComment };
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.message || "Error adding comment to post"
+    );
   }
 });
