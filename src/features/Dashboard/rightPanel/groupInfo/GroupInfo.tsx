@@ -1,7 +1,7 @@
 import { RiGroup3Fill } from "react-icons/ri";
-import { useAppSelector } from "../../../hooks/reduxHooks";
-import GroupRules from "./groupInfo/GroupRules";
-import LeaveGroup from "./groupInfo/LeaveGroup";
+import { useAppSelector } from "../../../../hooks/reduxHooks";
+import GroupRules from "./GroupRules";
+import LeaveGroup from "./LeaveGroup";
 
 type GroupInfoTypes = {
   id: string;

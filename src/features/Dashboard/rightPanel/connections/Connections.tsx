@@ -1,5 +1,5 @@
-import PopularUsers from "./connections/PopularUsers";
-import SuggestedCommunities from "./connections/SuggestedCommunities";
+import PopularUsers from "./PopularUsers";
+import SuggestedCommunities from "./SuggestedCommunities";
 
 const Connections = () => {
   return (
