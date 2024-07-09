@@ -27,12 +27,13 @@ const GroupPostForm = ({ groupId }: GroupPostFormTypes) => {
 
     const newPost = {
       postId: nanoid(),
-      userName,
-      groupName,
+      userName: userName || "",
+      groupName: groupName || "",
       userId,
       userPost: postText,
       likedBy: [],
       postComments: null,
+      createdAt: new Date().toISOString(),
     };
 
     await dispatch(addPostToCommunity({ communityId: groupId, post: newPost }));
