@@ -4,7 +4,7 @@ import { CiSaveDown2 } from "react-icons/ci";
 import ActionDropdown from "../../../ui/ActionDropdown";
 const PostCommentActions = () => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between mb-5">
       <div className="flex items-center gap-5">
         <button type="button" className="flex items-center gap-1">
           <BiLike className=" text-[1.5rem]" />
