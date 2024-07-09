@@ -4,18 +4,26 @@ import { likePost } from "../../../../slices/posts/postThunks";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-type PostActionTypes = {
+export interface PostActionTypes {
   likedBy: string[];
   postCommentLength: number;
   postId: string;
   communityId: string;
-};
+  timeAgo: string;
+  userName: string;
+  groupName: string;
+  userPost: string;
+}
 
 const PostActions = ({
   likedBy,
   postCommentLength,
   postId,
   communityId,
+  timeAgo,
+  userName,
+  groupName,
+  userPost
 }: PostActionTypes) => {
   const {
     loading: { liking },
@@ -59,7 +67,22 @@ const PostActions = ({
         )}
         <span className="text-[16px] font-semibold">{localLikedCount}</span>
       </button>
-      <Link to={`/post/${postId}`} className="flex items-center gap-1">
+      <Link
+        to={`/post/${postId}`}
+        state={{
+          postInfo: {
+            likedBy,
+            postCommentLength,
+            postId,
+            communityId,
+            timeAgo,
+            userName,
+            groupName,
+            userPost
+          },
+        }}
+        className="flex items-center gap-1"
+      >
         <BiComment className="text-[1.3rem]" />
         <span className="text-[16px] font-semibold">{postCommentLength}</span>
       </Link>
