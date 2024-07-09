@@ -1,7 +1,17 @@
 import { IoChevronBack } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
-const PostCommentsHeader = () => {
+type CommentsHeaderTypes = {
+  groupName: string;
+  userName: string;
+  timeAgo: string;
+};
+
+const PostCommentsHeader = ({
+  groupName,
+  timeAgo,
+  userName,
+}: CommentsHeaderTypes) => {
   return (
     <div className="mb-5">
       <button
@@ -19,14 +29,16 @@ const PostCommentsHeader = () => {
           />
           <div className="flex flex-col">
             <Link to="" className="text-[1rem] font-medium">
-              DemoUser
+              {userName}
             </Link>
             <Link to="" className="text-[.7rem] text-gray-500">
-              Music
+              {groupName}
             </Link>
           </div>
         </div>
-        <p className="text-[.8rem] text-gray-500">June 1st, 2024 9:08 PM</p>
+        <p className="text-[.8rem] text-gray-500">
+          {timeAgo.replace("about", " ")}
+        </p>
       </div>
     </div>
   );
