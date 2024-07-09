@@ -17,6 +17,7 @@ export interface UserPostTypes {
         userComment: string;
         userId: string;
         userName: string;
+        postedAt: string;
       }[]
     | null;
   createdAt: string;
