@@ -2,6 +2,7 @@ import { BiComment, BiLike, BiSolidLike } from "react-icons/bi";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { likePost } from "../../../../slices/posts/postThunks";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 type PostActionTypes = {
   likedBy: string[];
@@ -58,10 +59,10 @@ const PostActions = ({
         )}
         <span className="text-[16px] font-semibold">{localLikedCount}</span>
       </button>
-      <button className="flex items-center gap-1">
+      <Link to={`/post/${postId}`} className="flex items-center gap-1">
         <BiComment className="text-[1.3rem]" />
         <span className="text-[16px] font-semibold">{postCommentLength}</span>
-      </button>
+      </Link>
     </div>
   );
 };
