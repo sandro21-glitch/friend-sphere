@@ -29,8 +29,11 @@ const PostComments = () => {
           timeAgo={timeAgo}
         />
         <PostCommentText userPost={userPost} />
-        <PostCommentActions />
-        <PostCommentForm />
+        <PostCommentActions
+          likedBy={likedBy}
+          postCommentLength={postCommentLength}
+        />
+        <PostCommentForm communityId={communityId} postId={postId} />
       </div>
     </section>
   );
