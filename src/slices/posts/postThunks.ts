@@ -270,71 +270,92 @@ export const removePost = createAsyncThunk<
   }
 });
 
-interface AddCommentResponse {}
+// ADD COMMENT TO POST
 interface AddCommentPayload {
-  postId: string;
-  comment: string;
   communityId: string;
+  postId: string;
+  postComment: {
+    userComment: string;
+    userId: string;
+    userName: string;
+    postedAt?: string;
+  };
 }
 
-//add comment to post
+interface AddCommentResponse {
+  postId: string;
+  communityId: string;
+  comment: {
+    userComment: string;
+    userId: string;
+    userName: string;
+    postedAt: string;
+  };
+}
 export const addCommentToPost = createAsyncThunk<
   AddCommentResponse,
   AddCommentPayload,
   { state: RootState }
 >("posts/addCommentToPost", async (payload, thunkAPI) => {
-  const { communityId, postId, comment } = payload;
+  const { communityId, postId, postComment } = payload;
 
   try {
+    // Find the specific community
     const communitiesRef = ref(database, "communities");
-    const snapshot = await get(communitiesRef);
+    const communitiesSnapshot = await get(communitiesRef);
 
-    if (!snapshot.exists()) {
+    if (!communitiesSnapshot.exists()) {
       throw new Error("Communities not found");
     }
 
-    let communityKey: string | null = null;
-    let postKey: string | null = null;
+    let updatedComment: AddCommentResponse | null = null;
 
-    snapshot.forEach((childSnapshot) => {
-      const community = childSnapshot.val();
-      if (community.uid === communityId) {
-        communityKey = childSnapshot.key;
-        const posts = community.posts || [];
-        posts.forEach((post: UserPostTypes, index: number) => {
+    communitiesSnapshot.forEach((communitySnapshot) => {
+      const community = communitySnapshot.val();
+      if (community.posts) {
+        // Find the specific post within the community's posts array
+        const updatedPosts = community.posts.map((post: UserPostTypes) => {
           if (post.postId === postId) {
-            postKey = index.toString();
+            // Ensure postComments is initialized if it doesn't exist
+            if (!post.postComments) {
+              post.postComments = [];
+            }
+
+            // Create a new comment object
+            const newComment = {
+              ...postComment,
+              postedAt: postComment.postedAt || new Date().toISOString(),
+            };
+
+            // Push the new comment to postComments array
+            post.postComments.push(newComment);
+
+            // Update the post's comments in Firebase
+            update(ref(database, `communities/${communitySnapshot.key}/posts`), {
+              [post.postId]: {
+                ...post,
+                postComments: post.postComments,
+              }
+            });
+
+            updatedComment = { postId, communityId, comment: newComment };
           }
+
+          return post;
+        });
+
+        // Update the community's posts with the updated array
+        update(ref(database, `communities/${communitySnapshot.key}`), {
+          posts: updatedPosts,
         });
       }
     });
 
-    if (!communityKey || !postKey) {
-      throw new Error("Community or post not found");
+    if (!updatedComment) {
+      throw new Error("Post not found");
     }
 
-    const postRef = ref(
-      database,
-      `communities/${communityKey}/posts/${postKey}/postComments`
-    );
-    const postSnapshot = await get(postRef);
-    const postComments = postSnapshot.exists() ? postSnapshot.val() : [];
-
-    const newComment = {
-      ...comment,
-      createdAt: new Date().toISOString(),
-    };
-
-    const updatedComments = [...postComments, newComment];
-
-    await update(
-      ref(database, `communities/${communityKey}/posts/${postKey}`),
-      {
-        postComments: updatedComments,
-      }
-    );
-
-    return { postId, communityId, comment: newComment };
+    return updatedComment;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.message || "Error adding comment to post"
