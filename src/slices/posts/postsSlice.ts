@@ -161,6 +161,19 @@ export const postsSlice = createSlice({
       .addCase(addCommentToPost.fulfilled, (state, action) => {
         state.loading.commenting = false;
         const { comment, communityId, postId } = action.payload;
+
+        if (state.communityPosts) {
+          state.communityPosts = state.communityPosts.map((post) => {
+            if (post.postId === postId) {
+              return {
+                ...post,
+                postComments: [...(post.postComments || []), comment],
+              };
+            }
+            return post;
+          });
+        }
+
         console.log(comment, communityId, postId);
       })
       .addCase(addCommentToPost.rejected, (state, action) => {
