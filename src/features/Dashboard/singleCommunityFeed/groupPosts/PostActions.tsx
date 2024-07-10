@@ -23,7 +23,7 @@ const PostActions = ({
   timeAgo,
   userName,
   groupName,
-  userPost
+  userPost,
 }: PostActionTypes) => {
   const {
     loading: { liking },
@@ -78,7 +78,7 @@ const PostActions = ({
             timeAgo,
             userName,
             groupName,
-            userPost
+            userPost,
           },
         }}
         className="flex items-center gap-1"
