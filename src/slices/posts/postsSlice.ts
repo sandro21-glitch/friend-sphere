@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  addCommentToPost,
   addPostToCommunity,
   fetchCommunityPosts,
   likePost,
@@ -17,7 +18,7 @@ export interface UserPostTypes {
         userComment: string;
         userId: string;
         userName: string;
-        postedAt: string;
+        postedAt?: string;
       }[]
     | null;
   createdAt: string;
@@ -31,12 +32,14 @@ interface PostsState {
     adding: boolean;
     liking: boolean;
     removing: boolean;
+    commenting: boolean;
   };
   error: {
     fetchingError: string | null;
     addingError: string | null;
     likingError: string | null;
     removingError: string | null;
+    commentingError: string | null;
   };
 }
 [];
@@ -48,12 +51,14 @@ const initialState: PostsState = {
     adding: false,
     liking: false,
     removing: false,
+    commenting: false,
   },
   error: {
     fetchingError: null,
     addingError: null,
     likingError: null,
     removingError: null,
+    commentingError: null,
   },
 };
 
@@ -125,7 +130,7 @@ export const postsSlice = createSlice({
         state.error.likingError = action.payload
           ? action.payload.toString()
           : "Unknown error";
-        alert(state.error.likingError);
+        alert(state.error.likingError || "Unknown error");
       });
     //remove post
     builder
@@ -146,7 +151,23 @@ export const postsSlice = createSlice({
         state.error.removingError = action.payload
           ? action.payload.toString()
           : "Unknown error";
-        alert(state.error.removingError);
+        alert(state.error.removingError || "Unknown error");
+      });
+    //comment to post
+    builder
+      .addCase(addCommentToPost.pending, (state) => {
+        state.loading.commenting = true;
+      })
+      .addCase(addCommentToPost.fulfilled, (state, action) => {
+        state.loading.commenting = false;
+        const { comment, communityId, postId } = action.payload;
+        console.log(comment, communityId, postId);
+      })
+      .addCase(addCommentToPost.rejected, (state, action) => {
+        state.error.removingError = action.payload
+          ? action.payload.toString()
+          : "Unknown error";
+        alert(state.error.removingError || "Unknown error");
       });
   },
 });
