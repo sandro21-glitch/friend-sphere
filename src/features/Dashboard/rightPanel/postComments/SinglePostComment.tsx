@@ -1,3 +1,5 @@
+import { formatDistanceToNow, parseISO } from "date-fns";
+
 type SingleCommentTypes = {
   comment: {
     userComment: string;
@@ -8,6 +10,11 @@ type SingleCommentTypes = {
 };
 const SinglePostComment = ({ comment }: SingleCommentTypes) => {
   const { userComment, userName, postedAt } = comment || {};
+  const parsedDate =
+    postedAt && !isNaN(Date.parse(postedAt)) ? parseISO(postedAt) : new Date();
+
+  // format the distance to now in a human-readable format
+  const commentedAt = formatDistanceToNow(parsedDate, { addSuffix: true });
 
   return (
     <li className="border-b pb-2 mb-2">
@@ -17,9 +24,11 @@ const SinglePostComment = ({ comment }: SingleCommentTypes) => {
           alt="user avatar"
           className="w-8 h-8 mr-2"
         />
-        <div className="leading-5">
+        <div className="leading-4">
           <p className="text-[.9rem] font-medium">{userName}</p>
-          <p className="text-[.8rem] text-gray-500">{postedAt}</p>
+          <p className="text-[.7rem] text-gray-500">
+            {commentedAt.replace("about", "")}
+          </p>
         </div>
       </div>
       <p className="text-[.9rem]">{userComment}</p>
