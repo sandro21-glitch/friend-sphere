@@ -1,27 +1,30 @@
-import { BiComment, BiLike } from "react-icons/bi";
+import { BiComment } from "react-icons/bi";
 import { CiSaveDown2 } from "react-icons/ci";
 import ActionDropdown from "../../../ui/ActionDropdown";
+
+import LikeButton from "../../../ui/LikeButton";
 
 type PostCommentActionTypes = {
   likedBy: string[];
   postCommentLength: number;
+  postId: string;
+  communityId: string;
 };
 
 const PostCommentActions = ({
   likedBy,
   postCommentLength,
+  postId,
+  communityId,
 }: PostCommentActionTypes) => {
-
-  
   return (
     <div className="flex items-center justify-between mb-5">
       <div className="flex items-center gap-5">
-        <button type="button" className="flex items-center gap-1">
-          <BiLike className=" text-[1.5rem]" />
-          <span className="text-[16px] font-semibold">
-            {likedBy.length || 0}
-          </span>
-        </button>
+        <LikeButton
+          likedBy={likedBy}
+          postId={postId}
+          communityId={communityId}
+        />
         <div className="flex items-center gap-1">
           <BiComment className="text-[1.3rem]" />
           <span className="text-[16px] font-semibold">
