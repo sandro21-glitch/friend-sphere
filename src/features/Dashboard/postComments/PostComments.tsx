@@ -32,6 +32,8 @@ const PostComments = () => {
         <PostCommentActions
           likedBy={likedBy}
           postCommentLength={postCommentLength}
+          postId={postId}
+          communityId={communityId}
         />
         <PostCommentForm communityId={communityId} postId={postId} />
       </div>
