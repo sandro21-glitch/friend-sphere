@@ -40,7 +40,7 @@ const SingleComunityPage = () => {
       </section>
     );
   return (
-    <section className="col-span-2 min-h-full h-full mt-5 bg-white">
+    <section className="col-span-2 min-h-full h-full mt-5 bg-white border">
       <GroupHeader postPage={postPage} setPostPage={setPostPage} />
       <GroupPostForm groupId={uid} />
       <GroupPosts communityId={communityData.uid} />
