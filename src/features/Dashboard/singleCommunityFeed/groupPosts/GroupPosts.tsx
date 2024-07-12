@@ -10,7 +10,7 @@ const GroupPosts = ({ communityId }: GroupPostTypes) => {
 
   return (
     <div className="py-5 px-2">
-      <ul className="flex flex-col gap-5">
+      <ul className="flex flex-col gap-5 ">
         {groupPosts
           .slice()
           .reverse()
