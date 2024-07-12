@@ -20,6 +20,7 @@ const PostCommentForm = ({ communityId, postId }: PostCommentFormProps) => {
 
   const handleAddComment = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (userComment === "") return;
     if (name && uid) {
       dispatch(
         addCommentToPost({
