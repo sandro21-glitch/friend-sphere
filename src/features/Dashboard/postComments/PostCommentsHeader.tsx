@@ -1,5 +1,5 @@
 import { IoChevronBack } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type CommentsHeaderTypes = {
   groupName: string;
@@ -12,9 +12,16 @@ const PostCommentsHeader = ({
   timeAgo,
   userName,
 }: CommentsHeaderTypes) => {
+  const navigate = useNavigate();
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="mb-5">
       <button
+        type="button"
+        onClick={handleGoBack}
         className="w-7 h-7 rounded-full border border-dashed
        border-azure-blue flex items-center justify-center mb-5"
       >
