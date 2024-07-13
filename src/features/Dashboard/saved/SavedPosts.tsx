@@ -3,6 +3,7 @@ import DashboardPage from "../../../ui/DashboardPage";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { fetchSavedPostsThunk } from "../../../slices/posts/postThunks";
 import PageLoader from "../../../ui/PageLoader";
+import SavedPostsList from "./SavedPostsList";
 
 const SavedPosts = () => {
   const userId = useAppSelector((store) => store.auth.userData?.uid);
@@ -11,6 +12,7 @@ const SavedPosts = () => {
   const {
     error: { fetchingSavedPostsError },
     loading: { fetchingSavedPosts },
+    savedPosts,
   } = useAppSelector((store) => store.posts);
 
   useEffect(() => {
@@ -26,10 +28,21 @@ const SavedPosts = () => {
         <div className="flex items-center justify-center h-full">
           <PageLoader />
         </div>
-      </DashboardPage>  
+      </DashboardPage>
     );
 
-  return <DashboardPage>SavedPosts</DashboardPage>;
+  if (savedPosts && savedPosts?.length < 1) {
+    <DashboardPage>
+      <p className="p-5 border-b">no posts saved</p>;
+    </DashboardPage>;
+  }
+
+  return (
+    <DashboardPage>
+      <h3 className="p-5 border-b text-center text-[1.2rem] font-semibold normal-case">Your saved posts</h3>
+      <SavedPostsList savedPosts={savedPosts || []} />
+    </DashboardPage>
+  );
 };
 
 export default SavedPosts;
