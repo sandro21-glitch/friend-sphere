@@ -4,7 +4,6 @@ import { get, onValue, ref, remove, update } from "firebase/database";
 import { RootState } from "../../store";
 import { UserPostTypes } from "./postsSlice";
 import { CommunityTypes } from "../community/communitySlice";
-import { arrayUnion } from "firebase/firestore/lite";
 
 interface AddPostPayload {
   communityId: string;
@@ -367,7 +366,7 @@ export const addCommentToPost = createAsyncThunk<
   }
 });
 
-//save post
+// save post 
 interface SavePostArgs {
   userId: string;
   postId: string;
@@ -388,10 +387,22 @@ export const savePostThunk = createAsyncThunk<
   async ({ userId, postId, communityId }, { rejectWithValue }) => {
     try {
       const userRef = ref(database, `users/${userId}`);
+      const snapshot = await get(userRef);
+
+      if (!snapshot.exists()) {
+        throw new Error("User not found");
+      }
+
+      const userData = snapshot.val();
+      const currentSavedPosts: SavedPost[] = userData.savedPosts || [];
+
       const postToSave: SavedPost = { postId, communityId };
+      const updatedSavedPosts = [...currentSavedPosts, postToSave];
+
       await update(userRef, {
-        savedPosts: arrayUnion(postToSave),
+        savedPosts: updatedSavedPosts,
       });
+
       return postToSave;
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -399,11 +410,12 @@ export const savePostThunk = createAsyncThunk<
   }
 );
 
+
+
 // fetch user saved posts
 
-export interface SavedPostTest {
+export interface SavedPostType extends UserPostTypes {
   communityId: string;
-  postId: string;
 }
 
 export interface FetchSavedPostsPayload {
@@ -411,7 +423,7 @@ export interface FetchSavedPostsPayload {
 }
 
 export const fetchSavedPostsThunk = createAsyncThunk<
-  SavedPostTest[],
+  SavedPostType[],
   FetchSavedPostsPayload,
   { state: RootState }
 >("posts/fetchSavedPosts", async (payload, thunkAPI) => {
@@ -419,35 +431,39 @@ export const fetchSavedPostsThunk = createAsyncThunk<
 
   try {
     // Reference to the user's savedPosts array in Firebase
-    const userSavedPostsRef = ref(database, `users/${userId}/savedPosts/dt`);
+    const userSavedPostsRef = ref(database, `users/${userId}/savedPosts`);
     const snapshot = await get(userSavedPostsRef);
 
     if (!snapshot.exists()) {
+      console.log(`Saved posts not found for user ${userId}`);
       throw new Error("Saved posts not found for the user");
     }
 
     // Extract the saved posts array from the snapshot
-    const savedPostsArray: SavedPost[] = snapshot.val() || [];
+    const savedPostsArray: { communityId: string; postId: string }[] = snapshot.val() || [];
 
-    // Fetch each saved post from communities based on communityId and postId
-    const savedPostsPromises = savedPostsArray.map(async (savedPost) => {
+    const fetchedPosts: SavedPostType[] = [];
+
+    // Reference to the communities in Firebase
+    const communitiesRef = ref(database, "communities");
+    const communitiesSnapshot = await get(communitiesRef);
+
+    if (!communitiesSnapshot.exists()) {
+      console.log(`Communities not found`);
+      throw new Error("Communities not found");
+    }
+
+    // Iterate through each saved post and find the matching post in communities
+    savedPostsArray.forEach((savedPost) => {
       const { communityId, postId } = savedPost;
-      const communitiesRef = ref(database, "communities");
-      const communitiesSnapshot = await get(communitiesRef);
 
-      if (!communitiesSnapshot.exists()) {
-        throw new Error("Communities not found");
-      }
+      let post: SavedPostType | null = null;
 
-      let post: any = null;
-
-      // Loop through each community to find the matching community
       communitiesSnapshot.forEach((childSnapshot) => {
         const community = childSnapshot.val();
         if (community.uid === communityId) {
           const posts = community.posts || [];
-          // Loop through each post in the community to find the matching post
-          posts.forEach((pst: any) => {
+          posts.forEach((pst: SavedPostType) => {
             if (pst.postId === postId) {
               post = pst;
             }
@@ -455,17 +471,17 @@ export const fetchSavedPostsThunk = createAsyncThunk<
         }
       });
 
-      if (!post) {
+      if (post) {
+        fetchedPosts.push(post);
+      } else {
+        console.log(`Post ${postId} not found in any community`);
         throw new Error(`Post ${postId} not found in any community`);
       }
-
-      return post;
     });
 
-    // Wait for all promises to resolve and return the result
-    const fetchedPosts = await Promise.all(savedPostsPromises);
     return fetchedPosts;
   } catch (error: any) {
+    console.error("Error fetching saved posts:", error.message);
     return thunkAPI.rejectWithValue(
       error.message || "Error fetching saved posts from communities"
     );
