@@ -5,7 +5,7 @@ const ProtectedRoute = () => {
   const isAuthenticated = useAppSelector((state) => state.auth.userData);
 
   if (!isAuthenticated) {
-    return <Navigate to="/signin" />;
+    return <Navigate to="/signin" />;     
   }
 
   return <Outlet />;
