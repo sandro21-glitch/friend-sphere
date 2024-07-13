@@ -23,11 +23,10 @@ const PostCommentActions = ({
 
   const dispatch = useAppDispatch();
   const handleSavePost = () => {
-    if (userId) {
-      dispatch(savePostThunk({ communityId, postId, userId }));
+    if (userId && postId && communityId) {
+      dispatch(savePostThunk({ userId, postId, communityId }));
     }
   };
-
   return (
     <div className="flex items-center justify-between mb-5">
       <div className="flex items-center gap-5">
