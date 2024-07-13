@@ -4,6 +4,7 @@ import PostCommentForm from "./PostCommentForm";
 import PostCommentsHeader from "./PostCommentsHeader";
 import PostCommentText from "./PostCommentText";
 import { PostActionTypes } from "../singleCommunityFeed/groupPosts/PostActions";
+import DashboardPage from "../../../ui/DashboardPage";
 
 const PostComments = () => {
   const location = useLocation();
@@ -21,7 +22,7 @@ const PostComments = () => {
   } = postInfo;
 
   return (
-    <section className="col-span-2 max-h-[85vh] h-full mt-5 bg-white rounded-lg border">
+    <DashboardPage>
       <div className="p-5">
         <PostCommentsHeader
           groupName={groupName}
@@ -37,7 +38,7 @@ const PostComments = () => {
         />
         <PostCommentForm communityId={communityId} postId={postId} />
       </div>
-    </section>
+    </DashboardPage>
   );
 };
 
