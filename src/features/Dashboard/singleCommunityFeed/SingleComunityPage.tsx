@@ -6,6 +6,7 @@ import GroupPostForm from "./groupHeaderSection/GroupPostForm";
 import { fetchCommunityPosts } from "../../../slices/posts/postThunks";
 import GroupPosts from "./groupPosts/GroupPosts";
 import PageLoader from "../../../ui/PageLoader";
+import DashboardPage from "../../../ui/DashboardPage";
 
 const SingleComunityPage = () => {
   const {
@@ -40,11 +41,11 @@ const SingleComunityPage = () => {
       </section>
     );
   return (
-    <section className="col-span-2 min-h-full h-full mt-5 bg-white border">
+    <DashboardPage> 
       <GroupHeader postPage={postPage} setPostPage={setPostPage} />
       <GroupPostForm groupId={uid} />
       <GroupPosts communityId={communityData.uid} />
-    </section>
+    </DashboardPage>
   );
 };
 
