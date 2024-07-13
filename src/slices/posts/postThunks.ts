@@ -4,6 +4,7 @@ import { get, onValue, ref, remove, update } from "firebase/database";
 import { RootState } from "../../store";
 import { UserPostTypes } from "./postsSlice";
 import { CommunityTypes } from "../community/communitySlice";
+import { arrayUnion } from "firebase/firestore/lite";
 
 interface AddPostPayload {
   communityId: string;
@@ -58,11 +59,11 @@ export const addPostToCommunity = createAsyncThunk<
     ...post,
     createdAt: new Date().toISOString(),
     postComments: post.postComments
-    ? post.postComments.map((comment) => ({
-        ...comment,
-        postedAt: comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
-      }))
-    : null,
+      ? post.postComments.map((comment) => ({
+          ...comment,
+          postedAt: comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
+        }))
+      : null,
   };
 
   const communityRef = ref(database, `communities/${communityKey}/posts`);
@@ -331,12 +332,15 @@ export const addCommentToPost = createAsyncThunk<
             post.postComments.push(newComment);
 
             // Update the post's comments in Firebase
-            update(ref(database, `communities/${communitySnapshot.key}/posts`), {
-              [post.postId]: {
-                ...post,
-                postComments: post.postComments,
+            update(
+              ref(database, `communities/${communitySnapshot.key}/posts`),
+              {
+                [post.postId]: {
+                  ...post,
+                  postComments: post.postComments,
+                },
               }
-            });
+            );
 
             updatedComment = { postId, communityId, comment: newComment };
           }
@@ -359,6 +363,111 @@ export const addCommentToPost = createAsyncThunk<
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.message || "Error adding comment to post"
+    );
+  }
+});
+
+//save post
+interface SavePostArgs {
+  userId: string;
+  postId: string;
+  communityId: string;
+}
+
+interface SavedPost {
+  postId: string;
+  communityId: string;
+}
+
+export const savePostThunk = createAsyncThunk<
+  SavedPost,
+  SavePostArgs,
+  { rejectValue: string }
+>(
+  "posts/savePost",
+  async ({ userId, postId, communityId }, { rejectWithValue }) => {
+    try {
+      const userRef = ref(database, `users/${userId}`);
+      const postToSave: SavedPost = { postId, communityId };
+      await update(userRef, {
+        savedPosts: arrayUnion(postToSave),
+      });
+      return postToSave;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// fetch user saved posts
+
+export interface SavedPostTest {
+  communityId: string;
+  postId: string;
+}
+
+export interface FetchSavedPostsPayload {
+  userId: string;
+}
+
+export const fetchSavedPostsThunk = createAsyncThunk<
+  SavedPostTest[],
+  FetchSavedPostsPayload,
+  { state: RootState }
+>("posts/fetchSavedPosts", async (payload, thunkAPI) => {
+  const { userId } = payload;
+
+  try {
+    // Reference to the user's savedPosts array in Firebase
+    const userSavedPostsRef = ref(database, `users/${userId}/savedPosts/dt`);
+    const snapshot = await get(userSavedPostsRef);
+
+    if (!snapshot.exists()) {
+      throw new Error("Saved posts not found for the user");
+    }
+
+    // Extract the saved posts array from the snapshot
+    const savedPostsArray: SavedPost[] = snapshot.val() || [];
+
+    // Fetch each saved post from communities based on communityId and postId
+    const savedPostsPromises = savedPostsArray.map(async (savedPost) => {
+      const { communityId, postId } = savedPost;
+      const communitiesRef = ref(database, "communities");
+      const communitiesSnapshot = await get(communitiesRef);
+
+      if (!communitiesSnapshot.exists()) {
+        throw new Error("Communities not found");
+      }
+
+      let post: any = null;
+
+      // Loop through each community to find the matching community
+      communitiesSnapshot.forEach((childSnapshot) => {
+        const community = childSnapshot.val();
+        if (community.uid === communityId) {
+          const posts = community.posts || [];
+          // Loop through each post in the community to find the matching post
+          posts.forEach((pst: any) => {
+            if (pst.postId === postId) {
+              post = pst;
+            }
+          });
+        }
+      });
+
+      if (!post) {
+        throw new Error(`Post ${postId} not found in any community`);
+      }
+
+      return post;
+    });
+
+    // Wait for all promises to resolve and return the result
+    const fetchedPosts = await Promise.all(savedPostsPromises);
+    return fetchedPosts;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(
+      error.message || "Error fetching saved posts from communities"
     );
   }
 });
