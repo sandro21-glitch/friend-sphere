@@ -11,6 +11,10 @@ export interface UserData {
     userUid: string;
     name: string;
   }[];
+  savedPosts: {
+    postId: string;
+    communityId: string;
+  }[];
   registeredDate: string;
   joinedGroups: string[];
   isAdmin: boolean;
@@ -24,4 +28,3 @@ export interface userFormData {
   email: string;
   password: string;
 }
-
