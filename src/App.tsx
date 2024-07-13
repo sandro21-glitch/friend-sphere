@@ -12,6 +12,7 @@ import PublicRoute from "./ui/PublicRoute";
 import Community from "./features/Dashboard/communities/Community";
 import SingleComunityPage from "./features/Dashboard/singleCommunityFeed/SingleComunityPage";
 import PostComments from "./features/Dashboard/postComments/PostComments";
+import SavedPosts from "./features/Dashboard/saved/SavedPosts";
 
 const router = createBrowserRouter([
   {
@@ -49,10 +50,14 @@ const router = createBrowserRouter([
               {
                 path: "community/:communityName",
                 element: <SingleComunityPage />,
-              },
+              },  
               {
                 path: "post/:postId",
                 element: <PostComments />,
+              },
+              {
+                path: "saved",
+                element: <SavedPosts />,
               },
             ],
           },
