@@ -26,6 +26,24 @@ export interface UserPostTypes {
   createdAt: string;
   groupName: string;
 }
+export interface SavedPostTypes {
+  userName: string;
+  postId: string;
+  userId: string;
+  userPost: string;
+  likedBy: string[] | null;
+  postComments:
+    | {
+        userComment: string;
+        userId: string;
+        userName: string;
+        postedAt?: string;
+      }[]
+    | null;
+  createdAt: string;
+  groupName: string;
+  communityId: string;
+}
 
 interface PostsState {
   communityPosts: UserPostTypes[] | null;
@@ -150,10 +168,18 @@ export const postsSlice = createSlice({
         state.loading.removing = true;
       })
       .addCase(removePost.fulfilled, (state, action) => {
+        // set the loading state for removing to false
         state.loading.removing = false;
         const { postId } = action.payload;
+        // remove the post from communityPosts if it exists
         if (state.communityPosts) {
           state.communityPosts = state.communityPosts.filter(
+            (post) => post.postId !== postId
+          );
+        }
+        // remove the post from savedPosts if it exists
+        if (state.savedPosts) {
+          state.savedPosts = state.savedPosts.filter(
             (post) => post.postId !== postId
           );
         }
@@ -201,7 +227,6 @@ export const postsSlice = createSlice({
       })
       .addCase(savePostThunk.fulfilled, (state) => {
         state.loading.saving = false;
-        console.log("fulfile");
       })
       .addCase(savePostThunk.rejected, (state, action) => {
         state.loading.saving = false;
@@ -217,7 +242,8 @@ export const postsSlice = createSlice({
       })
       .addCase(fetchSavedPostsThunk.fulfilled, (state, action) => {
         state.loading.fetchingSavedPosts = false;
-        state.savedPosts = action.payload; 
+        state.savedPosts = action.payload;
+        console.log(action.payload);
       })
       .addCase(fetchSavedPostsThunk.rejected, (state, action) => {
         state.loading.fetchingSavedPosts = false;
