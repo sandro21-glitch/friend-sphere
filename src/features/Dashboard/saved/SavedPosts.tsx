@@ -31,15 +31,19 @@ const SavedPosts = () => {
       </DashboardPage>
     );
 
-  if (savedPosts && savedPosts?.length < 1) {
-    <DashboardPage>
-      <p className="p-5 border-b">no posts saved</p>;
-    </DashboardPage>;
+  if (savedPosts === null) {
+    return (
+      <DashboardPage>
+        <p className="p-5 border-b text-center text-[1.3rem]">No posts saved</p>
+      </DashboardPage>
+    );
   }
 
   return (
     <DashboardPage>
-      <h3 className="p-5 border-b text-center text-[1.2rem] font-semibold normal-case">Your saved posts</h3>
+      <h3 className="p-5 border-b text-center text-[1.2rem] font-semibold normal-case">
+        Your saved posts
+      </h3>
       <SavedPostsList savedPosts={savedPosts || []} />
     </DashboardPage>
   );
