@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { database } from "../../config/firebase";
 import { get, onValue, ref, remove, update } from "firebase/database";
 import { RootState } from "../../store";
-import { UserPostTypes } from "./postsSlice";
+import { SavedPostTypes, UserPostTypes } from "./postsSlice";
 import { CommunityTypes } from "../community/communitySlice";
 
 interface AddPostPayload {
@@ -366,7 +366,7 @@ export const addCommentToPost = createAsyncThunk<
   }
 });
 
-// save post 
+// save post
 interface SavePostArgs {
   userId: string;
   postId: string;
@@ -410,20 +410,14 @@ export const savePostThunk = createAsyncThunk<
   }
 );
 
-
-
 // fetch user saved posts
-
-export interface SavedPostType extends UserPostTypes {
-  communityId: string;
-}
 
 export interface FetchSavedPostsPayload {
   userId: string;
 }
 
 export const fetchSavedPostsThunk = createAsyncThunk<
-  SavedPostType[],
+  SavedPostTypes[],
   FetchSavedPostsPayload,
   { state: RootState }
 >("posts/fetchSavedPosts", async (payload, thunkAPI) => {
@@ -440,9 +434,10 @@ export const fetchSavedPostsThunk = createAsyncThunk<
     }
 
     // Extract the saved posts array from the snapshot
-    const savedPostsArray: { communityId: string; postId: string }[] = snapshot.val() || [];
+    const savedPostsArray: { communityId: string; postId: string }[] =
+      snapshot.val() || [];
 
-    const fetchedPosts: SavedPostType[] = [];
+    const fetchedPosts: SavedPostTypes[] = [];
 
     // Reference to the communities in Firebase
     const communitiesRef = ref(database, "communities");
@@ -454,18 +449,18 @@ export const fetchSavedPostsThunk = createAsyncThunk<
     }
 
     // Iterate through each saved post and find the matching post in communities
-    savedPostsArray.forEach((savedPost) => {
+    for (const savedPost of savedPostsArray) {
       const { communityId, postId } = savedPost;
 
-      let post: SavedPostType | null = null;
+      let post: SavedPostTypes | null = null;
 
       communitiesSnapshot.forEach((childSnapshot) => {
         const community = childSnapshot.val();
         if (community.uid === communityId) {
           const posts = community.posts || [];
-          posts.forEach((pst: SavedPostType) => {
+          posts.forEach((pst: SavedPostTypes) => {
             if (pst.postId === postId) {
-              post = pst;
+              post = { ...pst, communityId };
             }
           });
         }
@@ -474,10 +469,9 @@ export const fetchSavedPostsThunk = createAsyncThunk<
       if (post) {
         fetchedPosts.push(post);
       } else {
-        console.log(`Post ${postId} not found in any community`);
-        throw new Error(`Post ${postId} not found in any community`);
+        console.error(`Post ${postId} not found in community ${communityId}`);
       }
-    });
+    }
 
     return fetchedPosts;
   } catch (error: any) {
