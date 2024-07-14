@@ -26,28 +26,13 @@ export interface UserPostTypes {
   createdAt: string;
   groupName: string;
 }
-export interface SavedPostTypes {
-  userName: string;
-  postId: string;
-  userId: string;
-  userPost: string;
-  likedBy: string[] | null;
-  postComments:
-    | {
-        userComment: string;
-        userId: string;
-        userName: string;
-        postedAt?: string;
-      }[]
-    | null;
-  createdAt: string;
-  groupName: string;
+export interface SavedPostTypes extends UserPostTypes {
   communityId: string;
 }
 
 interface PostsState {
   communityPosts: UserPostTypes[] | null;
-  savedPosts: UserPostTypes[] | null;
+  savedPosts: SavedPostTypes[] | null;
   loading: {
     fetching: boolean;
     adding: boolean;
@@ -240,11 +225,13 @@ export const postsSlice = createSlice({
       .addCase(fetchSavedPostsThunk.pending, (state) => {
         state.loading.fetchingSavedPosts = true;
       })
-      .addCase(fetchSavedPostsThunk.fulfilled, (state, action) => {
-        state.loading.fetchingSavedPosts = false;
-        state.savedPosts = action.payload;
-        console.log(action.payload);
-      })
+      .addCase(
+        fetchSavedPostsThunk.fulfilled,
+        (state, action: PayloadAction<SavedPostTypes[]>) => {
+          state.loading.fetchingSavedPosts = false;
+          state.savedPosts = action.payload;
+        }
+      )
       .addCase(fetchSavedPostsThunk.rejected, (state, action) => {
         state.loading.fetchingSavedPosts = false;
         state.error.fetchingSavedPostsError = action.payload
