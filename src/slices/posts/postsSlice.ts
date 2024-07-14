@@ -217,7 +217,7 @@ export const postsSlice = createSlice({
       })
       .addCase(fetchSavedPostsThunk.fulfilled, (state, action) => {
         state.loading.fetchingSavedPosts = false;
-        state.savedPosts = action.payload; // Assuming action.payload is an array of SavedPostType
+        state.savedPosts = action.payload; 
       })
       .addCase(fetchSavedPostsThunk.rejected, (state, action) => {
         state.loading.fetchingSavedPosts = false;
