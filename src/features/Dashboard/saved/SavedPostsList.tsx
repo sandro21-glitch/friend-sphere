@@ -1,11 +1,11 @@
-import { UserPostTypes } from "../../../slices/posts/postsSlice";
+import { SavedPostTypes } from "../../../slices/posts/postsSlice";
 import SingleSavedPost from "./SingleSavedPost";
 
-type SavedPostTypes = {
-  savedPosts: UserPostTypes[];
+type SavedPostListTypes = {
+  savedPosts: SavedPostTypes[];
 };
 
-const SavedPostsList = ({ savedPosts }: SavedPostTypes) => {
+const SavedPostsList = ({ savedPosts }: SavedPostListTypes) => {
   return (
     <ul className="p-4 flex flex-col gap-4">
       {savedPosts.map((post) => {
