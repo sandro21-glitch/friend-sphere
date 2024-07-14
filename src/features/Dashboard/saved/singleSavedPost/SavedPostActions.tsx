@@ -28,7 +28,11 @@ const SavedPostActions = ({
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <LikePostAction communityId="test" likedBy={likedBy} postId={postId} />
+        <LikePostAction
+          communityId={communityId}
+          likedBy={likedBy}
+          postId={postId}
+        />
         <SavedPostCommentsAction
           likedBy={likedBy}
           postCommentLength={postCommentLength}
@@ -40,7 +44,11 @@ const SavedPostActions = ({
           userPost={userPost}
         />
       </div>
-      <RemovePostBtn postUserId={userId} communityId={"test"} postId={postId} />
+      <RemovePostBtn
+        postUserId={userId}
+        communityId={communityId}
+        postId={postId}
+      />
     </div>
   );
 };
