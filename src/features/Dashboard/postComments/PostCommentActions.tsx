@@ -21,8 +21,14 @@ const PostCommentActions = ({
 }: PostCommentActionTypes) => {
   const userId = useAppSelector((store) => store.auth.userData?.uid);
 
+  // check if the post is already saved to avoid duplicates
+  const isSamePost = useAppSelector((store) =>
+    store.posts.savedPosts?.find((post) => post.postId === postId)
+  );
+
   const dispatch = useAppDispatch();
   const handleSavePost = () => {
+    if (isSamePost) return;
     if (userId && postId && communityId) {
       dispatch(savePostThunk({ userId, postId, communityId }));
     }
@@ -42,7 +48,11 @@ const PostCommentActions = ({
           </span>
         </div>
       </div>
-      <button type="button" onClick={handleSavePost} className="flex items-center gap-1 relative group">
+      <button
+        type="button"
+        onClick={handleSavePost}
+        className="flex items-center gap-1 relative group"
+      >
         <CiSaveDown2 className=" text-[1.5rem]" />
         <ActionDropdown dropdownText="Save post" />
       </button>
