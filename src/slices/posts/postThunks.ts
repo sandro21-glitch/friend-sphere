@@ -411,7 +411,6 @@ export const savePostThunk = createAsyncThunk<
 );
 
 // fetch user saved posts
-
 export interface FetchSavedPostsPayload {
   userId: string;
 }
@@ -468,8 +467,6 @@ export const fetchSavedPostsThunk = createAsyncThunk<
 
       if (post) {
         fetchedPosts.push(post);
-      } else {
-        console.error(`Post ${postId} not found in community ${communityId}`);
       }
     }
 
