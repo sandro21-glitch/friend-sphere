@@ -7,7 +7,7 @@ type SavedPostTypes = {
 
 const SavedPostsList = ({ savedPosts }: SavedPostTypes) => {
   return (
-    <ul className="p-4">
+    <ul className="p-4 flex flex-col gap-4">
       {savedPosts.map((post) => {
         return <SingleSavedPost key={post.postId} post={post} />;
       })}
