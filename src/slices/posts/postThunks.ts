@@ -428,8 +428,7 @@ export const fetchSavedPostsThunk = createAsyncThunk<
     const snapshot = await get(userSavedPostsRef);
 
     if (!snapshot.exists()) {
-      console.log(`Saved posts not found for user ${userId}`);
-      throw new Error("Saved posts not found for the user");
+      return []; // Return empty array if no saved posts found
     }
 
     // Extract the saved posts array from the snapshot
@@ -443,7 +442,6 @@ export const fetchSavedPostsThunk = createAsyncThunk<
     const communitiesSnapshot = await get(communitiesRef);
 
     if (!communitiesSnapshot.exists()) {
-      console.log(`Communities not found`);
       throw new Error("Communities not found");
     }
 
