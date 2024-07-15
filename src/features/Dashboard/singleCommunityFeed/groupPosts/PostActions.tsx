@@ -1,6 +1,5 @@
-import { BiComment } from "react-icons/bi";
-import { Link } from "react-router-dom";
 import LikeButton from "../../../../ui/LikeButton";
+import CommentsLink from "../../../../ui/CommentsLink";
 
 export interface PostActionTypes {
   likedBy: string[];
@@ -26,25 +25,16 @@ const PostActions = ({
   return (
     <div className="flex items-center gap-4">
       <LikeButton likedBy={likedBy} postId={postId} communityId={communityId} />
-      <Link
-        to={`/post/${postId}`}
-        state={{
-          postInfo: {
-            likedBy,
-            postCommentLength,
-            postId,
-            communityId,
-            timeAgo,
-            userName,
-            groupName,
-            userPost,
-          },
-        }}
-        className="flex items-center gap-1"
-      >
-        <BiComment className="text-[1.3rem]" />
-        <span className="text-[16px] font-semibold">{postCommentLength}</span>
-      </Link>
+      <CommentsLink
+        likedBy={likedBy}
+        postCommentLength={postCommentLength}
+        postId={postId}
+        communityId={communityId}
+        timeAgo={timeAgo}
+        userName={userName}
+        groupName={groupName}
+        userPost={userPost}
+      />
     </div>
   );
 };
