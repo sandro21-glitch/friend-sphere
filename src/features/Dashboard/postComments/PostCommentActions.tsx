@@ -1,10 +1,9 @@
-import { BiComment } from "react-icons/bi";
-import { CiSaveDown2 } from "react-icons/ci";
-import ActionDropdown from "../../../ui/ActionDropdown";
+import { useAppSelector } from "../../../hooks/reduxHooks";
+import { useEffect, useState } from "react";
 
-import LikeButton from "../../../ui/LikeButton";
-import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import { savePostThunk } from "../../../slices/posts/postThunks";
+import SavePostBtn from "./commentActions/SavePostBtn";
+import PostInteractions from "./commentActions/PostInteractions";
+import UnsavePostBtn from "./commentActions/UnsavePostBtn";
 
 type PostCommentActionTypes = {
   likedBy: string[];
@@ -19,43 +18,35 @@ const PostCommentActions = ({
   postId,
   communityId,
 }: PostCommentActionTypes) => {
-  const userId = useAppSelector((store) => store.auth.userData?.uid);
+  const savedPosts = useAppSelector((store) => store.posts.savedPosts);
+  const [isPostSaved, setIsPostSaved] = useState<boolean>(false);
 
-  // check if the post is already saved to avoid duplicates
-  const isSamePost = useAppSelector((store) =>
-    store.posts.savedPosts?.find((post) => post.postId === postId)
-  );
+  useEffect(() => {
+    const postSaved =
+      savedPosts?.some(
+        (post) => post.postId === postId && post.communityId === communityId
+      ) || false;
+    setIsPostSaved(postSaved);
+  }, [savedPosts, postId, communityId]);
 
-  const dispatch = useAppDispatch();
-  const handleSavePost = () => {
-    if (isSamePost) return;
-    if (userId && postId && communityId) {
-      dispatch(savePostThunk({ userId, postId, communityId }));
-    }
-  };
   return (
     <div className="flex items-center justify-between mb-5">
-      <div className="flex items-center gap-5">
-        <LikeButton
-          likedBy={likedBy}
+      <PostInteractions
+        likedBy={likedBy}
+        postId={postId}
+        communityId={communityId}
+        postCommentLength={postCommentLength}
+      />
+      {isPostSaved ? (
+        <UnsavePostBtn />
+      ) : (
+        <SavePostBtn
+          isPostSaved={isPostSaved}
           postId={postId}
           communityId={communityId}
+          setIsPostSaved={setIsPostSaved}
         />
-        <div className="flex items-center gap-1">
-          <BiComment className="text-[1.3rem]" />
-          <span className="text-[16px] font-semibold">
-            {postCommentLength || 0}
-          </span>
-        </div>
-      </div>
-      <button
-        type="button"
-        onClick={handleSavePost}
-        className="flex items-center gap-1 relative group"
-      >
-        <CiSaveDown2 className=" text-[1.5rem]" />
-        <ActionDropdown dropdownText="Save post" />
-      </button>
+      )}
     </div>
   );
 };
