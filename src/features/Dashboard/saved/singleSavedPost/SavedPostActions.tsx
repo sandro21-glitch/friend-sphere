@@ -1,6 +1,6 @@
+import CommentsLink from "../../../../ui/CommentsLink";
 import RemovePostBtn from "../../singleCommunityFeed/groupPosts/RemovePostBtn";
 import LikePostAction from "./post actions/LikePostAction";
-import SavedPostCommentsAction from "./post actions/SavedPostCommentsAction";
 
 type SavedPostActionsTypes = {
   likedBy: string[];
@@ -33,7 +33,7 @@ const SavedPostActions = ({
           likedBy={likedBy}
           postId={postId}
         />
-        <SavedPostCommentsAction
+        <CommentsLink
           likedBy={likedBy}
           postCommentLength={postCommentLength}
           postId={postId}
