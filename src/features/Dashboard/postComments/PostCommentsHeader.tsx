@@ -5,12 +5,14 @@ type CommentsHeaderTypes = {
   groupName: string;
   userName: string;
   timeAgo: string;
+  communityId: string;
 };
 
 const PostCommentsHeader = ({
   groupName,
   timeAgo,
   userName,
+  communityId,
 }: CommentsHeaderTypes) => {
   const navigate = useNavigate();
   const handleGoBack = () => {
@@ -38,7 +40,11 @@ const PostCommentsHeader = ({
             <Link to="" className="text-[1rem] font-medium">
               {userName}
             </Link>
-            <Link to="" className="text-[.7rem] text-gray-500">
+            <Link
+              state={{ id: communityId }}
+              to={`/community/${groupName}`}
+              className="text-[.7rem] text-gray-500"
+            >
               {groupName}
             </Link>
           </div>
