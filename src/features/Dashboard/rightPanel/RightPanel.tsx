@@ -13,14 +13,14 @@ const RightPanel = () => {
     ? location.state?.id
     : isPostCommentsPage
     ? postId
-    : null;
+    : "";
 
   return (
     <div className="bg-white col-span-1 h-[85vh] sticky top-[5rem] border rounded-md">
       {isSingleCommunityPage ? (
         <GroupInfo id={id} />
       ) : isPostCommentsPage ? (
-        <PostCommentsAside postId={postId || ""} />
+        <PostCommentsAside postId={id} />
       ) : (
         <Connections />
       )}
