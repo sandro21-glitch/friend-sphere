@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import logo from "../assets/images/logo-no-background.svg";
 
 type LogoTypes = {
@@ -6,9 +7,9 @@ type LogoTypes = {
 
 const Logo = ({ height }: LogoTypes) => {
   return (
-    <div className="flex justify-center ">
-      <img src={logo} alt="logo" style={{ height: height }} />
-    </div>
+    <Link to="/home" className="flex justify-center cursor-pointer">
+      <img src={logo} alt="logo" loading="lazy" style={{ height: height }} />
+    </Link>
   );
 };
 
