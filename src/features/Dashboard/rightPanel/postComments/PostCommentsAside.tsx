@@ -6,11 +6,22 @@ type PostCommentsAsideTypes = {
 };
 
 const PostCommentsAside = ({ postId }: PostCommentsAsideTypes) => {
-  const postComments = useAppSelector(
-    (store) =>
-      store.posts.communityPosts?.find((post) => post.postId === postId)
-        ?.postComments
-  );
+  const { communityPosts, savedPosts } = useAppSelector((store) => store.posts);
+
+  const findPostWithComments = (postId: string) => {
+    let postWithComments = communityPosts?.find(
+      (post) => post.postId === postId
+    );
+
+    if (!postWithComments) {
+      postWithComments = savedPosts?.find((post) => post.postId === postId);
+    }
+
+    return postWithComments?.postComments || [];
+  };
+
+  // get the post comments
+  const postComments = findPostWithComments(postId);
 
   return (
     <div className="p-5">
@@ -18,14 +29,16 @@ const PostCommentsAside = ({ postId }: PostCommentsAsideTypes) => {
         Recent Comments
       </h4>
       <ul>
-        {postComments &&
-          postComments.length > 0 &&
+        {postComments.length > 0 ? (
           postComments
             .slice()
             .reverse()
-            .map((comment, index) => {
-              return <SinglePostComment key={index} comment={comment} />;
-            })}
+            .map((comment, index) => (
+              <SinglePostComment key={index} comment={comment} />
+            ))
+        ) : (
+          <p>No comments available</p>
+        )}
       </ul>
     </div>
   );
