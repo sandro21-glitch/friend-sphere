@@ -183,10 +183,25 @@ export const postsSlice = createSlice({
       })
       .addCase(addCommentToPost.fulfilled, (state, action) => {
         state.loading.commenting = false;
-        const { comment, communityId, postId } = action.payload;
+        const { comment, postId } = action.payload;
 
+        //for community posts
         if (state.communityPosts) {
-          state.communityPosts = state.communityPosts.map((post) => {
+          state.communityPosts = state.communityPosts.map(
+            (post: UserPostTypes) => {
+              if (post.postId === postId) {
+                return {
+                  ...post,
+                  postComments: [...(post.postComments || []), comment],
+                };
+              }
+              return post;
+            }
+          );
+        }
+        //for saved posts
+        if (state.savedPosts) {
+          state.savedPosts = state.savedPosts.map((post: SavedPostTypes) => {
             if (post.postId === postId) {
               return {
                 ...post,
@@ -196,8 +211,6 @@ export const postsSlice = createSlice({
             return post;
           });
         }
-
-        console.log(comment, communityId, postId);
       })
       .addCase(addCommentToPost.rejected, (state, action) => {
         state.error.removingError = action.payload
