@@ -28,6 +28,7 @@ const PostComments = () => {
           groupName={groupName}
           userName={userName}
           timeAgo={timeAgo}
+          communityId={communityId}
         />
         <PostCommentText userPost={userPost} />
         <PostCommentActions
