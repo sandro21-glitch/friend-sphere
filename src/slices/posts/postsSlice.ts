@@ -85,7 +85,28 @@ const initialState: PostsState = {
 export const postsSlice = createSlice({
   name: "posts",
   initialState,
-  reducers: {},
+  reducers: {
+    setSavedPostLike: (
+      state,
+      action: PayloadAction<{ postId: string; userId: string }>
+    ) => {
+      const { postId, userId } = action.payload;
+      if (state.savedPosts) {
+        state.savedPosts = state.savedPosts?.map((post) =>
+          post.postId === postId
+            ? {
+                ...post,
+                likedBy: post.likedBy
+                  ? post.likedBy.includes(userId)
+                    ? post.likedBy.filter((id) => id !== userId) // remove userId if already liked
+                    : [...post.likedBy, userId] // add userId if not liked
+                  : [userId],
+              }
+            : post
+        );
+      }
+    },
+  },
   extraReducers: (builder) => {
     //add post
     builder
@@ -274,6 +295,6 @@ export const postsSlice = createSlice({
   },
 });
 
-export const {} = postsSlice.actions;
+export const { setSavedPostLike } = postsSlice.actions;
 
 export default postsSlice.reducer;
