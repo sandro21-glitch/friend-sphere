@@ -7,6 +7,7 @@ import {
   likePost,
   removePost,
   savePostThunk,
+  unsavePostThunk,
 } from "./postThunks";
 
 export interface UserPostTypes {
@@ -40,6 +41,7 @@ interface PostsState {
     removing: boolean;
     commenting: boolean;
     saving: boolean;
+    unsaving: boolean;
     fetchingSavedPosts: boolean;
   };
   error: {
@@ -49,6 +51,7 @@ interface PostsState {
     removingError: string | null;
     commentingError: string | null;
     savingError: string | null;
+    unsavingError: string | null;
     fetchingSavedPostsError: string | null;
   };
 }
@@ -64,6 +67,7 @@ const initialState: PostsState = {
     removing: false,
     commenting: false,
     saving: false,
+    unsaving: false,
     fetchingSavedPosts: false,
   },
   error: {
@@ -73,6 +77,7 @@ const initialState: PostsState = {
     removingError: null,
     commentingError: null,
     savingError: null,
+    unsavingError: null,
     fetchingSavedPostsError: null,
   },
 };
@@ -230,8 +235,8 @@ export const postsSlice = createSlice({
         state.loading.saving = false;
         state.error.removingError = action.payload
           ? action.payload.toString()
-          : "Unknown error";
-        alert(state.error.removingError || "Unknown error");
+          : "Failed to save post";
+        alert(state.error.removingError || "Failed to save post");
       });
     //fetch saved posts
     builder
@@ -249,9 +254,23 @@ export const postsSlice = createSlice({
         state.loading.fetchingSavedPosts = false;
         state.error.fetchingSavedPostsError = action.payload
           ? action.payload.toString()
-          : "Unknown error";
-        alert(state.error.removingError || "Unknown error");
+          : "Failed to fetch saved posts";
+        alert(state.error.removingError || "Failed to fetch saved posts");
       });
+    //unsave post
+    builder.addCase(unsavePostThunk.pending, (state) => {
+      state.loading.unsaving = true;
+    });
+    builder.addCase(unsavePostThunk.fulfilled, (state) => {
+      state.loading.unsaving = false;
+    });
+    builder.addCase(unsavePostThunk.rejected, (state, action) => {
+      state.loading.unsaving = false;
+      state.error.unsavingError = action.payload
+        ? action.payload.toString()
+        : "Failed to unsave post";
+      alert(state.error.removingError || "Failed to unsave post");
+    });
   },
 });
 
