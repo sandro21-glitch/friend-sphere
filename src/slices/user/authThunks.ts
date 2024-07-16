@@ -39,6 +39,7 @@ export const registerUser = createAsyncThunk(
         location: "",
         interests: [],
         bio: "",
+        savedPosts: [],
       };
 
       await set(ref(database, `users/${uid}`), userProfile);
