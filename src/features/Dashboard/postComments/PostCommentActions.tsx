@@ -38,7 +38,11 @@ const PostCommentActions = ({
         postCommentLength={postCommentLength}
       />
       {isPostSaved ? (
-        <UnsavePostBtn />
+        <UnsavePostBtn
+          postId={postId}
+          communityId={communityId}
+          setIsPostSaved={setIsPostSaved}
+        />
       ) : (
         <SavePostBtn
           isPostSaved={isPostSaved}
