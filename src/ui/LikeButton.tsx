@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import { likePost } from "../slices/posts/postThunks";
+import { setSavedPostLike } from "../slices/posts/postsSlice";
 
 type LikeButtonProps = {
   likedBy: string[];
@@ -27,7 +28,8 @@ const LikeButton = ({ likedBy, postId, communityId }: LikeButtonProps) => {
 
     setLocalLiked(!localLiked);
     setLocalLikedCount(localLiked ? localLikedCount - 1 : localLikedCount + 1);
-
+    
+    dispatch(setSavedPostLike({ postId, userId }));
     try {
       await dispatch(likePost({ postId, userId, communityId })).unwrap();
     } catch (error) {
