@@ -476,3 +476,45 @@ export const fetchSavedPostsThunk = createAsyncThunk<
     );
   }
 });
+
+
+// unsave post
+interface UnsavePostArgs {
+  userId: string;
+  postId: string;
+  communityId: string;
+}
+
+export const unsavePostThunk = createAsyncThunk<
+  SavedPost,
+  UnsavePostArgs,
+  { rejectValue: string }
+>(
+  "posts/unsavePost",
+  async ({ userId, postId, communityId }, { rejectWithValue }) => {
+    try {
+      const userRef = ref(database, `users/${userId}`);
+      const snapshot = await get(userRef);
+
+      if (!snapshot.exists()) {
+        throw new Error("User not found");
+      }
+
+      const userData = snapshot.val();
+      const currentSavedPosts: SavedPost[] = userData.savedPosts || [];
+
+      // Filter out the post to unsave
+      const updatedSavedPosts = currentSavedPosts.filter(
+        (savedPost) => !(savedPost.postId === postId && savedPost.communityId === communityId)
+      );
+
+      await update(userRef, {
+        savedPosts: updatedSavedPosts,
+      });
+
+      return { postId, communityId };
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
