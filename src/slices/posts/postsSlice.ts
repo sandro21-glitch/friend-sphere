@@ -115,7 +115,7 @@ export const postsSlice = createSlice({
         fetchCommunityPosts.fulfilled,
         (state, action: PayloadAction<UserPostTypes[]>) => {
           state.loading.fetching = false;
-          state.communityPosts = action.payload || null;
+          state.communityPosts = action.payload;
         }
       )
       .addCase(fetchCommunityPosts.rejected, (state, action) => {
