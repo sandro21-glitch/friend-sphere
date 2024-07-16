@@ -5,9 +5,17 @@ type LikePostActionTypes = {
   postId: string;
   communityId: string;
 };
-const LikePostAction = ({ likedBy, postId,communityId }: LikePostActionTypes) => {
+const LikePostAction = ({
+  likedBy,
+  postId,
+  communityId,
+}: LikePostActionTypes) => {
   return (
-    <LikeButton likedBy={likedBy || []} postId={postId} communityId={communityId} />
+    <LikeButton
+      likedBy={likedBy || []}
+      postId={postId}
+      communityId={communityId}
+    />
   );
 };
 
