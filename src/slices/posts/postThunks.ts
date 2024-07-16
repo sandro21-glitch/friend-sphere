@@ -139,9 +139,9 @@ export const fetchCommunityPosts = createAsyncThunk<
   }
 });
 
-// like post
+// likePost thunk
 export const likePost = createAsyncThunk<
-  { postId: string; communityId: string; userId: string },
+  { postId: string; communityId: string; userId: string; likedBy: string[] },
   LikePostPayload,
   { state: RootState }
 >("posts/likePost", async (payload, thunkAPI) => {
@@ -157,6 +157,7 @@ export const likePost = createAsyncThunk<
 
     let communityKey: string | null = null;
     let postKey: string | null = null;
+    let updatedLikedBy: string[] = [];
 
     snapshot.forEach((childSnapshot) => {
       const community = childSnapshot.val();
@@ -166,6 +167,7 @@ export const likePost = createAsyncThunk<
         posts.forEach((post: UserPostTypes, index: number) => {
           if (post.postId === postId) {
             postKey = index.toString();
+            updatedLikedBy = post.likedBy || [];
           }
         });
       }
@@ -175,35 +177,27 @@ export const likePost = createAsyncThunk<
       throw new Error("Community or post not found");
     }
 
-    const postRef = ref(
-      database,
-      `communities/${communityKey}/posts/${postKey}/likedBy`
-    );
-    const postSnapshot = await get(postRef);
-    let likedBy = postSnapshot.exists() ? postSnapshot.val() : [];
-
-    if (likedBy.includes(userId)) {
-      // Remove user's like
-      likedBy = likedBy.filter((id: string) => id !== userId);
+    if (updatedLikedBy.includes(userId)) {
+      updatedLikedBy = updatedLikedBy.filter((id: string) => id !== userId);
     } else {
-      // Add user's like
-      likedBy.push(userId);
+      updatedLikedBy.push(userId);
     }
 
     await update(
       ref(database, `communities/${communityKey}/posts/${postKey}`),
       {
-        likedBy,
+        likedBy: updatedLikedBy,
       }
     );
 
-    return { postId, communityId, userId };
+    return { postId, communityId, userId, likedBy: updatedLikedBy };
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.message || "Error liking/unliking post"
     );
   }
 });
+
 
 // payload type for the removePost action
 interface RemovePostPayload {
