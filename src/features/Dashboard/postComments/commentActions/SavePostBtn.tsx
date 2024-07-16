@@ -38,7 +38,9 @@ const SavePostBtn = ({
     <button
       type="button"
       onClick={handleSavePost}
-      className="flex items-center gap-5 relative group"
+      className={`flex items-center gap-5 relative group ${
+        saving ? "cursor-wait" : "cursor-pointer"
+      }`}
       disabled={saving}
     >
       {saving ? (
