@@ -13,6 +13,7 @@ import Community from "./features/Dashboard/communities/Community";
 import SingleComunityPage from "./features/Dashboard/singleCommunityFeed/SingleComunityPage";
 import PostComments from "./features/Dashboard/postComments/PostComments";
 import SavedPosts from "./features/Dashboard/saved/SavedPosts";
+import User from "./features/Dashboard/userPage/User";
 
 const router = createBrowserRouter([
   {
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
               {
                 path: "community/:communityName",
                 element: <SingleComunityPage />,
-              },  
+              },
               {
                 path: "post/:postId",
                 element: <PostComments />,
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
               {
                 path: "saved",
                 element: <SavedPosts />,
+              },
+              {
+                path: "user/:userId",
+                element: <User />,
               },
             ],
           },
