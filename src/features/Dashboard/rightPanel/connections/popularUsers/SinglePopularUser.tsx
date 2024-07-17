@@ -8,7 +8,8 @@ type SinglePopularUserTypes = {
 const SinglePopularUser = ({ user }: SinglePopularUserTypes) => {
   const { followersCount, name, id } = user;
   return (
-    <li className="flex justify-between items-start">
+    <li className="flex justify-between items-center border border-slate-100  py-[.25rem] px-[.5rem]
+     rounded-md shadow-sm shadow-[#f2f5fc]">
       <div className="flex items-center gap-2">
         <img
           src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
