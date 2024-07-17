@@ -7,7 +7,7 @@ type PopularUserTypes = {
 
 const PopularUsersList = ({ popularUsers }: PopularUserTypes) => {
   return (
-    <ul className="flex flex-col gap-5">
+    <ul className="flex flex-col gap-3">
       {popularUsers?.map((user) => {
         return <SinglePopularUser key={user.id} user={user} />;
       })}
