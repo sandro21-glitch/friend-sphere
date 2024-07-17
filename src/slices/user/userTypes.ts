@@ -28,3 +28,10 @@ export interface userFormData {
   email: string;
   password: string;
 }
+
+//top user types
+export interface TopUserTypes {
+  id: string;
+  name: string;
+  followersCount: number;
+}
