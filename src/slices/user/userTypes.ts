@@ -35,3 +35,27 @@ export interface TopUserTypes {
   name: string;
   followersCount: number;
 }
+// Define the user type excluding the password
+export interface UserType {
+  uid: string;
+  email: string;
+  name: string;
+  followers: {
+    userUid: string;
+    name: string;
+  }[];
+  following: {
+    userUid: string;
+    name: string;
+  }[];
+  savedPosts: {
+    postId: string;
+    communityId: string;
+  }[];
+  registeredDate: string;
+  joinedGroups: string[];
+  isAdmin: boolean;
+  location: string;
+  interests: string[];
+  bio: string;
+}
