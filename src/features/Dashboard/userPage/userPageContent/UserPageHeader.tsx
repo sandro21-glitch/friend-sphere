@@ -8,7 +8,7 @@ type UserPageHeaderTypes = {
 };
 const UserPageHeader = ({ name, location }: UserPageHeaderTypes) => {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mb-10">
       <div className="relative w-fit mb-5 group">
         <img
           src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
