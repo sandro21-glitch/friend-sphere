@@ -1,9 +1,7 @@
-
+import DashboardPage from "../../../ui/DashboardPage";
 
 const User = () => {
-  return (
-    <div>User</div>
-  )
-}
+  return <DashboardPage>User</DashboardPage>;
+};
 
-export default User
+export default User;
