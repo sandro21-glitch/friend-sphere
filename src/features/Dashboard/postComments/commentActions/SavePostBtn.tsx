@@ -50,7 +50,7 @@ const SavePostBtn = ({
           <BsBookmark className="text-[1.7rem]" />
           <ActionDropdown
             dropdownText="Save post"
-            positions="-top-10 -right-[17px]"
+            classnames="-top-10 -right-[17px]"
           />
         </>
       )}
