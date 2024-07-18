@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import DashboardPage from "../../../ui/DashboardPage";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { fetchSavedPostsThunk } from "../../../slices/posts/postThunks";
-import PageLoader from "../../../ui/PageLoader";
 import SavedPostsList from "./SavedPostsList";
+import ErrorMessage from "../../../ui/ErrorMessage";
+import PageDataLoader from "../../../ui/PageDataLoader";
 
 const SavedPosts = () => {
   const userId = useAppSelector((store) => store.auth.userData?.uid);
@@ -21,24 +22,16 @@ const SavedPosts = () => {
     }
   }, [dispatch, userId]);
 
-  if (fetchingSavedPostsError) return <p>Error..</p>;
-  if (fetchingSavedPosts)
+  if (fetchingSavedPostsError)
     return (
-      <DashboardPage>
-        <div className="flex items-center justify-center h-full">
-          <PageLoader />
-        </div>
-      </DashboardPage>
+      <ErrorMessage
+        message={fetchingSavedPostsError || "Failed to fetch posts"}
+      />
     );
+  if (fetchingSavedPosts) return <PageDataLoader />;
 
   if (savedPosts === null || savedPosts.length === 0) {
-    return (
-      <DashboardPage>
-        <h3 className="p-5 border-b text-center text-[1.2rem] font-semibold normal-case">
-          Your saved posts are empty
-        </h3>
-      </DashboardPage>
-    );
+    return <ErrorMessage message="Your saved posts are empty" />;
   }
 
   return (
