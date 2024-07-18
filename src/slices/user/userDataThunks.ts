@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { database } from "../../config/firebase";
 import { get, ref, update } from "firebase/database";
-import { TopUserTypes } from "./userTypes";
+import { TopUserTypes, UserData, UserType } from "./userTypes";
 
 // Async thunk to update user's bio, location, and interests in Firebase
 export const updateUserProfile = createAsyncThunk(
@@ -65,5 +65,41 @@ export const fetchTopUsers = createAsyncThunk<
   } catch (error: any) {
     console.error("Failed to fetch top users:", error.message || error);
     return rejectWithValue(error.message || "Failed to fetch top users");
+  }
+});
+
+// Async thunk to fetch user information based on user ID
+export const fetchUserById = createAsyncThunk<
+  UserType,
+  string,
+  { rejectValue: string }
+>("user/fetchUserById", async (uid, { rejectWithValue }) => {
+  try {
+    const userRef = ref(database, `users/${uid}`);
+    const snapshot = await get(userRef);
+
+    if (!snapshot.exists()) {
+      throw new Error("User not found");
+    }
+
+    const data: UserData = snapshot.val();
+    const user: UserType = {
+      uid: data.uid,
+      email: data.email,
+      name: data.name,
+      followers: data.followers,
+      following: data.following,
+      savedPosts: data.savedPosts,
+      registeredDate: data.registeredDate,
+      joinedGroups: data.joinedGroups,
+      isAdmin: data.isAdmin,
+      location: data.location,
+      interests: data.interests,
+      bio: data.bio,
+    };
+
+    return user;
+  } catch (error: any) {
+    return rejectWithValue(error.message || "Failed to fetch user data");
   }
 });
