@@ -33,6 +33,7 @@ export const userDataSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    //update current user profile details
     builder
       .addCase(updateUserProfile.pending, (state) => {
         state.loading.updatingUserProfile = true;
@@ -45,6 +46,7 @@ export const userDataSlice = createSlice({
           (action.payload as string) || "Failed to update user profile";
         state.loading.updatingUserProfile = false;
       });
+    //fetch popular/top users
     builder
       .addCase(fetchTopUsers.pending, (state) => {
         state.loading.fetchingTopUsers = true;
