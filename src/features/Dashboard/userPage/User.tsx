@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import ErrorMessage from "../../../ui/ErrorMessage";
 import PageDataLoader from "../../../ui/PageDataLoader";
 import UserPageHeader from "./userPageContent/UserPageHeader";
+import UserInfo from "./userInfo/UserInfo";
 
 const User = () => {
   const { userId } = useParams();
@@ -32,8 +33,9 @@ const User = () => {
 
   return (
     <DashboardPage>
-      <div className="p-5 flex justify-center items-center my-10">
+      <div className="p-5 flex flex-col justify-center items-center my-10">
         <UserPageHeader name={name} location={location} />
+        <UserInfo singleUser={singleUser} />
       </div>
     </DashboardPage>
   );
