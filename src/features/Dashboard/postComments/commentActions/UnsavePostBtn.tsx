@@ -33,7 +33,7 @@ const UnsavePostBtn = ({
       <BsBookmarkDashFill className="text-[1.7rem]" />
       <ActionDropdown
         dropdownText="Remove from saved"
-        positions="-top-10 right-[-155%]"
+        classnames="-top-10 right-[-155%]"
       />
     </button>
   );
