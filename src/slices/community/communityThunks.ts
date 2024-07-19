@@ -3,6 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { get, onValue, ref, update } from "firebase/database";
 import { database } from "../../config/firebase";
 import { CommunityTypes } from "./communitySlice";
+import { UserData } from "../user/userTypes";
 
 export const fetchCommunities = createAsyncThunk(
   "community/fetchCommunities",
@@ -105,11 +106,12 @@ export const fetchNonJoinedCommunities = createAsyncThunk(
 export const joinGroup = createAsyncThunk(
   "community/joinGroup",
   async (
-    { communityUid, uid }: { communityUid: string; uid: string },
+    { communityUid, communityName, uid }: { communityUid: string; communityName: string; uid: string },
     { rejectWithValue }
   ) => {
     try {
       const communitiesRef = ref(database, "communities");
+      const usersRef = ref(database, `users/${uid}`);
 
       // Fetch all communities
       const snapshot = await get(communitiesRef);
@@ -136,6 +138,25 @@ export const joinGroup = createAsyncThunk(
 
       await update(communitiesRef, updates);
       communityToUpdate.members = updatedMembers;
+
+      // Fetch user data
+      const userSnapshot = await get(usersRef);
+      const userData: UserData = userSnapshot.val() || {};
+
+      const updatedJoinedGroups = [
+        ...(userData.joinedGroups || []),
+        {
+          groupId: communityUid,
+          groupName: communityName,
+        },
+      ];
+
+      const userUpdates: any = {};
+      userUpdates[`joinedGroups`] = updatedJoinedGroups;
+
+      // Update user's joined groups
+      await update(usersRef, userUpdates);
+
       return { communityToUpdate, communityUid };
     } catch (error: any) {
       console.error("Error joining group:", error);
