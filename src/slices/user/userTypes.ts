@@ -16,7 +16,10 @@ export interface UserData {
     communityId: string;
   }[];
   registeredDate: string;
-  joinedGroups: string[];
+  joinedGroups: {
+    groupId: string;
+    groupName: string;
+  }[];
   isAdmin: boolean;
   location: string;
   interests: string[];
@@ -53,7 +56,10 @@ export interface UserType {
     communityId: string;
   }[];
   registeredDate: string;
-  joinedGroups: string[];
+  joinedGroups: {
+    groupId: string;
+    groupName: string;
+  }[];
   isAdmin: boolean;
   location: string;
   interests: string[];
