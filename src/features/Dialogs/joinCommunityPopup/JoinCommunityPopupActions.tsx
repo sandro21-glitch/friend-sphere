@@ -5,9 +5,13 @@ import MiniLoadingSpinner from "../../../ui/MiniLoadingSpinner";
 
 type PopupActionTypes = {
   communityId: string;
+  communityName: string;
 };
 
-const JoinCommunityPopupActions = ({ communityId }: PopupActionTypes) => {
+const JoinCommunityPopupActions = ({
+  communityId,
+  communityName,
+}: PopupActionTypes) => {
   const { loading, error } = useAppSelector(
     (store) => store.communities.joinGroup
   );
@@ -18,7 +22,9 @@ const JoinCommunityPopupActions = ({ communityId }: PopupActionTypes) => {
     if (!userUid) return;
 
     try {
-      await dispatch(joinGroup({ uid: userUid, communityUid: communityId }));
+      await dispatch(
+        joinGroup({ uid: userUid, communityUid: communityId, communityName })
+      );
       dispatch(
         setJoinCommunityModal({ isModalOpen: false, communityData: null })
       );
