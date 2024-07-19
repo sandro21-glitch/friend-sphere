@@ -21,9 +21,7 @@ const SinglePopularUser = ({ user }: SinglePopularUserTypes) => {
             className="w-[2rem] h-[2rem]"
           />
           <div>
-            <Link className="text-[16px] font-medium" to={`user/${id}`}>
-              {name}
-            </Link>
+            <div className="text-[16px] font-medium">{name}</div>
             <div className="text-[12px] capitalize text-gray-500">
               followers: {followersCount}
             </div>
