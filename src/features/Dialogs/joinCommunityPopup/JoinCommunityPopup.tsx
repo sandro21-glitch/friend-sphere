@@ -22,7 +22,7 @@ const JoinCommunityPopup = () => {
         Are you sure you want to join this community? You can always leave
         later.
       </p>
-      <JoinCommunityPopupActions communityId={communityId} />
+      <JoinCommunityPopupActions communityId={communityId} communityName={communityName} />
     </div>
   );
 };
