@@ -11,6 +11,7 @@ type NonJoinedCommunityTypes = {
 const SingleNonJoinedCommunity = ({ group }: NonJoinedCommunityTypes) => {
 
   const dispatch = useAppDispatch();
+  
   const handleJoinCommunity = () => {
     dispatch(
       setJoinCommunityModal({
