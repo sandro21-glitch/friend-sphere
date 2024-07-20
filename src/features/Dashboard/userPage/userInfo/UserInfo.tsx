@@ -36,7 +36,18 @@ const UserInfo = ({ singleUser }: UserInfoTypes) => {
       <UserFollowersCount followers={followers} />
       {commonGroups.length > 0 ? (
         <UserGroups commonGroups={commonGroups} />
-      ) : null}
+      ) : (
+        <li className="text-md">You have no communities in common.</li>
+      )}
+      <li className="text-md">
+        <p className="font-semibold text-md">Interests:</p>
+        {interests.map((interest, idx) => (
+          <span key={idx}>
+            {interest}
+            {idx < interests.length - 1 && ", "}
+          </span>
+        ))}
+      </li>
     </ul>
   );
 };
