@@ -1,4 +1,3 @@
-import { MdUpdate } from "react-icons/md";
 import { UserType } from "../../../../slices/user/userTypes";
 import { useAppSelector } from "../../../../hooks/reduxHooks";
 import UserGroups from "./userProfileContent/UserGroups";
