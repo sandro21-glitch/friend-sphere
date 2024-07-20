@@ -17,24 +17,26 @@ const UserInfo = ({ singleUser }: UserInfoTypes) => {
   const {
     followers,
     following,
-    joinedGroups,
+    joinedGroups = [],
     registeredDate,
     bio,
     interests,
     uid,
   } = singleUser;
 
-  const commonGroups = joinedGroups.filter((group) =>
+  const commonGroups = joinedGroups?.filter((group) =>
     currUserGroups.some((currGroup) => currGroup.groupId === group.groupId)
   );
 
   return (
     <ul className="flex flex-col items-start w-full">
-     <UserRegisterDate registeredDate={registeredDate} />
+      <UserRegisterDate registeredDate={registeredDate} />
       <UserGroupsCount joinedGroups={joinedGroups} />
       <UserFollowingCount following={following} />
       <UserFollowersCount followers={followers} />
-      {commonGroups.length > 0 && <UserGroups commonGroups={commonGroups} />}
+      {commonGroups.length > 0 ? (
+        <UserGroups commonGroups={commonGroups} />
+      ) : null}
     </ul>
   );
 };
