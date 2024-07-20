@@ -4,11 +4,12 @@ import Connections from "./connections/Connections";
 import PostCommentsAside from "./postComments/PostCommentsAside";
 import { useEffect } from "react";
 import { fetchTopUsers } from "../../../slices/user/userDataThunks";
-import { useAppDispatch } from "../../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 
 const RightPanel = () => {
   const location = useLocation();
   const { postId } = useParams<{ postId: string }>();
+  const currentUserId = useAppSelector((store) => store.auth.userData?.uid);
 
   const dispatch = useAppDispatch();
 
@@ -22,7 +23,9 @@ const RightPanel = () => {
 
   // Fetch top users only once when the component mounts
   useEffect(() => {
-    dispatch(fetchTopUsers());
+    if (currentUserId) {
+      dispatch(fetchTopUsers(currentUserId));
+    }
   }, [dispatch]);
 
   return (
