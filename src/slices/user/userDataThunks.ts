@@ -31,12 +31,11 @@ export const updateUserProfile = createAsyncThunk(
 );
 
 //fetch popular users
-
 export const fetchTopUsers = createAsyncThunk<
   TopUserTypes[],
-  void,
+  string, // currentUserId as an argument
   { rejectValue: string }
->("users/fetchTopUsers", async (_, { rejectWithValue }) => {
+>("users/fetchTopUsers", async (currentUserId, { rejectWithValue }) => {
   try {
     const usersRef = ref(database, "users");
     const snapshot = await get(usersRef);
@@ -50,11 +49,13 @@ export const fetchTopUsers = createAsyncThunk<
       const data = childSnapshot.val();
       const followersCount = data.followers?.length || 0;
 
-      users.push({
-        id: data.uid,
-        followersCount,
-        name: data.name,
-      });
+      if (data.uid !== currentUserId) {
+        users.push({
+          id: data.uid,
+          followersCount,
+          name: data.name,
+        });
+      }
 
       if (users.length >= 5) {
         return true; // Stop iterating after collecting 5 users
