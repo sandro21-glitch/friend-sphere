@@ -71,6 +71,7 @@ export const fetchUserCommunities = createAsyncThunk(
   }
 );
 
+//fetchNonJoinedCommunities
 export const fetchNonJoinedCommunities = createAsyncThunk(
   "community/fetchNonJoinedCommunities",
   async (userId: string, { rejectWithValue }) => {
@@ -106,7 +107,11 @@ export const fetchNonJoinedCommunities = createAsyncThunk(
 export const joinGroup = createAsyncThunk(
   "community/joinGroup",
   async (
-    { communityUid, communityName, uid }: { communityUid: string; communityName: string; uid: string },
+    {
+      communityUid,
+      communityName,
+      uid,
+    }: { communityUid: string; communityName: string; uid: string },
     { rejectWithValue }
   ) => {
     try {
