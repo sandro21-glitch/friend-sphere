@@ -38,7 +38,7 @@ const UserInfo = ({ singleUser }: UserInfoTypes) => {
       {commonGroups.length > 0 ? (
         <UserGroups commonGroups={commonGroups} />
       ) : (
-        <li className="text-md">You have no communities in common.</li>
+        <li className="text-md  mb-2">You have no communities in common.</li>
       )}
       <li className="text-md">
         <p className="font-semibold text-md">Interests:</p>
