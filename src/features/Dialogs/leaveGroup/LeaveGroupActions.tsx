@@ -16,7 +16,7 @@ const LeaveGroupActions = () => {
     try {
       await dispatch(
         leaveGroup({ communityUid: dataIds?.communityId, uid: dataIds.userId })
-      );
+      ).unwrap()
       dispatch(setLeaveCommunity({ dataIds: null, isModalOpen: false }));
       navigate("/home");
     } catch (error) {
