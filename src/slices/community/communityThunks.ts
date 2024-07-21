@@ -178,11 +178,13 @@ export const leaveGroup = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      // Create references to the communities and users nodes
       const communitiesRef = ref(database, "communities");
+      const userRef = ref(database, `users/${uid}`); // Use `users/${uid}` for specific user
 
       // Fetch all communities
-      const snapshot = await get(communitiesRef);
-      const communities = snapshot.val() || {};
+      const communitiesSnapshot = await get(communitiesRef);
+      const communities = communitiesSnapshot.val() || {};
 
       let communityToUpdate: any = null;
       let memberIndex: number | undefined = undefined;
@@ -196,7 +198,6 @@ export const leaveGroup = createAsyncThunk(
             memberIndex = communityToUpdate.members.findIndex(
               (member: { memberid: string }) => member.memberid === uid
             );
-            // Define the type of member as { memberid: string } or the appropriate type for your case
           }
         }
       });
@@ -214,10 +215,30 @@ export const leaveGroup = createAsyncThunk(
       // Remove user from members array
       communityToUpdate.members.splice(memberIndex, 1);
 
-      const updates: any = {};
-      updates[`${communityToUpdate.id}/members`] = communityToUpdate.members;
+      const communityUpdates: any = {};
+      communityUpdates[`${communityToUpdate.id}/members`] = communityToUpdate.members;
 
-      await update(communitiesRef, updates);
+      // Fetch the user data
+      const userSnapshot = await get(userRef);
+      const user = userSnapshot.val() || {};
+
+      if (!user.joinedGroups) {
+        return rejectWithValue("User joinedGroups not found.");
+      }
+
+      // Remove community from user's joinedGroups array
+      const updatedJoinedGroups = user.joinedGroups.filter(
+        (group: { groupId: string }) => group.groupId !== communityUid
+      );
+
+      const userUpdates: any = {};
+      userUpdates['joinedGroups'] = updatedJoinedGroups;
+
+      // Update both community and user data
+      await Promise.all([
+        update(ref(database, `communities/${communityToUpdate.id}`), communityUpdates),
+        update(userRef, userUpdates),
+      ]);
 
       return { communityToUpdate, communityUid };
     } catch (error: any) {
