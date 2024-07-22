@@ -1,72 +1,73 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { get, onValue, ref, update } from "firebase/database";
+import { get, ref, update } from "firebase/database";
 import { database } from "../../config/firebase";
-import { CommunityTypes } from "./communitySlice";
+import { CommunitySummary, CommunityTypes } from "./communitySlice";
 import { UserData } from "../user/userTypes";
 
-export const fetchCommunities = createAsyncThunk(
-  "community/fetchCommunities",
-  async (_, { rejectWithValue }) => {
-    try {
-      const communitiesRef = ref(database, "communities");
-
-      const snapshot = await new Promise<any>((resolve, _) => {
-        onValue(
-          communitiesRef,
-          (snapshot) => {
-            const communities: CommunityTypes[] = [];
-            snapshot.forEach((childSnapshot) => {
-              communities.push(childSnapshot.val() as CommunityTypes);
-            });
-            resolve(communities);
-          },
-          {
-            onlyOnce: true,
-          }
-        );
-      });
-
-      return snapshot;
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Error fetching communities");
-    }
-  }
-);
 
 export const fetchUserCommunities = createAsyncThunk(
   "community/fetchUserCommunities",
   async (userId: string, { rejectWithValue }) => {
     try {
-      const communitiesRef = ref(database, "communities");
+      const userRef = ref(database, `users/${userId}`);
 
-      const snapshot = await new Promise<any>((resolve, _) => {
-        onValue(
-          communitiesRef,
-          (snapshot) => {
-            const communities: CommunityTypes[] = [];
-            snapshot.forEach((childSnapshot) => {
-              const community = childSnapshot.val() as CommunityTypes;
-              if (
-                community.members &&
-                community.members.some((member) => member.memberid === userId)
-              ) {
-                communities.push(community);
-              }
-            });
-            resolve(communities);
-          },
-          {
-            onlyOnce: true,
-          }
-        );
-      });
+      // Fetch user data
+      const userSnapshot = await get(userRef);
+      const userData: UserData = userSnapshot.val();
 
-      return snapshot;
+      if (!userData || !userData.joinedGroups) {
+        return [];
+      }
+
+      // Map the joinedGroups to only include community ID and name
+      const userCommunities: CommunitySummary[] = userData.joinedGroups.map(
+        (group) => ({
+          uid: group.groupId,
+          name: group.groupName,
+        })
+      );
+
+      return userCommunities;
     } catch (error: any) {
       return rejectWithValue(
         error.message || "Error fetching user communities"
       );
+    }
+  }
+);
+
+
+//fetch single group by id
+export const fetchCommunityById = createAsyncThunk<
+  CommunityTypes,
+  string,
+  { rejectValue: string }
+>(
+  "community/fetchCommunityById",
+  async (communityUid: string, { rejectWithValue }) => {
+    try {
+      const communitiesRef = ref(database, "communities");
+
+      // Fetch all communities
+      const snapshot = await get(communitiesRef);
+      const communities = snapshot.val() || {};
+
+      // Find the community by UID
+      let communityToFetch: CommunityTypes | null = null;
+      Object.keys(communities).forEach((key) => {
+        if (communities[key].uid === communityUid) {
+          communityToFetch = { ...communities[key], id: key } as CommunityTypes;
+        }
+      });
+
+      if (!communityToFetch) {
+        return rejectWithValue(`Community with uid ${communityUid} not found.`);
+      }
+
+      return communityToFetch;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Error fetching community");
     }
   }
 );
@@ -216,7 +217,8 @@ export const leaveGroup = createAsyncThunk(
       communityToUpdate.members.splice(memberIndex, 1);
 
       const communityUpdates: any = {};
-      communityUpdates[`${communityToUpdate.id}/members`] = communityToUpdate.members;
+      communityUpdates[`${communityToUpdate.id}/members`] =
+        communityToUpdate.members;
 
       // Fetch the user data
       const userSnapshot = await get(userRef);
@@ -232,11 +234,14 @@ export const leaveGroup = createAsyncThunk(
       );
 
       const userUpdates: any = {};
-      userUpdates['joinedGroups'] = updatedJoinedGroups;
+      userUpdates["joinedGroups"] = updatedJoinedGroups;
 
       // Update both community and user data
       await Promise.all([
-        update(ref(database, `communities/${communityToUpdate.id}`), communityUpdates),
+        update(
+          ref(database, `communities/${communityToUpdate.id}`),
+          communityUpdates
+        ),
         update(userRef, userUpdates),
       ]);
 
