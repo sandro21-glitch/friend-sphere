@@ -1,7 +1,7 @@
 import { BsBookmark } from "react-icons/bs";
-import ActionDropdown from "../../../../ui/ActionDropdown";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { savePostThunk } from "../../../../slices/posts/postThunks";
+import Tooltip from "../../../../ui/Tooltip";
 
 type SavePostBtnTypes = {
   isPostSaved: boolean;
@@ -38,22 +38,15 @@ const SavePostBtn = ({
     <button
       type="button"
       onClick={handleSavePost}
-      className={`flex items-center gap-5 relative group ${
+      className={` flex items-center gap-5 relative group ${
         saving ? "cursor-wait" : "cursor-pointer"
       }`}
       disabled={saving}
     >
-      {saving ? (
-        "Loading..."
-      ) : (
-        <>
-          <BsBookmark className="text-[1.7rem]" />
-          <ActionDropdown
-            dropdownText="Save post"
-            classnames="-top-10 -right-[17px]"
-          />
-        </>
-      )}
+      <div className="">
+        <BsBookmark className="text-[1.7rem]" />
+      </div>
+      <Tooltip action={saving ? "Loading..." : "Save post"} />
     </button>
   );
 };
