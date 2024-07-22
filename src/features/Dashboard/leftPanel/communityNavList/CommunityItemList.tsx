@@ -4,7 +4,7 @@ import SmallSpinner from "../../../../ui/SmallSpinner";
 
 const CommunityItemList = () => {
   const {
-    communityData,
+    userGroups,
     joinedGroups: { error, loading },
   } = useAppSelector((store) => store.communities);
 
@@ -12,7 +12,7 @@ const CommunityItemList = () => {
   if (loading) return <SmallSpinner />;
   return (
     <ul className="flex flex-col gap-1">
-      {communityData?.slice(0, 5).map((item) => {
+      {userGroups?.slice(0, 5).map((item) => {
         return (
           <li
             key={item.uid}
