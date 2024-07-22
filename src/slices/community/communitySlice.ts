@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
+  fetchCommunityById,
   fetchNonJoinedCommunities,
   fetchUserCommunities,
   joinGroup,
@@ -38,11 +39,36 @@ export interface CommunityTypes {
     createdAt: string;
   }[];
 }
+export interface PostType {
+  userName: string;
+  groupName: string;
+  postId: string;
+  userId: string;
+  userPost: string;
+  likedBy: string[] | null;
+  postComments:
+    | {
+        userComment: string;
+        userId: string;
+        userName: string;
+      }[]
+    | null;
+  createdAt: string;
+}
+export interface CommunitySummary {
+  uid: string;
+  name: string;
+}
 
 interface CommunityState {
-  communityData: CommunityTypes[] | null;
+  userGroups: CommunitySummary[] | null;
+  groupById: CommunityTypes | null;
   nonJoinedGroupData: CommunityTypes[] | null;
   joinedGroups: {
+    loading: boolean;
+    error: string | null;
+  };
+  singleGroup: {
     loading: boolean;
     error: string | null;
   };
@@ -63,9 +89,14 @@ interface CommunityState {
 }
 
 const initialState: CommunityState = {
-  communityData: null,
+  userGroups: null,
+  groupById: null,
   nonJoinedGroupData: null,
   joinedGroups: {
+    loading: false,
+    error: null,
+  },
+  singleGroup: {
     loading: false,
     error: null,
   },
@@ -90,6 +121,7 @@ export const communitiesSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    //fetch user communities
     builder
       .addCase(fetchUserCommunities.pending, (state) => {
         state.joinedGroups.loading = true;
@@ -97,17 +129,31 @@ export const communitiesSlice = createSlice({
       })
       .addCase(
         fetchUserCommunities.fulfilled,
-        (state, action: PayloadAction<CommunityTypes[]>) => {
-          state.communityData = action.payload;
+        (state, action: PayloadAction<CommunitySummary[]>) => {
+          state.userGroups = action.payload;
           state.joinedGroups.loading = false;
           state.joinedGroups.error = null;
         }
       )
       .addCase(fetchUserCommunities.rejected, (state, action) => {
         state.joinedGroups.error =
-          action.error.message ?? "Error fetching communities";
+          action.error.message ?? "Error user fetching communities";
         state.joinedGroups.loading = false;
       });
+    //fetch single community with id
+    builder
+      .addCase(fetchCommunityById.pending, (state) => {
+        state.singleGroup.loading = true;
+      })
+      .addCase(
+        fetchCommunityById.fulfilled,
+        (state, action: PayloadAction<CommunityTypes>) => {
+          state.singleGroup.loading = false;
+          state.groupById = action.payload;
+        }
+      )
+      .addCase(fetchCommunityById.rejected, () => {});
+    //fetch non joined groups
     builder
       .addCase(fetchNonJoinedCommunities.pending, (state) => {
         state.nonJoinedGroups.loading = true;
@@ -129,10 +175,6 @@ export const communitiesSlice = createSlice({
         state.joinGroup.loading = false;
         state.joinGroup.communityId = action.payload.communityUid;
 
-        // add the joined group to communityData if it's not already there
-        if (state.communityData) {
-          state.communityData.push(action.payload.communityToUpdate);
-        }
         // filter out the joined group from nonJoinedGroupData
         if (state.nonJoinedGroupData) {
           state.nonJoinedGroupData = state.nonJoinedGroupData.filter(
@@ -153,11 +195,6 @@ export const communitiesSlice = createSlice({
       .addCase(leaveGroup.fulfilled, (state, action) => {
         state.leaveGroup.loading = false;
         state.leaveGroup.communityId = action.payload.communityUid;
-        if (state.communityData) {
-          state.communityData = state.communityData?.filter(
-            (group) => group.uid !== action.payload.communityUid
-          );
-        }
       })
       .addCase(leaveGroup.rejected, (state, action) => {
         state.leaveGroup.loading = false;
