@@ -1,17 +1,17 @@
-import { useAppSelector } from "../../../../hooks/reduxHooks";
+import { PostType } from "../../../../slices/community/communitySlice";
 import SingleGroupPost from "./SingleGroupPost";
 
 type GroupPostTypes = {
   communityId: string;
+  posts: PostType[];
 };
-const GroupPosts = ({ communityId }: GroupPostTypes) => {
-  const groupPosts = useAppSelector((store) => store.posts.communityPosts);
-  if (!groupPosts) return <p>No posts</p>;
+const GroupPosts = ({ posts, communityId }: GroupPostTypes) => {
+  if (!posts) return <p>No posts</p>;
 
   return (
     <div className="py-5 px-2">
       <ul className="flex flex-col gap-5 ">
-        {groupPosts
+        {posts
           .slice()
           .reverse()
           .map((post) => {
