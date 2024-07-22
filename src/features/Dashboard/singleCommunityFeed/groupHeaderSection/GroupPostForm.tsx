@@ -5,19 +5,16 @@ import { addPostToCommunity } from "../../../../slices/posts/postThunks";
 import { nanoid } from "nanoid";
 
 type GroupPostFormTypes = {
+  name: string;
   groupId: string;
 };
 
-const GroupPostForm = ({ groupId }: GroupPostFormTypes) => {
+const GroupPostForm = ({ name, groupId }: GroupPostFormTypes) => {
   const [postText, setPostText] = useState("");
   const dispatch = useAppDispatch();
   const userId = useAppSelector((store) => store.auth.userData?.uid || null);
   const userName = useAppSelector((store) => store.auth.userData?.name || null);
-  const groupName = useAppSelector(
-    (store) =>
-      store.communities.communityData?.find((group) => group.uid === groupId)
-        ?.name
-  );
+
   const handleAddPost = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -28,7 +25,7 @@ const GroupPostForm = ({ groupId }: GroupPostFormTypes) => {
     const newPost = {
       postId: nanoid(),
       userName: userName || "",
-      groupName: groupName || "",
+      groupName: name || "",
       userId,
       userPost: postText,
       likedBy: [],
