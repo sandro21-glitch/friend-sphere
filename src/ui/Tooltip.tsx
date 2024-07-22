@@ -6,8 +6,10 @@ type TooltipTypes = {
 const Tooltip = ({ message, action }: TooltipTypes) => {
   return (
     <div
-      className="absolute z-10 hidden p-1 text-[12px] text-nowrap font-medium
-             text-white bg-azure-blue rounded-lg group-hover:inline-block -translate-y-full top-0"
+      className="absolute z-10 hidden group-hover:block py-1 px-2 text-[12px]
+       whitespace-nowrap font-medium
+               text-white bg-azure-blue rounded-md transform -translate-x-1/2 -translate-y-full
+               -top-1 left-1/2"
       role="tooltip"
     >
       <span className="capitalize">{action}</span>{" "}
