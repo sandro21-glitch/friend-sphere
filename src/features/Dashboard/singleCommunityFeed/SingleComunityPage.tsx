@@ -1,45 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../hooks/reduxHooks';
-import GroupHeader from './groupHeaderSection/GroupHeader';
-import GroupPostForm from './groupHeaderSection/GroupPostForm';
-import { fetchCommunityPosts } from '../../../slices/posts/postThunks';
-import GroupPosts from './groupPosts/GroupPosts';
-import PageLoader from '../../../ui/PageLoader';
-import DashboardPage from '../../../ui/DashboardPage';
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import GroupHeader from "./groupHeaderSection/GroupHeader";
+import GroupPostForm from "./groupHeaderSection/GroupPostForm";
+import GroupPosts from "./groupPosts/GroupPosts";
+import PageLoader from "../../../ui/PageLoader";
+import DashboardPage from "../../../ui/DashboardPage";
+import { fetchCommunityById } from "../../../slices/community/communityThunks";
 
 const SingleCommunityPage: React.FC = () => {
   const {
-    loading: { fetching },
-    error: { fetchingError },
-  } = useAppSelector((store) => store.posts);
+    singleGroup: { loading, error },
+    groupById,
+  } = useAppSelector((store) => store.communities);
 
-  const [postPage, setPostPage] = useState<string>('all');
+  const [postPage, setPostPage] = useState<string>("all");
 
   const location = useLocation();
   const { id } = location.state || {};
-  
-  const communityData = useAppSelector((store) =>
-    store.communities.communityData?.find((data) => data.uid === id)
-  );
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (communityData) {
-      dispatch(fetchCommunityPosts({ communityId: communityData.uid }));
+    if (id) {
+      dispatch(fetchCommunityById(id));
     }
-  }, [dispatch, postPage, communityData]);
+  }, [dispatch, id]);
 
-  if (!id) {
-    return (
-      <section className="col-span-2 min-h-full h-full mt-5 bg-white">
-        {"Community ID not found in location state."}
-      </section>
-    );
-  }
-
-  if (fetching) {
+  if (loading) {
     return (
       <section className="col-span-2 min-h-full h-full mt-5 bg-white flex items-center justify-center">
         <PageLoader />
@@ -47,27 +35,23 @@ const SingleCommunityPage: React.FC = () => {
     );
   }
 
-  if (fetchingError) {
+  if (error) {
     return (
       <section className="col-span-2 min-h-full h-full mt-5 bg-white">
-        {fetchingError || "Something went wrong"}
+        {error || "Something went wrong"}
       </section>
     );
   }
 
-  if (!communityData) {
-    return (
-      <section className="col-span-2 min-h-full h-full mt-5 bg-white">
-        {"Community data not found."}
-      </section>
-    );
-  }
+  if (!groupById) return null;
+
+  const { posts, uid, name } = groupById;
 
   return (
     <DashboardPage>
       <GroupHeader postPage={postPage} setPostPage={setPostPage} />
-      <GroupPostForm groupId={communityData.uid} />
-      <GroupPosts communityId={communityData.uid} />
+      <GroupPostForm groupId={uid} name={name} />
+      <GroupPosts communityId={uid} posts={posts} />
     </DashboardPage>
   );
 };
