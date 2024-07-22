@@ -8,9 +8,7 @@ type GroupInfoTypes = {
 };
 
 const GroupInfo = ({ id }: GroupInfoTypes) => {
-  const groupInfo = useAppSelector((state) =>
-    state.communities.communityData?.find((group) => group.uid === id)
-  );
+  const groupInfo = useAppSelector((store) => store.communities.groupById);
 
   const { banner, description, members, name, rules = [] } = groupInfo || {};
   return (
