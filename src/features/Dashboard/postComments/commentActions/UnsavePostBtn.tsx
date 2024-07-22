@@ -1,7 +1,7 @@
 import { BsBookmarkDashFill } from "react-icons/bs";
-import ActionDropdown from "../../../../ui/ActionDropdown";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { unsavePostThunk } from "../../../../slices/posts/postThunks";
+import Tooltip from "../../../../ui/Tooltip";
 
 type UnsavePostBtnTypes = {
   postId: string;
@@ -31,10 +31,7 @@ const UnsavePostBtn = ({
       className="flex items-center gap-5 relative group"
     >
       <BsBookmarkDashFill className="text-[1.7rem]" />
-      <ActionDropdown
-        dropdownText="Remove from saved"
-        classnames="-top-10 right-[-155%]"
-      />
+      <Tooltip action={"Remove from saved"} />
     </button>
   );
 };
