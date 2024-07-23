@@ -167,21 +167,43 @@ export const communitiesSlice = createSlice({
           action?.error.message ?? "Error fetching communities";
         state.nonJoinedGroups.loading = false;
       });
+    //join group
     builder
       .addCase(joinGroup.pending, (state) => {
         state.joinGroup.loading = true;
       })
-      .addCase(joinGroup.fulfilled, (state, action) => {
-        state.joinGroup.loading = false;
-        state.joinGroup.communityId = action.payload.communityUid;
+      .addCase(
+        joinGroup.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            communityToUpdate: CommunityTypes;
+            communityUid: string;
+          }>
+        ) => {
+          state.joinGroup.loading = false;
+          const { communityToUpdate, communityUid } = action.payload;
+          state.joinGroup.communityId = communityUid;
 
-        // filter out the joined group from nonJoinedGroupData
-        if (state.nonJoinedGroupData) {
-          state.nonJoinedGroupData = state.nonJoinedGroupData.filter(
-            (group) => group.uid !== action.payload.communityUid
-          );
+          if (state.userGroups && communityToUpdate) {
+            // console.log(communityToUpdate);
+            state.userGroups = [
+              ...state.userGroups,
+              {
+                name: communityToUpdate.name,
+                uid: communityUid,
+              },
+            ];
+          }
+
+          // Filter out the joined group from nonJoinedGroupData
+          if (state.nonJoinedGroupData) {
+            state.nonJoinedGroupData = state.nonJoinedGroupData.filter(
+              (group) => group.uid !== action.payload.communityUid
+            );
+          }
         }
-      })
+      )
       .addCase(joinGroup.rejected, (state, action) => {
         state.joinGroup.loading = false;
         state.joinGroup.communityId = null;
@@ -192,10 +214,25 @@ export const communitiesSlice = createSlice({
       .addCase(leaveGroup.pending, (state) => {
         state.leaveGroup.loading = true;
       })
-      .addCase(leaveGroup.fulfilled, (state, action) => {
-        state.leaveGroup.loading = false;
-        state.leaveGroup.communityId = action.payload.communityUid;
-      })
+      .addCase(
+        leaveGroup.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            communityToUpdate: CommunityTypes;
+            communityUid: string;
+          }>
+        ) => {
+          state.leaveGroup.loading = false;
+          const { communityUid } = action.payload;
+          state.leaveGroup.communityId = communityUid;
+          if (state.userGroups) {
+            state.userGroups = state.userGroups?.filter(
+              (group) => group.uid !== communityUid
+            );
+          }
+        }
+      )
       .addCase(leaveGroup.rejected, (state, action) => {
         state.leaveGroup.loading = false;
         state.leaveGroup.error =
