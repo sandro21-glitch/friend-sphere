@@ -3,39 +3,21 @@ import { BiComment } from "react-icons/bi";
 
 interface PostLinkProps {
   postId: string;
-  likedBy: string[];
   postCommentLength: number;
   communityId: string;
-  timeAgo: string;
-  userName: string;
-  groupName: string;
-  userPost: string;
 }
 
 const CommentsLink: React.FC<PostLinkProps> = ({
   postId,
-  likedBy,
   postCommentLength,
   communityId,
-  timeAgo,
-  userName,
-  groupName,
-  userPost,
 }) => {
   return (
     <Link
       to={`/post/${postId}`}
       state={{
-        postInfo: {
-          likedBy,
-          postCommentLength,
-          postId,
-          communityId,
-          timeAgo,
-          userName,
-          groupName,
-          userPost,
-        },
+        communityId,
+        postId,
       }}
       className="flex items-center gap-1"
     >
