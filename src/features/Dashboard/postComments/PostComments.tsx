@@ -3,23 +3,45 @@ import PostCommentActions from "./PostCommentActions";
 import PostCommentForm from "./PostCommentForm";
 import PostCommentsHeader from "./PostCommentsHeader";
 import PostCommentText from "./PostCommentText";
-import { PostActionTypes } from "../singleCommunityFeed/groupPosts/PostActions";
 import DashboardPage from "../../../ui/DashboardPage";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { fetchSinglePost } from "../../../slices/posts/postThunks";
+import PageDataLoader from "../../../ui/PageDataLoader";
+import ErrorMessage from "../../../ui/ErrorMessage";
 
 const PostComments = () => {
-  const location = useLocation();
-  const { postInfo }: { postInfo: PostActionTypes } = location.state || {};
-
   const {
-    communityId,
-    groupName,
-    likedBy,
-    postCommentLength,
-    postId,
-    timeAgo,
-    userPost,
-    userName,
-  } = postInfo;
+    loading: { fetchingSinglePost },
+    error: { fetchingSinglePostError },
+    singlePost,
+  } = useAppSelector((store) => store.posts);
+
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+
+  const { postId, communityId } = location.state || {};
+
+  useEffect(() => {
+    if (postId && communityId) {
+      dispatch(fetchSinglePost({ communityId, postId }));
+    }
+  }, [postId, communityId, dispatch]);
+
+  if (fetchingSinglePost) {
+    return <PageDataLoader />;
+  }
+  if (fetchingSinglePostError) {
+    return <ErrorMessage message={fetchingSinglePostError || 'something went wrong... try again'} />;
+  }
+
+  if (!singlePost) {
+    return <ErrorMessage message="Post not found" />;
+  }
+
+  const { userName, userPost, likedBy, postComments, createdAt, groupName } = singlePost;
+  const timeAgo = createdAt; // You can format this if needed
+  const postCommentLength = postComments ? postComments.length : 0;
 
   return (
     <DashboardPage>
@@ -32,7 +54,7 @@ const PostComments = () => {
         />
         <PostCommentText userPost={userPost} />
         <PostCommentActions
-          likedBy={likedBy}
+          likedBy={likedBy || []}
           postCommentLength={postCommentLength}
           postId={postId}
           communityId={communityId}
