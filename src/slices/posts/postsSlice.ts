@@ -4,6 +4,7 @@ import {
   addPostToCommunity,
   fetchCommunityPosts,
   fetchSavedPostsThunk,
+  fetchSinglePost,
   likePost,
   removePost,
   savePostThunk,
@@ -34,6 +35,7 @@ export interface SavedPostTypes extends UserPostTypes {
 interface PostsState {
   communityPosts: UserPostTypes[] | null;
   savedPosts: SavedPostTypes[] | null;
+  singlePost: UserPostTypes | null;
   loading: {
     fetching: boolean;
     adding: boolean;
@@ -43,6 +45,7 @@ interface PostsState {
     saving: boolean;
     unsaving: boolean;
     fetchingSavedPosts: boolean;
+    fetchingSinglePost: boolean;
   };
   error: {
     fetchingError: string | null;
@@ -53,6 +56,7 @@ interface PostsState {
     savingError: string | null;
     unsavingError: string | null;
     fetchingSavedPostsError: string | null;
+    fetchingSinglePostError: string | null;
   };
 }
 [];
@@ -60,6 +64,7 @@ interface PostsState {
 const initialState: PostsState = {
   communityPosts: null,
   savedPosts: null,
+  singlePost: null,
   loading: {
     fetching: false,
     adding: false,
@@ -69,6 +74,7 @@ const initialState: PostsState = {
     saving: false,
     unsaving: false,
     fetchingSavedPosts: false,
+    fetchingSinglePost: false,
   },
   error: {
     fetchingError: null,
@@ -79,6 +85,7 @@ const initialState: PostsState = {
     savingError: null,
     unsavingError: null,
     fetchingSavedPostsError: null,
+    fetchingSinglePostError: null,
   },
 };
 
@@ -292,6 +299,24 @@ export const postsSlice = createSlice({
         : "Failed to unsave post";
       alert(state.error.removingError || "Failed to unsave post");
     });
+    //fetching single post data
+    builder
+      .addCase(fetchSinglePost.pending, (state) => {
+        state.loading.fetchingSinglePost = true;
+      })
+      .addCase(
+        fetchSinglePost.fulfilled,
+        (state, action: PayloadAction<UserPostTypes>) => {
+          state.loading.fetchingSinglePost = false;
+          state.singlePost = action.payload;
+        }
+      )
+      .addCase(fetchSinglePost.rejected, (state, action) => {
+        state.loading.fetchingSinglePost = false;
+        state.error.fetchingSinglePostError = action.payload
+          ? action.payload.toString()
+          : "Failed to fetch post data";
+      });
   },
 });
 
