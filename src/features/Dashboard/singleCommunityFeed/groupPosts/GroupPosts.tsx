@@ -6,8 +6,15 @@ type GroupPostTypes = {
   posts: PostType[];
 };
 const GroupPosts = ({ posts, communityId }: GroupPostTypes) => {
-  if (!posts) return <p>No posts</p>;
-
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="py-5 px-2 text-center">
+        <p className="text-gray-500 italic">
+          No posts available. Be the first to post!
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="py-5 px-2">
       <ul className="flex flex-col gap-5 ">
