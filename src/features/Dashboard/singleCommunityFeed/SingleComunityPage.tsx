@@ -46,7 +46,7 @@ const SingleCommunityPage: React.FC = () => {
   if (!groupById) return null;
 
   const { posts, uid, name } = groupById;
-
+  
   return (
     <DashboardPage>
       <GroupHeader postPage={postPage} setPostPage={setPostPage} />
