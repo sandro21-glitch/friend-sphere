@@ -512,3 +512,61 @@ export const unsavePostThunk = createAsyncThunk<
     }
   }
 );
+
+
+// Thunk to fetch a single post
+export const fetchSinglePost = createAsyncThunk<
+  UserPostTypes,
+  { communityId: string; postId: string },
+  { rejectValue: string }
+>("community/fetchSinglePost", async ({ communityId, postId }, { rejectWithValue }) => {
+  try {
+    const communitiesRef = ref(database, "communities");
+
+    const snapshot = await new Promise<UserPostTypes | null>((resolve, _) => {
+      onValue(
+        communitiesRef,
+        (snapshot) => {
+          let post: UserPostTypes | null = null;
+          snapshot.forEach((childSnapshot) => {
+            const community = childSnapshot.val() as CommunityTypes;
+            if (community.uid === communityId) {
+              const communityPosts = community.posts || [];
+              communityPosts.forEach((p: any) => {
+                if (p.postId === postId) {
+                  post = {
+                    userId: p.userId,
+                    userPost: p.userPost,
+                    likedBy: p.likedBy,
+                    postComments: p.postComments
+                      ? p.postComments.map((comment: any) => ({
+                          ...comment,
+                          postedAt: comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
+                        }))
+                      : null,
+                    createdAt: p.createdAt,
+                    userName: p.userName,
+                    postId: p.postId,
+                    groupName: p.groupName,
+                  };
+                }
+              });
+            }
+          });
+          resolve(post);
+        },
+        {
+          onlyOnce: true,
+        }
+      );
+    });
+
+    if (snapshot) {
+      return snapshot;
+    } else {
+      return rejectWithValue("Post not found");
+    }
+  } catch (error: any) {
+    return rejectWithValue(error.message || "Error fetching single post");
+  }
+});
