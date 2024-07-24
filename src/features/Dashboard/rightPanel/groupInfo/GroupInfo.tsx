@@ -2,6 +2,7 @@ import { RiGroup3Fill } from "react-icons/ri";
 import { useAppSelector } from "../../../../hooks/reduxHooks";
 import GroupRules from "./GroupRules";
 import LeaveGroup from "./LeaveGroup";
+import PageDataLoader from "../../../../ui/PageDataLoader";
 
 type GroupInfoTypes = {
   id: string;
@@ -9,6 +10,11 @@ type GroupInfoTypes = {
 
 const GroupInfo = ({ id }: GroupInfoTypes) => {
   const groupInfo = useAppSelector((store) => store.communities.groupById);
+  const { loading } = useAppSelector((store) => store.communities.singleGroup);
+
+  if (loading) {
+    return <PageDataLoader />;
+  }
 
   const { banner, description, members, name, rules = [] } = groupInfo || {};
   return (
