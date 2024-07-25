@@ -2,8 +2,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { get, ref, update } from "firebase/database";
 import { database } from "../../config/firebase";
 import { UserData } from "../user/userTypes";
-import { CommunitySummary, CommunityTypes, JoinedGroupSummary } from "./communityTypes";
-
+import {
+  CommunitySummary,
+  CommunityTypes,
+  FullGroupListSummary,
+} from "./communityTypes";
 
 export const fetchUserCommunities = createAsyncThunk(
   "community/fetchUserCommunities",
@@ -35,7 +38,6 @@ export const fetchUserCommunities = createAsyncThunk(
     }
   }
 );
-
 
 //fetch single group by id
 export const fetchCommunityById = createAsyncThunk<
@@ -269,7 +271,7 @@ export const leaveGroup = createAsyncThunk(
 
 // thunk for fetching joined group summaries
 export const fetchJoinedGroupSummaries = createAsyncThunk<
-  JoinedGroupSummary[],
+  FullGroupListSummary[],
   string,
   { rejectValue: string }
 >(
@@ -303,20 +305,24 @@ export const fetchJoinedGroupSummaries = createAsyncThunk<
       });
 
       // Map joined groups to summaries
-      const joinedGroupSummaries: JoinedGroupSummary[] = joinedGroups.map((group: { groupId: string }) => {
-        const community = communitiesMap[group.groupId];
+      const joinedGroupSummaries: FullGroupListSummary[] = joinedGroups.map(
+        (group: { groupId: string }) => {
+          const community = communitiesMap[group.groupId];
 
-        return {
-          groupId: group.groupId,
-          groupName: community?.name || "",
-          banner: community?.banner || "",
-          membersCount: community?.members?.length || 0
-        };
-      });
+          return {
+            groupId: group.groupId,
+            groupName: community?.name || "",
+            banner: community?.banner || "",
+            membersCount: community?.members?.length || 0,
+          };
+        }
+      );
 
       return joinedGroupSummaries;
     } catch (error: any) {
-      return rejectWithValue(error.message || "Error fetching joined group summaries");
+      return rejectWithValue(
+        error.message || "Error fetching joined group summaries"
+      );
     }
   }
 );
