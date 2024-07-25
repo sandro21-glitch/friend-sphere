@@ -2,22 +2,16 @@ import { useAppSelector } from "../../../../hooks/reduxHooks";
 import PageDataLoader from "../../../../ui/PageDataLoader";
 import SinglePostComment from "./SinglePostComment";
 
-type PostCommentsAsideTypes = {
-  postId: string;
-};
 
-const PostCommentsAside = ({ postId }: PostCommentsAsideTypes) => {
-  const { groupById } = useAppSelector((store) => store.communities);
+const PostCommentsAside = () => {
+  const { singlePost } = useAppSelector((store) => store.posts);
   const { fetchingSinglePost } = useAppSelector((store) => store.posts.loading);
-  // Find the specific post based on postId
-  const post = groupById?.posts.find((post) => post.postId === postId);
 
-  // Check if the post and its comments exist
-  const postComments = post?.postComments;
 
   if (fetchingSinglePost) {
     return <PageDataLoader />;
   }
+  const postComments = singlePost?.postComments || []
 
   return (
     <div className="p-5">
