@@ -2,9 +2,8 @@ import { HiOutlineUserGroup } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../../hooks/reduxHooks";
 const CommunityItemsHeader = () => {
-  const communityLength = useAppSelector(
-    (store) => store.communities.communityData?.length
-  );
+  const communityLength =
+    useAppSelector((store) => store.communities.fullGroupList)?.length || 0;
 
   return (
     <div className="flex items-center justify-between mb-5">
