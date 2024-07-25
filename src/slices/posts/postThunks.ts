@@ -4,6 +4,7 @@ import { get, onValue, ref, remove, update } from "firebase/database";
 import { RootState } from "../../store";
 import { SavedPostTypes, UserPostTypes } from "./postsSlice";
 import { CommunityTypes } from "../community/communitySlice";
+import { UserData } from "../user/userTypes";
 
 interface AddPostPayload {
   communityId: string;
@@ -418,16 +419,19 @@ export const fetchSavedPostsThunk = createAsyncThunk<
 
   try {
     // Reference to the user's savedPosts array in Firebase
-    const userSavedPostsRef = ref(database, `users/${userId}/savedPosts`);
-    const snapshot = await get(userSavedPostsRef);
+    const userSavedPostsRef = ref(database, `users/${userId}`);
+    const userSnapshot = await get(userSavedPostsRef);
 
-    if (!snapshot.exists()) {
-      return []; // Return empty array if no saved posts found
+    if (!userSnapshot.exists()) {
+      throw new Error("User not found");
     }
 
-    // Extract the saved posts array from the snapshot
+    const userData: UserData = userSnapshot.val();
     const savedPostsArray: { communityId: string; postId: string }[] =
-      snapshot.val() || [];
+      userData.savedPosts || [];
+    const joinedGroups: Set<string> = new Set(
+      userData.joinedGroups.map((group) => group.groupId)
+    );
 
     const fetchedPosts: SavedPostTypes[] = [];
 
@@ -442,6 +446,11 @@ export const fetchSavedPostsThunk = createAsyncThunk<
     // Iterate through each saved post and find the matching post in communities
     for (const savedPost of savedPostsArray) {
       const { communityId, postId } = savedPost;
+
+      // Check if the communityId is in the user's joined groups
+      if (!joinedGroups.has(communityId)) {
+        continue; // Skip this community if not joined
+      }
 
       let post: SavedPostTypes | null = null;
 
