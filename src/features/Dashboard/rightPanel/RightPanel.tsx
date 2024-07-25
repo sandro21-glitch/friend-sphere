@@ -33,7 +33,7 @@ const RightPanel = () => {
       {isSingleCommunityPage ? (
         <GroupInfo id={id} />
       ) : isPostCommentsPage ? (
-        <PostCommentsAside postId={id} />
+        <PostCommentsAside />
       ) : (
         <Connections />
       )}
