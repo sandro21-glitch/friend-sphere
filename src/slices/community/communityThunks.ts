@@ -72,11 +72,15 @@ export const fetchCommunityById = createAsyncThunk<
   }
 );
 
-//fetchNonJoinedCommunities
-export const fetchNonJoinedCommunities = createAsyncThunk(
+export const fetchNonJoinedCommunities = createAsyncThunk<
+  CommunityTypes[],
+  string,
+  { rejectValue: string }
+>(
   "community/fetchNonJoinedCommunities",
   async (userId: string, { rejectWithValue }) => {
     try {
+      // Reference to the communities in Firebase
       const communitiesRef = ref(database, "communities");
       const snapshot = await get(communitiesRef);
       const allCommunities: CommunityTypes[] = [];
@@ -85,14 +89,25 @@ export const fetchNonJoinedCommunities = createAsyncThunk(
         allCommunities.push(childSnapshot.val() as CommunityTypes);
       });
 
-      // Filter communities that user has not joined
-      const nonJoinedCommunities = allCommunities.filter(
-        (community) =>
-          !community.members ||
-          !community.members.some((member) => member.memberid === userId)
+      // Fetch user data to determine joined communities
+      const userRef = ref(database, `users/${userId}`);
+      const userSnapshot = await get(userRef);
+
+      if (!userSnapshot.exists()) {
+        throw new Error("User not found");
+      }
+
+      const userData = userSnapshot.val();
+      const joinedGroupIds: Set<string> = new Set(
+        userData.joinedGroups.map((group: { groupId: string }) => group.groupId)
       );
 
-      // randomly select three communities
+      // Filter communities that the user has not joined
+      const nonJoinedCommunities = allCommunities.filter(
+        (community) => !joinedGroupIds.has(community.uid)
+      );
+
+      // Randomly select three communities
       const randomCommunities = nonJoinedCommunities
         .sort(() => 0.5 - Math.random())
         .slice(0, 3);
