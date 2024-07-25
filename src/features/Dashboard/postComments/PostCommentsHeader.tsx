@@ -1,16 +1,17 @@
+import { formatDistanceToNow } from "date-fns";
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 
 type CommentsHeaderTypes = {
   groupName: string;
   userName: string;
-  timeAgo: string;
+  createdAt: string;
   communityId: string;
 };
 
 const PostCommentsHeader = ({
   groupName,
-  timeAgo,
+  createdAt,
   userName,
   communityId,
 }: CommentsHeaderTypes) => {
@@ -18,6 +19,8 @@ const PostCommentsHeader = ({
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
 
   return (
     <div className="mb-5">
