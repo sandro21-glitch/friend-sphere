@@ -1,12 +1,24 @@
-import { useAppSelector } from "../../../hooks/reduxHooks";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import SmallSpinner from "../../../ui/SmallSpinner";
 import SingleUserCommunityItem from "./SingleUserCommunityItem";
+import { fetchJoinedGroupSummaries } from "../../../slices/community/communityThunks";
 
 const UserCommunitiesList = () => {
   const {
-    communityData,
-    joinedGroups: { error, loading },
+    fullGroups: { error, loading },
+    fullGroupList,
   } = useAppSelector((store) => store.communities);
+
+  const userId = useAppSelector((store) => store.auth.userData?.uid);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchJoinedGroupSummaries(userId));
+    }
+  }, [dispatch, userId]);
 
   if (loading)
     return (
@@ -18,15 +30,15 @@ const UserCommunitiesList = () => {
 
   return (
     <ul className="flex flex-col gap-3">
-      {communityData?.map((groupData) => {
-        const { banner, name, members,uid } = groupData;
+      {fullGroupList?.map((groupData) => {
+        const { banner, groupId, groupName, membersCount } = groupData;
         return (
           <SingleUserCommunityItem
-            key={groupData.uid}
+            key={groupId}
             banner={banner}
-            name={name}
-            id={uid}
-            membersLength={members?.length ? members?.length : 0}
+            name={groupName}
+            id={groupId}
+            membersLength={membersCount ? membersCount : 0}
           />
         );
       })}
