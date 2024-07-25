@@ -3,6 +3,7 @@ import CreatePostBtn from "./CreatePostBtn";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { addPostToCommunity } from "../../../../slices/posts/postThunks";
 import { nanoid } from "nanoid";
+import { addPostUi } from "../../../../slices/community/communitySlice";
 
 type GroupPostFormTypes = {
   name: string;
@@ -34,6 +35,7 @@ const GroupPostForm = ({ name, groupId }: GroupPostFormTypes) => {
     };
 
     await dispatch(addPostToCommunity({ communityId: groupId, post: newPost }));
+    dispatch(addPostUi({ post: newPost }));
     setPostText("");
   };
 
