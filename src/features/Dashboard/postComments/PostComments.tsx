@@ -1,12 +1,12 @@
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { fetchSinglePost } from "../../../slices/posts/postThunks";
 import { useLocation } from "react-router-dom";
 import PostCommentActions from "./PostCommentActions";
 import PostCommentForm from "./PostCommentForm";
 import PostCommentsHeader from "./PostCommentsHeader";
 import PostCommentText from "./PostCommentText";
 import DashboardPage from "../../../ui/DashboardPage";
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import { fetchSinglePost } from "../../../slices/posts/postThunks";
 import PageDataLoader from "../../../ui/PageDataLoader";
 import ErrorMessage from "../../../ui/ErrorMessage";
 
@@ -40,7 +40,6 @@ const PostComments = () => {
   }
 
   const { userName, userPost, likedBy, postComments, createdAt, groupName } = singlePost;
-  const timeAgo = createdAt; // You can format this if needed
   const postCommentLength = postComments ? postComments.length : 0;
 
   return (
@@ -49,7 +48,7 @@ const PostComments = () => {
         <PostCommentsHeader
           groupName={groupName}
           userName={userName}
-          timeAgo={timeAgo}
+          createdAt={createdAt}
           communityId={communityId}
         />
         <PostCommentText userPost={userPost} />
@@ -59,7 +58,7 @@ const PostComments = () => {
           postId={postId}
           communityId={communityId}
         />
-        <PostCommentForm communityId={communityId} postId={postId} />
+        <PostCommentForm communityId={communityId} postId={postId} post={singlePost} />
       </div>
     </DashboardPage>
   );
