@@ -1,13 +1,19 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { addCommentToPost } from "../../../slices/posts/postThunks";
+import { UserPostTypes } from "../../../slices/posts/postsSlice";
 
 type PostCommentFormProps = {
   communityId: string;
   postId: string;
+  post: UserPostTypes;
 };
 
-const PostCommentForm = ({ communityId, postId }: PostCommentFormProps) => {
+const PostCommentForm = ({
+  communityId,
+  postId,
+  post,
+}: PostCommentFormProps) => {
   const [userComment, setUserComment] = useState<string>("");
   const commenting = useAppSelector((store) => store.posts.loading.commenting);
   const { name, uid } = useAppSelector((store) => store.auth.userData) || {};
@@ -18,7 +24,7 @@ const PostCommentForm = ({ communityId, postId }: PostCommentFormProps) => {
     setUserComment(e.target.value);
   };
 
-  const handleAddComment = (e: FormEvent<HTMLFormElement>) => {
+  const handleAddComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (userComment === "") return;
     if (name && uid) {
@@ -34,6 +40,7 @@ const PostCommentForm = ({ communityId, postId }: PostCommentFormProps) => {
           postId,
         })
       );
+      
       setUserComment("");
     }
   };
