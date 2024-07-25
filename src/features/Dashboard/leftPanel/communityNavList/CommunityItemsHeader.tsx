@@ -19,7 +19,7 @@ const CommunityItemsHeader = () => {
           className="absolute w-4 h-4 bg-azure-blue text-white text-[10px]
        flex items-center justify-center rounded-full -right-3 -top-2"
         >
-          {communityLength || 0}
+          {communityLength}
         </span>
       </div>
     </div>
