@@ -39,13 +39,14 @@ const PostComments = () => {
     return <ErrorMessage message="Post not found" />;
   }
 
-  const { userName, userPost, likedBy, postComments, createdAt, groupName } = singlePost;
+  const { userName, userPost, likedBy, postComments, createdAt, groupName,userId } = singlePost;
   const postCommentLength = postComments ? postComments.length : 0;
 
   return (
     <DashboardPage>
       <div className="p-5">
         <PostCommentsHeader
+        id={userId}
           groupName={groupName}
           userName={userName}
           createdAt={createdAt}
