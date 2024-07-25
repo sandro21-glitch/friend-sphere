@@ -7,6 +7,7 @@ type CommentsHeaderTypes = {
   userName: string;
   createdAt: string;
   communityId: string;
+  id: string;
 };
 
 const PostCommentsHeader = ({
@@ -14,6 +15,7 @@ const PostCommentsHeader = ({
   createdAt,
   userName,
   communityId,
+  id,
 }: CommentsHeaderTypes) => {
   const navigate = useNavigate();
   const handleGoBack = () => {
@@ -40,7 +42,7 @@ const PostCommentsHeader = ({
             className="w-12 h-12 mr-2"
           />
           <div className="flex flex-col">
-            <Link to="" className="text-[1rem] font-medium">
+            <Link to={`/user/${id}`} className="text-[1rem] font-medium">
               {userName}
             </Link>
             <Link
