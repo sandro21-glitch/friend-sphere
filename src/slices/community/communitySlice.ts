@@ -1,70 +1,24 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
   fetchCommunityById,
+  fetchJoinedGroupSummaries,
   fetchNonJoinedCommunities,
   fetchUserCommunities,
   joinGroup,
   leaveGroup,
 } from "./communityThunks";
 import { UserPostTypes } from "../posts/postsSlice";
-
-export interface CommunityTypes {
-  name: string;
-  uid: string;
-  description: string;
-  banner: string;
-  rules: {
-    rule: string;
-    description: string;
-    id: string;
-  }[];
-  members:
-    | {
-        memberid: string;
-      }[]
-    | null;
-  posts: {
-    userName: string;
-    groupName: string;
-    postId: string;
-    userId: string;
-    userPost: string;
-    likedBy: string[] | null;
-    postComments:
-      | {
-          userComment: string;
-          userId: string;
-          userName: string;
-        }[]
-      | null;
-    createdAt: string;
-  }[];
-}
-export interface PostType {
-  userName: string;
-  groupName: string;
-  postId: string;
-  userId: string;
-  userPost: string;
-  likedBy: string[] | null;
-  postComments:
-    | {
-        userComment: string;
-        userId: string;
-        userName: string;
-      }[]
-    | null;
-  createdAt: string;
-}
-export interface CommunitySummary {
-  uid: string;
-  name: string;
-}
+import {
+  CommunitySummary,
+  CommunityTypes,
+  FullGroupListSummary,
+} from "./communityTypes";
 
 interface CommunityState {
   userGroups: CommunitySummary[] | null;
   groupById: CommunityTypes | null;
   nonJoinedGroupData: CommunityTypes[] | null;
+  fullGroupList: FullGroupListSummary[] | null;
   joinedGroups: {
     loading: boolean;
     error: string | null;
@@ -86,6 +40,10 @@ interface CommunityState {
     loading: boolean;
     error: string | null;
     communityId: string | null;
+  };
+  fullGroups: {
+    loading: boolean;
+    error: string | null;
   };
 }
 
@@ -93,6 +51,7 @@ const initialState: CommunityState = {
   userGroups: null,
   groupById: null,
   nonJoinedGroupData: null,
+  fullGroupList: null,
   joinedGroups: {
     loading: false,
     error: null,
@@ -115,16 +74,17 @@ const initialState: CommunityState = {
     error: null,
     communityId: null,
   },
+  fullGroups: {
+    loading: false,
+    error: null,
+  },
 };
 
 export const communitiesSlice = createSlice({
   name: "community",
   initialState,
   reducers: {
-    addPostUi: (
-      state,
-      action: PayloadAction<{ post: UserPostTypes }>
-    ) => {
+    addPostUi: (state, action: PayloadAction<{ post: UserPostTypes }>) => {
       const { post } = action.payload;
       if (state.groupById) {
         state.groupById.posts = [...state.groupById.posts, post];
@@ -249,6 +209,21 @@ export const communitiesSlice = createSlice({
         state.leaveGroup.error =
           action?.error.message ?? "Error leaving community";
         state.leaveGroup.communityId = null;
+      });
+    builder
+      .addCase(fetchJoinedGroupSummaries.pending, (state) => {
+        state.fullGroups.loading = true;
+      })
+      .addCase(
+        fetchJoinedGroupSummaries.fulfilled,
+        (state, action: PayloadAction<FullGroupListSummary[]>) => {
+          state.fullGroups.loading = false;
+          state.fullGroupList = action.payload;
+        }
+      )
+      .addCase(fetchJoinedGroupSummaries.rejected, (state, action) => {
+        state.fullGroups.error =
+          action?.error.message ?? "Error leaving community";
       });
   },
 });
