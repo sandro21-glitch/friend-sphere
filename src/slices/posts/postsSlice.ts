@@ -89,6 +89,7 @@ const initialState: PostsState = {
   },
 };
 
+
 export const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -122,13 +123,7 @@ export const postsSlice = createSlice({
       })
       .addCase(addPostToCommunity.fulfilled, (state, action) => {
         state.loading.adding = false;
-        if (state.communityPosts) {
-          const newPost = {
-            ...action.payload.post,
-            createdAt: new Date().toISOString(),
-          };
-          state.communityPosts.push(newPost);
-        }
+        console.log(action.payload.post.postId,action.payload.communityId);
       })
       .addCase(addPostToCommunity.rejected, (state, action) => {
         state.loading.adding = false;
@@ -216,33 +211,11 @@ export const postsSlice = createSlice({
       })
       .addCase(addCommentToPost.fulfilled, (state, action) => {
         state.loading.commenting = false;
-        const { comment, postId } = action.payload;
+        const { comment } = action.payload;
 
-        //for community posts
-        if (state.communityPosts) {
-          state.communityPosts = state.communityPosts.map(
-            (post: UserPostTypes) => {
-              if (post.postId === postId) {
-                return {
-                  ...post,
-                  postComments: [...(post.postComments || []), comment],
-                };
-              }
-              return post;
-            }
-          );
-        }
-        //for saved posts
-        if (state.savedPosts) {
-          state.savedPosts = state.savedPosts.map((post: SavedPostTypes) => {
-            if (post.postId === postId) {
-              return {
-                ...post,
-                postComments: [...(post.postComments || []), comment],
-              };
-            }
-            return post;
-          });
+        if (state.singlePost) {
+          state.singlePost.postComments = state.singlePost.postComments || [];
+          state.singlePost.postComments.push(comment);
         }
       })
       .addCase(addCommentToPost.rejected, (state, action) => {
