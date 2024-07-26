@@ -14,9 +14,9 @@ const UserGroups = ({ commonGroups }: UserGroupTypes) => {
     .join(", ");
 
   return (
-    <li className="flex items-center gap-2 text-md mb-2">
+    <li className="flex items-center gap-2 text-md mb-2 select-none">
       You both are members of{" "}
-      <span className="font-bold text-blue-700 cursor-pointer">
+      <span className="font-bold text-blue-700 ">
         {formattedGroups}
         {remainingGroupsCount > 0 && (
           <span className="font-medium text-gray-500">
