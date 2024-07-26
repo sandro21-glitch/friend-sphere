@@ -6,7 +6,6 @@ export interface PostActionTypes {
   postCommentLength: number;
   postId: string;
   communityId: string;
-
 }
 
 const PostActions = ({
@@ -14,7 +13,6 @@ const PostActions = ({
   postCommentLength,
   postId,
   communityId,
-
 }: PostActionTypes) => {
   return (
     <div className="flex items-center gap-4">
