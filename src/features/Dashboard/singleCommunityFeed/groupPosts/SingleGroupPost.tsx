@@ -35,10 +35,6 @@ const SingleGroupPost = ({ post, communityId }: SinglePostTypes) => {
           postCommentLength={postComments?.length || 0}
           postId={postId}
           communityId={communityId}
-          timeAgo={timeAgo}
-          userName={userName}
-          groupName={groupName}
-          userPost={userPost}
         />
         <RemovePostBtn
           communityId={communityId}
