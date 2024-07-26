@@ -1,4 +1,5 @@
-import { CommunityTypes } from "../../../../../slices/community/communitySlice";
+
+import { CommunityTypes } from "../../../../../slices/community/communityTypes";
 import SingleNonJoinedCommunity from "./SingleNonJoinedCommunity";
 
 type GroupConnectListTypes = {
