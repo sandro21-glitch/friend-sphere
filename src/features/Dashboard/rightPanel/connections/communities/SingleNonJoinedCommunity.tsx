@@ -1,8 +1,8 @@
 import { MdGroups } from "react-icons/md";
-import { CommunityTypes } from "../../../../../slices/community/communitySlice";
 import ConnectButton from "../../../../../ui/ConnectButton";
 import { useAppDispatch } from "../../../../../hooks/reduxHooks";
 import { setJoinCommunityModal } from "../../../../../slices/modals/modalSlice";
+import { CommunityTypes } from "../../../../../slices/community/communityTypes";
 
 type NonJoinedCommunityTypes = {
   group: CommunityTypes;
