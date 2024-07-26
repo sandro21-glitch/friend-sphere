@@ -2,7 +2,7 @@ import { useAppSelector } from "../../../../hooks/reduxHooks";
 
 const TotalCommunities = () => {
   const communityCount = useAppSelector(
-    (store) => store.communities.communityData?.length || 0
+    (store) => store.communities.fullGroupList?.length || 0
   );
 
   return (
