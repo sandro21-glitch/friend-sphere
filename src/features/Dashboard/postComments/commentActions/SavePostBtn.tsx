@@ -19,18 +19,25 @@ const SavePostBtn = ({
   const userId = useAppSelector((store) => store.auth.userData?.uid);
   const {
     loading: { saving },
+    savedPosts,
   } = useAppSelector((store) => store.posts);
 
+  const isPostDuplicated = savedPosts?.find((post) => post.postId === postId);
   const dispatch = useAppDispatch();
 
-  const handleSavePost = () => {
-    if (isPostSaved) {
+  const handleSavePost = async () => {
+    if (isPostSaved && isPostDuplicated) {
       alert("This post is already saved.");
       return;
     }
-    if (userId && postId && communityId) {
-      dispatch(savePostThunk({ userId, postId, communityId }));
-      setIsPostSaved(true); // Optimistically update UI
+    try {
+      if (userId && postId && communityId) {
+        setIsPostSaved(true); // Optimistically update UI
+        await dispatch(savePostThunk({ userId, postId, communityId }));
+      }
+    } catch (error) {
+      setIsPostSaved(false); // Optimistically update UI
+      alert("Failed to save the post. Please try again.");
     }
   };
 
