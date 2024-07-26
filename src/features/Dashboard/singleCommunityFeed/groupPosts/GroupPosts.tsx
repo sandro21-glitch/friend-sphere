@@ -1,4 +1,5 @@
-import { PostType } from "../../../../slices/community/communitySlice";
+
+import { PostType } from "../../../../slices/community/communityTypes";
 import SingleGroupPost from "./SingleGroupPost";
 
 type GroupPostTypes = {
