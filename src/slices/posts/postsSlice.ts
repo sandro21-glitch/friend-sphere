@@ -89,7 +89,6 @@ const initialState: PostsState = {
   },
 };
 
-
 export const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -123,7 +122,7 @@ export const postsSlice = createSlice({
       })
       .addCase(addPostToCommunity.fulfilled, (state, action) => {
         state.loading.adding = false;
-        console.log(action.payload.post.postId,action.payload.communityId);
+        console.log(action.payload.post.postId, action.payload.communityId);
       })
       .addCase(addPostToCommunity.rejected, (state, action) => {
         state.loading.adding = false;
