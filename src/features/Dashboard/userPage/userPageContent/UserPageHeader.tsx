@@ -1,6 +1,5 @@
-import { SlUserFollow } from "react-icons/sl";
-import { CiLocationOn } from "react-icons/ci";
-import Tooltip from "../../../../ui/Tooltip";
+import UserImageWithFollow from "./UserImageWithFollow";
+import UserIntroduction from "./UserIntroduction";
 
 type UserPageHeaderTypes = {
   name: string;
@@ -10,25 +9,8 @@ type UserPageHeaderTypes = {
 const UserPageHeader = ({ name, location }: UserPageHeaderTypes) => {
   return (
     <div className="flex flex-col items-center mb-10">
-      <div className="relative w-fit mb-5">
-        <img
-          src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
-          alt="user image"
-          className="w-20 h-20"
-        />
-        <span className="absolute bottom-0 -right-3 border border-azure-blue w-8 h-8 rounded-full cursor-pointer flex items-center justify-center group">
-          <SlUserFollow className="text-azure-blue" />
-          {/* Tooltip */}
-          <Tooltip action="follow" message={name} />
-        </span>
-      </div>
-      <div className="flex items-center flex-col">
-        <h3 className="text-lg font-semibold">{name}</h3>
-        <h6 className="flex items-center text-gray-500">
-          <CiLocationOn />{" "}
-          {location ? location : <span className="text-sm">N/A</span>}
-        </h6>
-      </div>
+      <UserImageWithFollow name={name} />
+      <UserIntroduction location={location} name={name} />
     </div>
   );
 };
