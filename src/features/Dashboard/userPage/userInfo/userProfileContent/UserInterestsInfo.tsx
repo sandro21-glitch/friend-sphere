@@ -3,7 +3,7 @@ type UserInterestsInfoTypes = {
   name: string;
 };
 
-const UserInterestsInfo = ({interests,name}:UserInterestsInfoTypes) => {
+const UserInterestsInfo = ({ interests, name }: UserInterestsInfoTypes) => {
   return (
     <li className="text-md">
       <p className="font-semibold text-md">Interests:</p>
