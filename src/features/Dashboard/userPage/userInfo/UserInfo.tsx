@@ -5,6 +5,7 @@ import UserFollowersCount from "./userProfileContent/UserFollowersCount";
 import UserFollowingCount from "./userProfileContent/UserFollowingCount";
 import UserGroupsCount from "./userProfileContent/UserGroupsCount";
 import UserRegisterDate from "./userProfileContent/UserRegisterDate";
+import UserInterestsInfo from "./userProfileContent/UserInterestsInfo";
 
 type UserInfoTypes = {
   singleUser: UserType;
@@ -19,9 +20,7 @@ const UserInfo = ({ singleUser }: UserInfoTypes) => {
     following,
     joinedGroups = [],
     registeredDate,
-    bio,
     interests,
-    uid,
     name,
   } = singleUser;
 
@@ -40,21 +39,7 @@ const UserInfo = ({ singleUser }: UserInfoTypes) => {
       ) : (
         <li className="text-md  mb-2">You have no communities in common.</li>
       )}
-      <li className="text-md">
-        <p className="font-semibold text-md">Interests:</p>
-        {interests && interests.length > 0 ? (
-          interests.map((interest, idx) => (
-            <span key={idx}>
-              {interest}
-              {idx < interests.length - 1 && ", "}
-            </span>
-          ))
-        ) : (
-          <span className="text-gray-500">
-            {name} has not added any interests.
-          </span>
-        )}
-      </li>
+      <UserInterestsInfo interests={interests} name={name} />
     </ul>
   );
 };
