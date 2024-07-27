@@ -41,6 +41,13 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
     }
   };
 
+    // Sort posts by `createdAt` in descending order (newest first)
+    const sortedPosts = posts ? [...posts].sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return dateB - dateA;
+    }) : [];
+
   if (fetching && !posts) {
     return (
       <div className="py-5 px-2 text-center flex items-center justify-center gap-3">
@@ -63,10 +70,7 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
   return (
     <div className="py-5 px-2">
       <ul className="flex flex-col gap-5">
-        {posts
-          .slice()
-          .reverse()
-          .map((post) => (
+        {sortedPosts.map((post) => (
             <SingleGroupPost
               key={post.postId}
               post={post}
