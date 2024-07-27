@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { database } from "../../config/firebase";
-import { get, onValue, ref, remove, update } from "firebase/database";
+import { get, onValue, ref, remove, set, update } from "firebase/database";
 import { RootState } from "../../store";
 import { SavedPostTypes, UserPostTypes } from "./postsSlice";
 import { UserData } from "../user/userTypes";
@@ -27,11 +27,10 @@ interface AddPostPayload {
   };
 }
 
-//add post to the group
+//add post to community
 export const addPostToCommunity = createAsyncThunk<
   { post: UserPostTypes; communityId: string },
-  AddPostPayload,
-  { state: RootState }
+  AddPostPayload
 >("communities/addPostToCommunity", async (payload) => {
   const { communityId, post } = payload;
 
@@ -63,19 +62,28 @@ export const addPostToCommunity = createAsyncThunk<
           ...comment,
           postedAt: comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
         }))
-      : null,
+      : [], // Use an empty array instead of null
   };
 
-  const communityRef = ref(database, `communities/${communityKey}/posts`);
-  const communitySnapshot = await get(communityRef);
+  const communityPostsRef = ref(database, `communities/${communityKey}/posts`);
 
-  const updatedPosts = communitySnapshot.exists()
-    ? [...communitySnapshot.val(), newPost]
-    : [newPost];
+  // Fetch existing posts and append the new post
+  const communityPostsSnapshot = await get(communityPostsRef);
+  const existingPosts = communityPostsSnapshot.exists()
+    ? communityPostsSnapshot.val()
+    : {};
 
-  await update(ref(database, `communities/${communityKey}`), {
-    posts: updatedPosts,
-  });
+  // Generate a new post ID (assumes `postId` is a unique ID you generate)
+  const newPostId = Date.now().toString(); // Simple unique ID
+
+  // Create a new object with the new post
+  const updatedPosts = {
+    ...existingPosts,
+    [newPostId]: newPost,
+  };
+
+  // Update the posts node with the new post list
+  await set(communityPostsRef, updatedPosts);
 
   return { post, communityId };
 });
