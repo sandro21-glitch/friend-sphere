@@ -3,8 +3,8 @@ import { database } from "../../config/firebase";
 import { get, onValue, ref, remove, update } from "firebase/database";
 import { RootState } from "../../store";
 import { SavedPostTypes, UserPostTypes } from "./postsSlice";
-import { CommunityTypes } from "../community/communitySlice";
 import { UserData } from "../user/userTypes";
+import { CommunityTypes } from "../community/communityTypes";
 
 interface AddPostPayload {
   communityId: string;
@@ -80,61 +80,78 @@ export const addPostToCommunity = createAsyncThunk<
   return { post, communityId };
 });
 
-interface FetchCommunityPostsPayload {
-  communityId: string;
-}
+
 
 interface LikePostPayload {
   communityId: string;
   postId: string;
   userId: string;
 }
+export interface FetchCommunityPostsPayload {
+  communityId: string;
+  offset?: string; // Key of the last post fetched
+  limit?: number; // Number of posts to fetch
+}
 export const fetchCommunityPosts = createAsyncThunk<
   UserPostTypes[],
   FetchCommunityPostsPayload,
   { rejectValue: string }
->("posts/fetchCommunityPosts", async ({ communityId }, { rejectWithValue }) => {
+>("posts/fetchCommunityPosts", async ({ communityId, offset = '', limit = 10 }, { rejectWithValue }) => {
   try {
     const communitiesRef = ref(database, "communities");
+    const snapshot = await get(communitiesRef);
+    
+    if (!snapshot.exists()) {
+      return rejectWithValue("Communities not found");
+    }
+    
+    let communityKey: string | null = null;
+    const posts: UserPostTypes[] = [];
 
-    const snapshot = await new Promise<UserPostTypes[]>((resolve, _) => {
-      onValue(
-        communitiesRef,
-        (snapshot) => {
-          const posts: UserPostTypes[] = [];
-          snapshot.forEach((childSnapshot) => {
-            const community = childSnapshot.val() as CommunityTypes;
-            if (community.uid === communityId) {
-              const communityPosts = community.posts || [];
-              communityPosts.forEach((post: any) => {
-                const updatedPost: UserPostTypes = {
-                  userId: post.userId,
-                  userPost: post.userPost,
-                  likedBy: post.likedBy,
-                  postComments: post.postComments
-                    ? post.postComments.map((comment: any) => ({
-                        ...comment,
-                        postedAt: comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
-                      }))
-                    : null,
-                  createdAt: post.createdAt,
-                  userName: post.userName,
-                  postId: post.postId,
-                  groupName: post.groupName,
-                };
-                posts.push(updatedPost);
-              });
-            }
-          });
-          resolve(posts);
-        },
-        {
-          onlyOnce: true,
-        }
-      );
+    snapshot.forEach((childSnapshot) => {
+      const community = childSnapshot.val();
+      if (community.uid === communityId) {
+        communityKey = childSnapshot.key;
+      }
     });
 
-    return snapshot;
+    if (!communityKey) {
+      return rejectWithValue("Community not found");
+    }
+
+    const communityPostsRef = ref(database, `communities/${communityKey}/posts`);
+    const communityPostsSnapshot = await get(communityPostsRef);
+    
+    if (!communityPostsSnapshot.exists()) {
+      return posts; // No posts found
+    }
+
+    // Get all posts from snapshot
+    const allPosts: UserPostTypes[] = [];
+    communityPostsSnapshot.forEach((postSnapshot) => {
+      const post = postSnapshot.val();
+      allPosts.push({
+        userId: post.userId,
+        userPost: post.userPost,
+        likedBy: post.likedBy,
+        postComments: post.postComments
+          ? post.postComments.map((comment: any) => ({
+              ...comment,
+              postedAt: comment.postedAt || new Date().toISOString(),
+            }))
+          : null,
+        createdAt: post.createdAt,
+        userName: post.userName,
+        postId: post.postId,
+        groupName: post.groupName,
+      });
+    });
+
+    // Apply offset and limit
+    const startIndex = offset ? allPosts.findIndex(post => post.postId === offset) + 1 : 0;
+    const limitedPosts = allPosts.slice(startIndex, startIndex + limit);
+
+    return limitedPosts;
   } catch (error: any) {
     return rejectWithValue(error.message || "Error fetching community posts");
   }
