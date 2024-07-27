@@ -62,7 +62,7 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
   return (
     <div className="py-5 px-2">
       <ul className="flex flex-col gap-5">
-        {posts.map((post) => (
+        {posts.slice().reverse().map((post) => (
           <SingleGroupPost
             key={post.postId}
             post={post}
