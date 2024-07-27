@@ -7,14 +7,21 @@ import GroupPosts from "./groupPosts/GroupPosts";
 import PageLoader from "../../../ui/PageLoader";
 import DashboardPage from "../../../ui/DashboardPage";
 import { fetchCommunityById } from "../../../slices/community/communityThunks";
+import { fetchCommunityPosts } from "../../../slices/posts/postThunks";
+import { clearGroupPosts } from "../../../slices/posts/postsSlice";
 
 const SingleCommunityPage: React.FC = () => {
   const {
     singleGroup: { loading, error },
     groupById,
   } = useAppSelector((store) => store.communities);
+  const { fetching: fetchingGroupPosts } = useAppSelector(
+    (store) => store.posts.loading
+  );
 
   const [postPage, setPostPage] = useState<string>("all");
+  const [offset, setOffset] = useState<string | undefined>(undefined); // Track last post ID
+  const [initialLoad, setInitialLoad] = useState<boolean>(true); // Track initial load
 
   const location = useLocation();
   const { id } = location.state || {};
@@ -24,10 +31,30 @@ const SingleCommunityPage: React.FC = () => {
   useEffect(() => {
     if (id) {
       dispatch(fetchCommunityById(id));
+      dispatch(clearGroupPosts());
     }
   }, [dispatch, id]);
 
-  if (loading) {
+  useEffect(() => {
+    if (groupById?.uid) {
+      dispatch(fetchCommunityPosts({ communityId: groupById.uid }))
+        .unwrap()
+        .then((fetchedPosts) => {
+          if (fetchedPosts.length > 0) {
+            setOffset(fetchedPosts[fetchedPosts.length - 1].postId); // Set offset to the last post ID
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching posts:", error);
+        })
+        .finally(() => {
+          // Once posts are fetched, no longer in the initial load state
+          setInitialLoad(false);
+        });
+    }
+  }, [dispatch, groupById?.uid]);
+
+  if (loading || (fetchingGroupPosts && initialLoad)) {
     return (
       <section className="col-span-2 min-h-full h-full mt-5 bg-white flex items-center justify-center">
         <PageLoader />
@@ -45,13 +72,13 @@ const SingleCommunityPage: React.FC = () => {
 
   if (!groupById) return null;
 
-  const { posts, uid, name } = groupById;
-  
+  const { uid, name } = groupById;
+
   return (
     <DashboardPage>
       <GroupHeader postPage={postPage} setPostPage={setPostPage} />
       <GroupPostForm groupId={uid} name={name} />
-      <GroupPosts communityId={uid} posts={posts} />
+      <GroupPosts communityId={uid} offset={offset} setOffset={setOffset} />
     </DashboardPage>
   );
 };
