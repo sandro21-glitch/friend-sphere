@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import SingleGroupPost from "./SingleGroupPost";
 import { fetchCommunityPosts } from "../../../../slices/posts/postThunks";
+import LoadPostsBtn from "./LoadPostsBtn";
 
 type GroupPostTypes = {
   communityId: string;
@@ -69,15 +70,7 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
           />
         ))}
       </ul>
-      <button
-        type="button"
-        onClick={loadMorePosts}
-        className="mt-5 py-1 w-full rounded-md border border-transparent
-       text-white bg-azure-blue hover:border-azure-blue hover:bg-transparent hover:text-azure-blue
-       transition-colors ease-in duration-150"
-      >
-        {fetching ? "Loading..." : "Load more posts"}
-      </button>
+      <LoadPostsBtn loadPosts={loadMorePosts} fetching={fetching} />
     </div>
   );
 };
