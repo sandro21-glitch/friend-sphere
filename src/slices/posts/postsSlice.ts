@@ -113,6 +113,9 @@ export const postsSlice = createSlice({
         );
       }
     },
+    clearGroupPosts: (state) => {
+      state.communityPosts = null;
+    },
   },
   extraReducers: (builder) => {
     //add post
@@ -122,7 +125,7 @@ export const postsSlice = createSlice({
       })
       .addCase(addPostToCommunity.fulfilled, (state, action) => {
         state.loading.adding = false;
-        console.log(action.payload.post.postId, action.payload.communityId);
+        state.communityPosts?.push(action.payload.post);
       })
       .addCase(addPostToCommunity.rejected, (state, action) => {
         state.loading.adding = false;
@@ -137,7 +140,21 @@ export const postsSlice = createSlice({
         fetchCommunityPosts.fulfilled,
         (state, action: PayloadAction<UserPostTypes[]>) => {
           state.loading.fetching = false;
-          state.communityPosts = action.payload;
+
+          // Create a set of existing post IDs for deduplication
+          const existingPostIds = new Set(
+            state.communityPosts?.map((post) => post.postId)
+          );
+
+          // Filter out duplicate posts
+          const newPosts = action.payload.filter(
+            (post) => !existingPostIds.has(post.postId)
+          );
+
+          // Append only new posts
+          state.communityPosts = state.communityPosts
+            ? [...state.communityPosts, ...newPosts]
+            : newPosts;
         }
       )
       .addCase(fetchCommunityPosts.rejected, (state, action) => {
@@ -292,6 +309,6 @@ export const postsSlice = createSlice({
   },
 });
 
-export const { setSavedPostLike } = postsSlice.actions;
+export const { setSavedPostLike,clearGroupPosts } = postsSlice.actions;
 
 export default postsSlice.reducer;
