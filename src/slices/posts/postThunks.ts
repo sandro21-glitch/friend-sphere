@@ -80,8 +80,6 @@ export const addPostToCommunity = createAsyncThunk<
   return { post, communityId };
 });
 
-
-
 interface LikePostPayload {
   communityId: string;
   postId: string;
@@ -96,66 +94,81 @@ export const fetchCommunityPosts = createAsyncThunk<
   UserPostTypes[],
   FetchCommunityPostsPayload,
   { rejectValue: string }
->("posts/fetchCommunityPosts", async ({ communityId, offset = '', limit = 10 }, { rejectWithValue }) => {
-  try {
-    const communitiesRef = ref(database, "communities");
-    const snapshot = await get(communitiesRef);
-    
-    if (!snapshot.exists()) {
-      return rejectWithValue("Communities not found");
-    }
-    
-    let communityKey: string | null = null;
-    const posts: UserPostTypes[] = [];
+>(
+  "posts/fetchCommunityPosts",
+  async ({ communityId, offset = "", limit = 10 }, { rejectWithValue }) => {
+    try {
+      const communitiesRef = ref(database, "communities");
+      const snapshot = await get(communitiesRef);
 
-    snapshot.forEach((childSnapshot) => {
-      const community = childSnapshot.val();
-      if (community.uid === communityId) {
-        communityKey = childSnapshot.key;
+      if (!snapshot.exists()) {
+        return rejectWithValue("Communities not found");
       }
-    });
 
-    if (!communityKey) {
-      return rejectWithValue("Community not found");
-    }
+      let communityKey: string | null = null;
+      const posts: UserPostTypes[] = [];
 
-    const communityPostsRef = ref(database, `communities/${communityKey}/posts`);
-    const communityPostsSnapshot = await get(communityPostsRef);
-    
-    if (!communityPostsSnapshot.exists()) {
-      return posts; // No posts found
-    }
-
-    // Get all posts from snapshot
-    const allPosts: UserPostTypes[] = [];
-    communityPostsSnapshot.forEach((postSnapshot) => {
-      const post = postSnapshot.val();
-      allPosts.push({
-        userId: post.userId,
-        userPost: post.userPost,
-        likedBy: post.likedBy,
-        postComments: post.postComments
-          ? post.postComments.map((comment: any) => ({
-              ...comment,
-              postedAt: comment.postedAt || new Date().toISOString(),
-            }))
-          : null,
-        createdAt: post.createdAt,
-        userName: post.userName,
-        postId: post.postId,
-        groupName: post.groupName,
+      snapshot.forEach((childSnapshot) => {
+        const community = childSnapshot.val();
+        if (community.uid === communityId) {
+          communityKey = childSnapshot.key;
+        }
       });
-    });
 
-    // Apply offset and limit
-    const startIndex = offset ? allPosts.findIndex(post => post.postId === offset) + 1 : 0;
-    const limitedPosts = allPosts.slice(startIndex, startIndex + limit);
+      if (!communityKey) {
+        return rejectWithValue("Community not found");
+      }
 
-    return limitedPosts;
-  } catch (error: any) {
-    return rejectWithValue(error.message || "Error fetching community posts");
+      const communityPostsRef = ref(
+        database,
+        `communities/${communityKey}/posts`
+      );
+      const communityPostsSnapshot = await get(communityPostsRef);
+
+      if (!communityPostsSnapshot.exists()) {
+        return posts; // No posts found
+      }
+
+      // Get all posts from snapshot
+      const allPosts: UserPostTypes[] = [];
+      communityPostsSnapshot.forEach((postSnapshot) => {
+        const post = postSnapshot.val();
+        allPosts.push({
+          userId: post.userId,
+          userPost: post.userPost,
+          likedBy: post.likedBy,
+          postComments: post.postComments
+            ? post.postComments.map((comment: any) => ({
+                ...comment,
+                postedAt: comment.postedAt || new Date().toISOString(),
+              }))
+            : null,
+          createdAt: post.createdAt,
+          userName: post.userName,
+          postId: post.postId,
+          groupName: post.groupName,
+        });
+      });
+
+      // Sort posts by createdAt in descending order
+      const sortedPosts = allPosts.sort((a, b) => {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      });
+
+      // Apply offset and limit
+      const startIndex = offset
+        ? sortedPosts.findIndex((post) => post.postId === offset) + 1
+        : 0;
+      const limitedPosts = sortedPosts.slice(startIndex, startIndex + limit);
+
+      return limitedPosts;
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Error fetching community posts");
+    }
   }
-});
+);
 
 // likePost thunk
 export const likePost = createAsyncThunk<
@@ -215,7 +228,6 @@ export const likePost = createAsyncThunk<
     );
   }
 });
-
 
 // payload type for the removePost action
 interface RemovePostPayload {
@@ -497,7 +509,6 @@ export const fetchSavedPostsThunk = createAsyncThunk<
   }
 });
 
-
 // unsave post
 interface UnsavePostArgs {
   userId: string;
@@ -525,7 +536,10 @@ export const unsavePostThunk = createAsyncThunk<
 
       // Filter out the post to unsave
       const updatedSavedPosts = currentSavedPosts.filter(
-        (savedPost) => !(savedPost.postId === postId && savedPost.communityId === communityId)
+        (savedPost) =>
+          !(
+            savedPost.postId === postId && savedPost.communityId === communityId
+          )
       );
 
       await update(userRef, {
@@ -539,60 +553,63 @@ export const unsavePostThunk = createAsyncThunk<
   }
 );
 
-
 // Thunk to fetch a single post
 export const fetchSinglePost = createAsyncThunk<
   UserPostTypes,
   { communityId: string; postId: string },
   { rejectValue: string }
->("community/fetchSinglePost", async ({ communityId, postId }, { rejectWithValue }) => {
-  try {
-    const communitiesRef = ref(database, "communities");
+>(
+  "community/fetchSinglePost",
+  async ({ communityId, postId }, { rejectWithValue }) => {
+    try {
+      const communitiesRef = ref(database, "communities");
 
-    const snapshot = await new Promise<UserPostTypes | null>((resolve, _) => {
-      onValue(
-        communitiesRef,
-        (snapshot) => {
-          let post: UserPostTypes | null = null;
-          snapshot.forEach((childSnapshot) => {
-            const community = childSnapshot.val() as CommunityTypes;
-            if (community.uid === communityId) {
-              const communityPosts = community.posts || [];
-              communityPosts.forEach((p: any) => {
-                if (p.postId === postId) {
-                  post = {
-                    userId: p.userId,
-                    userPost: p.userPost,
-                    likedBy: p.likedBy,
-                    postComments: p.postComments
-                      ? p.postComments.map((comment: any) => ({
-                          ...comment,
-                          postedAt: comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
-                        }))
-                      : null,
-                    createdAt: p.createdAt,
-                    userName: p.userName,
-                    postId: p.postId,
-                    groupName: p.groupName,
-                  };
-                }
-              });
-            }
-          });
-          resolve(post);
-        },
-        {
-          onlyOnce: true,
-        }
-      );
-    });
+      const snapshot = await new Promise<UserPostTypes | null>((resolve, _) => {
+        onValue(
+          communitiesRef,
+          (snapshot) => {
+            let post: UserPostTypes | null = null;
+            snapshot.forEach((childSnapshot) => {
+              const community = childSnapshot.val() as CommunityTypes;
+              if (community.uid === communityId) {
+                const communityPosts = community.posts || [];
+                communityPosts.forEach((p: any) => {
+                  if (p.postId === postId) {
+                    post = {
+                      userId: p.userId,
+                      userPost: p.userPost,
+                      likedBy: p.likedBy,
+                      postComments: p.postComments
+                        ? p.postComments.map((comment: any) => ({
+                            ...comment,
+                            postedAt:
+                              comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
+                          }))
+                        : null,
+                      createdAt: p.createdAt,
+                      userName: p.userName,
+                      postId: p.postId,
+                      groupName: p.groupName,
+                    };
+                  }
+                });
+              }
+            });
+            resolve(post);
+          },
+          {
+            onlyOnce: true,
+          }
+        );
+      });
 
-    if (snapshot) {
-      return snapshot;
-    } else {
-      return rejectWithValue("Post not found");
+      if (snapshot) {
+        return snapshot;
+      } else {
+        return rejectWithValue("Post not found");
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Error fetching single post");
     }
-  } catch (error: any) {
-    return rejectWithValue(error.message || "Error fetching single post");
   }
-});
+);
