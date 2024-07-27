@@ -43,8 +43,9 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
 
   if (fetching && !posts) {
     return (
-      <div className="py-5 px-2 text-center">
-        <p className="text-gray-500 italic">Loading posts...</p>
+      <div className="py-5 px-2 text-center flex items-center justify-center gap-3">
+        <p className="text-gray-500 italic">Loading posts</p>
+        <div className="w-5 h-5 border-8 border-dashed rounded-full animate-spin border-blue-600"></div>
       </div>
     );
   }
@@ -62,13 +63,16 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
   return (
     <div className="py-5 px-2">
       <ul className="flex flex-col gap-5">
-        {posts.slice().reverse().map((post) => (
-          <SingleGroupPost
-            key={post.postId}
-            post={post}
-            communityId={communityId}
-          />
-        ))}
+        {posts
+          .slice()
+          .reverse()
+          .map((post) => (
+            <SingleGroupPost
+              key={post.postId}
+              post={post}
+              communityId={communityId}
+            />
+          ))}
       </ul>
       <LoadPostsBtn loadPosts={loadMorePosts} fetching={fetching} />
     </div>
