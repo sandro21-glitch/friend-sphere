@@ -446,7 +446,6 @@ export const savePostThunk = createAsyncThunk<
 export interface FetchSavedPostsPayload {
   userId: string;
 }
-
 export const fetchSavedPostsThunk = createAsyncThunk<
   SavedPostTypes[],
   FetchSavedPostsPayload,
@@ -495,11 +494,15 @@ export const fetchSavedPostsThunk = createAsyncThunk<
         const community = childSnapshot.val();
         if (community.uid === communityId) {
           const posts = community.posts || [];
-          posts.forEach((pst: SavedPostTypes) => {
-            if (pst.postId === postId) {
-              post = { ...pst, communityId };
-            }
-          });
+          
+          // Ensure posts is an array
+          if (Array.isArray(posts)) {
+            posts.forEach((pst: SavedPostTypes) => {
+              if (pst.postId === postId) {
+                post = { ...pst, communityId };
+              }
+            });
+          }
         }
       });
 
