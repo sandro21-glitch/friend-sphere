@@ -6,88 +6,68 @@ import { SavedPostTypes, UserPostTypes } from "./postsSlice";
 import { UserData } from "../user/userTypes";
 import { CommunityTypes } from "../community/communityTypes";
 
-interface AddPostPayload {
-  communityId: string;
-  post: {
-    userName: string;
-    postId: string;
-    userId: string;
-    userPost: string;
-    likedBy: string[] | null;
-    postComments:
-      | {
-          userComment: string;
-          userId: string;
-          userName: string;
-          postedAt: string;
-        }[]
-      | null;
-    createdAt: string;
-    groupName: string;
-  };
-}
-
-//add post to community
+//add post to communit
 export const addPostToCommunity = createAsyncThunk<
   { post: UserPostTypes; communityId: string },
-  AddPostPayload
->("communities/addPostToCommunity", async (payload) => {
+  { communityId: string; post: UserPostTypes }
+>("communities/addPostToCommunity", async (payload, { rejectWithValue }) => {
   const { communityId, post } = payload;
 
-  const communitiesRef = ref(database, "communities");
-  const snapshot = await get(communitiesRef);
+  try {
+    const communitiesRef = ref(database, "communities");
+    const snapshot = await get(communitiesRef);
 
-  if (!snapshot.exists()) {
-    throw new Error("Communities not found");
-  }
-
-  let communityKey: string | null = null;
-
-  snapshot.forEach((childSnapshot) => {
-    const community = childSnapshot.val();
-    if (community.uid === communityId) {
-      communityKey = childSnapshot.key;
+    if (!snapshot.exists()) {
+      return rejectWithValue("Communities not found");
     }
-  });
 
-  if (!communityKey) {
-    throw new Error("Community not found");
+    let communityKey: string | null = null;
+
+    snapshot.forEach((childSnapshot) => {
+      const community = childSnapshot.val() as CommunityTypes;
+      if (community.uid === communityId) {
+        // Ensure 'uid' and 'communityId' match
+        communityKey = childSnapshot.key;
+      }
+    });
+
+    if (!communityKey) {
+      return rejectWithValue("Community not found");
+    }
+
+    const communityPostsRef = ref(
+      database,
+      `communities/${communityKey}/posts`
+    );
+
+    // Fetch existing posts to find the highest index
+    const postsSnapshot = await get(communityPostsRef);
+    let newIndex = 0;
+
+    if (postsSnapshot.exists()) {
+      const posts = postsSnapshot.val() as Record<string, any>;
+      // Find the highest index
+      newIndex =
+        Math.max(...Object.keys(posts).map((key) => parseInt(key))) + 1;
+    }
+
+    // Set the new post at the determined index
+    await set(ref(database, `communities/${communityKey}/posts/${newIndex}`), {
+      ...post,
+      createdAt: new Date().toISOString(),
+      postComments: post.postComments
+        ? post.postComments.map((comment) => ({
+            ...comment,
+            postedAt: comment.postedAt || new Date().toISOString(),
+          }))
+        : [], // Ensure postComments is an empty array if null
+    });
+
+    return { post, communityId };
+  } catch (error: any) {
+    return rejectWithValue(error.message || "Error adding post to community");
   }
-
-  const newPost = {
-    ...post,
-    createdAt: new Date().toISOString(),
-    postComments: post.postComments
-      ? post.postComments.map((comment) => ({
-          ...comment,
-          postedAt: comment.postedAt || new Date().toISOString(), // Ensure postedAt is present
-        }))
-      : [], // Use an empty array instead of null
-  };
-
-  const communityPostsRef = ref(database, `communities/${communityKey}/posts`);
-
-  // Fetch existing posts and append the new post
-  const communityPostsSnapshot = await get(communityPostsRef);
-  const existingPosts = communityPostsSnapshot.exists()
-    ? communityPostsSnapshot.val()
-    : {};
-
-  // Generate a new post ID (assumes `postId` is a unique ID you generate)
-  const newPostId = Date.now().toString(); // Simple unique ID
-
-  // Create a new object with the new post
-  const updatedPosts = {
-    ...existingPosts,
-    [newPostId]: newPost,
-  };
-
-  // Update the posts node with the new post list
-  await set(communityPostsRef, updatedPosts);
-
-  return { post, communityId };
 });
-
 interface LikePostPayload {
   communityId: string;
   postId: string;
@@ -446,6 +426,7 @@ export const savePostThunk = createAsyncThunk<
 export interface FetchSavedPostsPayload {
   userId: string;
 }
+
 export const fetchSavedPostsThunk = createAsyncThunk<
   SavedPostTypes[],
   FetchSavedPostsPayload,
@@ -494,15 +475,11 @@ export const fetchSavedPostsThunk = createAsyncThunk<
         const community = childSnapshot.val();
         if (community.uid === communityId) {
           const posts = community.posts || [];
-          
-          // Ensure posts is an array
-          if (Array.isArray(posts)) {
-            posts.forEach((pst: SavedPostTypes) => {
-              if (pst.postId === postId) {
-                post = { ...pst, communityId };
-              }
-            });
-          }
+          posts.forEach((pst: SavedPostTypes) => {
+            if (pst.postId === postId) {
+              post = { ...pst, communityId };
+            }
+          });
         }
       });
 
