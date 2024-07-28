@@ -31,6 +31,12 @@ export interface UserPostTypes {
 export interface SavedPostTypes extends UserPostTypes {
   communityId: string;
 }
+export interface PostCommentTypes {
+  userComment: string;
+  userId: string;
+  userName: string;
+  postedAt: string;
+}
 
 interface PostsState {
   communityPosts: UserPostTypes[] | null;
@@ -93,6 +99,18 @@ export const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
+    addPostUi: (state, action: PayloadAction<{ post: UserPostTypes }>) => {
+      const { post } = action.payload;
+      if (state.communityPosts) {
+        // Check if the post already exists
+        const postExists = state.communityPosts.some(
+          (p) => p.postId === post.postId
+        );
+        if (!postExists) {
+          state.communityPosts = [...state.communityPosts, post];
+        }
+      }
+    },
     setSavedPostLike: (
       state,
       action: PayloadAction<{ postId: string; userId: string }>
@@ -309,6 +327,7 @@ export const postsSlice = createSlice({
   },
 });
 
-export const { setSavedPostLike,clearGroupPosts } = postsSlice.actions;
+export const { setSavedPostLike, clearGroupPosts, addPostUi } =
+  postsSlice.actions;
 
 export default postsSlice.reducer;
