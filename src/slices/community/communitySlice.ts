@@ -7,7 +7,6 @@ import {
   joinGroup,
   leaveGroup,
 } from "./communityThunks";
-import { UserPostTypes } from "../posts/postsSlice";
 import {
   CommunitySummary,
   CommunityTypes,
@@ -84,12 +83,7 @@ export const communitiesSlice = createSlice({
   name: "community",
   initialState,
   reducers: {
-    addPostUi: (state, action: PayloadAction<{ post: UserPostTypes }>) => {
-      const { post } = action.payload;
-      if (state.groupById) {
-        state.groupById.posts = [...state.groupById.posts, post];
-      }
-    },
+  
   },
   extraReducers: (builder) => {
     //fetch user communities
@@ -228,6 +222,6 @@ export const communitiesSlice = createSlice({
   },
 });
 
-export const { addPostUi } = communitiesSlice.actions;
+export const {  } = communitiesSlice.actions;
 
 export default communitiesSlice.reducer;
