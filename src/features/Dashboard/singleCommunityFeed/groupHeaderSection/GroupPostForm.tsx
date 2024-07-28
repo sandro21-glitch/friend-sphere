@@ -1,9 +1,9 @@
 import { useState } from "react";
 import CreatePostBtn from "./CreatePostBtn";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
-import { addPostToCommunity } from "../../../../slices/posts/postThunks";
 import { nanoid } from "nanoid";
-import { addPostUi } from "../../../../slices/community/communitySlice";
+import { addPostUi } from "../../../../slices/posts/postsSlice";
+import { addPostToCommunity } from "../../../../slices/posts/postThunks";
 
 type GroupPostFormTypes = {
   name: string;
