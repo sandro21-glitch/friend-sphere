@@ -78,8 +78,12 @@ export interface FetchCommunityPostsPayload {
   offset?: string; // Key of the last post fetched
   limit?: number; // Number of posts to fetch
 }
+export interface FetchCommunityPostsResult {
+  communityId: string;
+  posts: UserPostTypes[];
+}
 export const fetchCommunityPosts = createAsyncThunk<
-  UserPostTypes[],
+  FetchCommunityPostsResult, // Updated return type
   FetchCommunityPostsPayload,
   { rejectValue: string }
 >(
@@ -114,7 +118,7 @@ export const fetchCommunityPosts = createAsyncThunk<
       const communityPostsSnapshot = await get(communityPostsRef);
 
       if (!communityPostsSnapshot.exists()) {
-        return posts; // No posts found
+        return { communityId, posts }; // No posts found, but return community ID
       }
 
       // Get all posts from snapshot
@@ -151,13 +155,12 @@ export const fetchCommunityPosts = createAsyncThunk<
         : 0;
       const limitedPosts = sortedPosts.slice(startIndex, startIndex + limit);
 
-      return limitedPosts;
+      return { communityId, posts: limitedPosts }; // Return community ID and posts
     } catch (error: any) {
       return rejectWithValue(error.message || "Error fetching community posts");
     }
   }
 );
-
 // likePost thunk
 export const likePost = createAsyncThunk<
   { postId: string; communityId: string; userId: string; likedBy: string[] },
