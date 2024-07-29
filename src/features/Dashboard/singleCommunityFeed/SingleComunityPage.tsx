@@ -8,7 +8,10 @@ import PageLoader from "../../../ui/PageLoader";
 import DashboardPage from "../../../ui/DashboardPage";
 import { fetchCommunityById } from "../../../slices/community/communityThunks";
 import { fetchCommunityPosts } from "../../../slices/posts/postThunks";
-import { clearGroupPosts } from "../../../slices/posts/postsSlice";
+import {
+  clearGroupPosts,
+  setCurrentGroup,
+} from "../../../slices/posts/postsSlice";
 
 const SingleCommunityPage: React.FC = () => {
   const {
@@ -37,11 +40,13 @@ const SingleCommunityPage: React.FC = () => {
 
   useEffect(() => {
     if (groupById?.uid) {
+      dispatch(setCurrentGroup(groupById.uid));
       dispatch(fetchCommunityPosts({ communityId: groupById.uid }))
         .unwrap()
-        .then((fetchedPosts) => {
-          if (fetchedPosts.length > 0) {
-            setOffset(fetchedPosts[fetchedPosts.length - 1].postId); // Set offset to the last post ID
+        .then((result) => {
+          const { posts } = result;
+          if (posts.length > 0) {
+            setOffset(posts[posts.length - 1].postId); // Set offset to the last post ID
           }
         })
         .catch((error) => {
