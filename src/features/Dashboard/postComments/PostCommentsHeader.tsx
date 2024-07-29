@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from "date-fns";
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../../hooks/reduxHooks";
 
 type CommentsHeaderTypes = {
   groupName: string;
@@ -21,8 +22,10 @@ const PostCommentsHeader = ({
   const handleGoBack = () => {
     navigate(-1);
   };
+  const currentUserId = useAppSelector((store) => store.auth.userData?.uid)
 
   const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  const url = id === currentUserId ? '/profile' : `/user/${id}`;
 
   return (
     <div className="mb-5">
@@ -42,7 +45,7 @@ const PostCommentsHeader = ({
             className="w-12 h-12 mr-2"
           />
           <div className="flex flex-col">
-            <Link to={`/user/${id}`} className="text-[1rem] font-medium">
+            <Link to={url} className="text-[1rem] font-medium">
               {userName}
             </Link>
             <Link
