@@ -10,6 +10,8 @@ const CommunityItemList = () => {
 
   if (error) return <p>ERROR</p>;
   if (loading) return <SmallSpinner />;
+
+
   return (
     <ul className="flex flex-col gap-1">
       {userGroups?.slice(0, 5).map((item) => {
