@@ -24,7 +24,7 @@ const SingleGroupPost = ({ post, communityId }: SinglePostTypes) => {
 
   // format the distance to now in a human-readable format
   const timeAgo = formatDistanceToNow(parsedDate, { addSuffix: true });
-
+  
   return (
     <li className="border rounded-md p-4 hover:shadow-lg transition-shadow ease-in duration-200">
       <PostHeader userName={userName} groupName={groupName} timeAgo={timeAgo} />
