@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import SingleGroupPost from "./SingleGroupPost";
-import { fetchCommunityPosts } from "../../../../slices/posts/postThunks";
+import { fetchCommunityPosts, FetchCommunityPostsResult } from "../../../../slices/posts/postThunks";
 import LoadPostsBtn from "./LoadPostsBtn";
 
 type GroupPostTypes = {
@@ -17,12 +17,17 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
   } = useAppSelector((store) => store.posts);
 
   const dispatch = useAppDispatch();
+  const [initialLoad, setInitialLoad] = useState(true); // Track initial load
 
   useEffect(() => {
     if (communityId) {
       dispatch(
         fetchCommunityPosts({ communityId, offset: undefined, limit: 10 })
-      );
+      )
+      .unwrap()
+      .then(() => {
+        setInitialLoad(false); // Set initial load to false after the first fetch
+      });
     }
   }, [dispatch, communityId]);
 
@@ -30,9 +35,10 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
     if (offset) {
       dispatch(fetchCommunityPosts({ communityId, offset, limit: 10 }))
         .unwrap()
-        .then((fetchedPosts) => {
-          if (fetchedPosts.length > 0) {
-            setOffset(fetchedPosts[fetchedPosts.length - 1].postId); // Update offset
+        .then((result: FetchCommunityPostsResult) => {
+          const { posts } = result;
+          if (posts.length > 0) {
+            setOffset(posts[posts.length - 1].postId); // Update offset
           }
         })
         .catch((error) => {
@@ -41,14 +47,14 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
     }
   };
 
-    // Sort posts by `createdAt` in descending order (newest first)
-    const sortedPosts = posts ? [...posts].sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-      return dateB - dateA;
-    }) : [];
+  // Sort posts by `createdAt` in descending order (newest first)
+  const sortedPosts = posts ? [...posts].sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+    return dateB - dateA;
+  }) : [];
 
-  if (fetching) {
+  if (initialLoad && fetching) {
     return (
       <div className="py-5 px-2 text-center flex items-center justify-center gap-3">
         <p className="text-gray-500 italic">Loading posts</p>
