@@ -82,9 +82,7 @@ const initialState: CommunityState = {
 export const communitiesSlice = createSlice({
   name: "community",
   initialState,
-  reducers: {
-  
-  },
+  reducers: {},
   extraReducers: (builder) => {
     //fetch user communities
     builder
@@ -117,7 +115,10 @@ export const communitiesSlice = createSlice({
           state.groupById = action.payload;
         }
       )
-      .addCase(fetchCommunityById.rejected, () => {});
+      .addCase(fetchCommunityById.rejected, (state, action) => {
+        state.singleGroup.error =
+          action.error.message ?? "Error fetching group data";
+      });
     //fetch non joined groups
     builder
       .addCase(fetchNonJoinedCommunities.pending, (state) => {
@@ -222,6 +223,6 @@ export const communitiesSlice = createSlice({
   },
 });
 
-export const {  } = communitiesSlice.actions;
+export const {} = communitiesSlice.actions;
 
 export default communitiesSlice.reducer;
