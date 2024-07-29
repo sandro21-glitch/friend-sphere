@@ -43,7 +43,6 @@ const Dashboard = () => {
   }, [location.pathname, userData?.uid, dispatch]);
 
 
-
   return (
     <main className="relative bg-dashboard-bg">
       <Navbar />
