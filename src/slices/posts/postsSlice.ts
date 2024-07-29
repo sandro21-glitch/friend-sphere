@@ -64,6 +64,7 @@ interface PostsState {
     fetchingSavedPostsError: string | null;
     fetchingSinglePostError: string | null;
   };
+  currentGroup:string;
 }
 [];
 
@@ -93,6 +94,7 @@ const initialState: PostsState = {
     fetchingSavedPostsError: null,
     fetchingSinglePostError: null,
   },
+  currentGroup:''
 };
 
 export const postsSlice = createSlice({
@@ -134,6 +136,9 @@ export const postsSlice = createSlice({
     clearGroupPosts: (state) => {
       state.communityPosts = null;
     },
+    setCurrentGroup:(state,action:PayloadAction<string>) => {
+      state.currentGroup = action.payload
+    }
   },
   extraReducers: (builder) => {
     //add post
@@ -156,23 +161,29 @@ export const postsSlice = createSlice({
       })
       .addCase(
         fetchCommunityPosts.fulfilled,
-        (state, action: PayloadAction<UserPostTypes[]>) => {
+        (
+          state,
+          action: PayloadAction<{ communityId: string; posts: UserPostTypes[] }>
+        ) => {
           state.loading.fetching = false;
+          const { communityId, posts } = action.payload;
 
-          // Create a set of existing post IDs for deduplication
-          const existingPostIds = new Set(
-            state.communityPosts?.map((post) => post.postId)
-          );
+          if (state.currentGroup === communityId) {
+            // Create a set of existing post IDs for deduplication
+            const existingPostIds = new Set(
+              state.communityPosts?.map((post) => post.postId)
+            );
 
-          // Filter out duplicate posts
-          const newPosts = action.payload.filter(
-            (post) => !existingPostIds.has(post.postId)
-          );
+            // Filter out duplicate posts
+            const newPosts = posts.filter(
+              (post) => !existingPostIds.has(post.postId)
+            );
 
-          // Append only new posts
-          state.communityPosts = state.communityPosts
-            ? [...state.communityPosts, ...newPosts]
-            : newPosts;
+            // Append only new posts
+            state.communityPosts = state.communityPosts
+              ? [...state.communityPosts, ...newPosts]
+              : newPosts;
+          }
         }
       )
       .addCase(fetchCommunityPosts.rejected, (state, action) => {
@@ -327,7 +338,7 @@ export const postsSlice = createSlice({
   },
 });
 
-export const { setSavedPostLike, clearGroupPosts, addPostUi } =
+export const { setSavedPostLike, clearGroupPosts, addPostUi,setCurrentGroup } =
   postsSlice.actions;
 
 export default postsSlice.reducer;
