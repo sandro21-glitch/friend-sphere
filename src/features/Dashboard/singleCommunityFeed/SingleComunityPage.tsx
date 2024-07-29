@@ -30,8 +30,8 @@ const SingleCommunityPage: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchCommunityById(id));
       dispatch(clearGroupPosts());
+      dispatch(fetchCommunityById(id));
     }
   }, [dispatch, id]);
 
