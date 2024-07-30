@@ -22,10 +22,10 @@ const PostCommentsHeader = ({
   const handleGoBack = () => {
     navigate(-1);
   };
-  const currentUserId = useAppSelector((store) => store.auth.userData?.uid)
+  const currentUserId = useAppSelector((store) => store.auth.userData?.uid);
 
   const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
-  const url = id === currentUserId ? '/profile' : `/user/${id}`;
+  const url = id === currentUserId ? "/profile" : `/user/${id}`;
 
   return (
     <div className="mb-5">
@@ -39,12 +39,14 @@ const PostCommentsHeader = ({
       </button>
       <div className="flex justify-between items-center">
         <div className="flex items-center">
-          <img
-            src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
-            alt="user image"
-            className="w-12 h-12 mr-2"
-          />
-          <div className="flex flex-col">
+          <Link to={url}>
+            <img
+              src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
+              alt="user image"
+              className="w-14 h-14 mr-1"
+            />
+          </Link>
+          <div className="flex flex-col leading-5">
             <Link to={url} className="text-[1rem] font-medium">
               {userName}
             </Link>
