@@ -8,9 +8,12 @@ type SavedPostListTypes = {
 const SavedPostsList = ({ savedPosts }: SavedPostListTypes) => {
   return (
     <ul className="p-4 flex flex-col gap-4">
-      {savedPosts.map((post) => {
-        return <SingleSavedPost key={post.postId} post={post} />;
-      })}
+      {savedPosts
+        .slice()
+        .reverse()
+        .map((post) => {
+          return <SingleSavedPost key={post.postId} post={post} />;
+        })}
     </ul>
   );
 };
