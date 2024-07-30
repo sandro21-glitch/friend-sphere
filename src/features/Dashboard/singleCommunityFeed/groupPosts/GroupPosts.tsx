@@ -54,7 +54,7 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
     return dateB - dateA;
   }) : [];
 
-  if (initialLoad || fetching) {
+  if (initialLoad) {
     return (
       <div className="py-5 px-2 text-center flex items-center justify-center gap-3">
         <p className="text-gray-500 italic">Loading posts</p>
