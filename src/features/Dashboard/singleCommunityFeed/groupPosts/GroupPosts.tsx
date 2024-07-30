@@ -26,7 +26,7 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
       )
       .unwrap()
       .then(() => {
-        setInitialLoad(false); // Set initial load to false after the first fetch
+        setInitialLoad(false); 
       });
     }
   }, [dispatch, communityId]);
@@ -47,14 +47,14 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
     }
   };
 
-  // Sort posts by `createdAt` in descending order (newest first)
+  // sort posts by `createdAt` in descending order (newest first)
   const sortedPosts = posts ? [...posts].sort((a, b) => {
     const dateA = new Date(a.createdAt).getTime();
     const dateB = new Date(b.createdAt).getTime();
     return dateB - dateA;
   }) : [];
 
-  if (initialLoad && fetching) {
+  if (initialLoad || fetching) {
     return (
       <div className="py-5 px-2 text-center flex items-center justify-center gap-3">
         <p className="text-gray-500 italic">Loading posts</p>
