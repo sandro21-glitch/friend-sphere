@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import SmallSpinner from "../../../ui/SmallSpinner";
 import SingleUserCommunityItem from "./SingleUserCommunityItem";
 import { fetchJoinedGroupSummaries } from "../../../slices/community/communityThunks";
+import PageDataLoader from "../../../ui/PageDataLoader";
+import ErrorMessage from "../../../ui/ErrorMessage";
 
 const UserCommunitiesList = () => {
   const {
@@ -20,13 +21,11 @@ const UserCommunitiesList = () => {
     }
   }, [dispatch, userId]);
 
-  if (loading)
+  if (loading) return <PageDataLoader />;
+  if (error)
     return (
-      <div className="flex items-center justify-center w-full">
-        <SmallSpinner />
-      </div>
+      <ErrorMessage message={error || "something went wrong... try again"} />
     );
-  if (error) return <p>error...</p>;
 
   return (
     <ul className="flex flex-col gap-3">
