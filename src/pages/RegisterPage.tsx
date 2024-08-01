@@ -7,7 +7,7 @@ import Logo from "../ui/Logo";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { registerUser } from "../slices/user/authThunks";
 import { useNavigate } from "react-router-dom";
-import { fetchUserCommunities } from "../slices/community/communityThunks";
+import { fetchNonJoinedCommunities, fetchUserCommunities } from "../slices/community/communityThunks";
 
 interface RegisterUser {
   name: string;
@@ -33,7 +33,7 @@ const RegisterPage = () => {
       if (registerUser.fulfilled.match(resultAction)) {
         const { uid } = resultAction.payload;
         if (uid) {
-          await dispatch(fetchUserCommunities(uid));
+          await dispatch(fetchNonJoinedCommunities(uid));
           navigate("/home");
         } else {
           console.error("No UID returned after registration");
