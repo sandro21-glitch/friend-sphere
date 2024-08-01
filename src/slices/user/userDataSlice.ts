@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   fetchTopUsers,
   fetchUserById,
+  followUser,
   updateUserProfile,
 } from "./userDataThunks";
 import { TopUserTypes, UserType } from "./userTypes";
@@ -12,11 +13,13 @@ interface UserDataState {
     updatingUserProfile: boolean;
     fetchingTopUsers: boolean;
     fetchingSingleUser: boolean;
+    following: boolean;
   };
   error: {
     updateUserProfile: string | null;
     fetchTopUsers: string | null;
     fetchSingleUserError: string | null;
+    followingError: string | null;
   };
   popularUsers: TopUserTypes[] | null;
   singleUser: UserType | null;
@@ -27,11 +30,13 @@ const initialState: UserDataState = {
     updatingUserProfile: false,
     fetchingTopUsers: false,
     fetchingSingleUser: false,
+    following: false,
   },
   error: {
     updateUserProfile: null,
     fetchTopUsers: null,
     fetchSingleUserError: null,
+    followingError: null,
   },
   popularUsers: null,
   singleUser: null,
@@ -71,19 +76,39 @@ export const userDataSlice = createSlice({
         state.loading.fetchingTopUsers = false;
         state.error.fetchTopUsers = action.payload || "unknown error";
       });
-    builder.addCase(fetchUserById.pending, (state) => {
-      state.loading.fetchingSingleUser = true;
-    });
-    builder.addCase(
-      fetchUserById.fulfilled,
-      (state, action: PayloadAction<UserType>) => {
-        state.loading.fetchingSingleUser = false;
-        state.singleUser = action.payload;
-      }
-    );
-    builder.addCase(fetchUserById.rejected, (state, action) => {
-      state.error.fetchTopUsers = action.payload || "unknown error";
-    });
+    //fetch user page by user id
+    builder
+      .addCase(fetchUserById.pending, (state) => {
+        state.loading.fetchingSingleUser = true;
+      })
+      .addCase(
+        fetchUserById.fulfilled,
+        (state, action: PayloadAction<UserType>) => {
+          state.loading.fetchingSingleUser = false;
+          state.singleUser = action.payload;
+        }
+      )
+      .addCase(fetchUserById.rejected, (state, action) => {
+        state.error.fetchTopUsers = action.payload || "unknown error";
+      });
+    //follow user
+    builder
+      .addCase(followUser.pending, (state) => {
+        state.loading.following = true;
+      })
+      .addCase(followUser.fulfilled, (state, action: PayloadAction<string>) => {
+        state.loading.following = false;
+        if (state.popularUsers) {
+          state.popularUsers = state.popularUsers?.filter(
+            (user) => user.id !== action.payload
+          );
+        }
+      })
+      .addCase(followUser.rejected, (state, action) => {
+        state.loading.following = false;
+        const followingError = action.payload as string;
+        state.error.followingError = followingError || "Failed to follow user";
+      });
   },
 });
 
