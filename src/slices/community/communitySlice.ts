@@ -149,12 +149,14 @@ export const communitiesSlice = createSlice({
         ) => {
           state.joinGroup.loading = false;
           const { communityToUpdate, communityUid } = action.payload;
-          state.joinGroup.communityId = communityUid;
 
-          if (state.userGroups && communityToUpdate) {
-            // console.log(communityToUpdate);
+          // Ensure state.userGroups is an array
+          const userGroups = state.userGroups || [];
+
+          // Add new community to userGroups
+          if (communityToUpdate) {
             state.userGroups = [
-              ...state.userGroups,
+              ...userGroups,
               {
                 name: communityToUpdate.name,
                 uid: communityUid,
@@ -165,7 +167,7 @@ export const communitiesSlice = createSlice({
           // Filter out the joined group from nonJoinedGroupData
           if (state.nonJoinedGroupData) {
             state.nonJoinedGroupData = state.nonJoinedGroupData.filter(
-              (group) => group.uid !== action.payload.communityUid
+              (group) => group.uid !== communityUid
             );
           }
         }
