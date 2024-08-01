@@ -72,7 +72,6 @@ export const fetchCommunityById = createAsyncThunk<
     }
   }
 );
-
 export const fetchNonJoinedCommunities = createAsyncThunk<
   CommunityTypes[],
   string,
@@ -84,8 +83,12 @@ export const fetchNonJoinedCommunities = createAsyncThunk<
       // Reference to the communities in Firebase
       const communitiesRef = ref(database, "communities");
       const snapshot = await get(communitiesRef);
-      const allCommunities: CommunityTypes[] = [];
 
+      if (!snapshot.exists()) {
+        throw new Error("No communities found");
+      }
+
+      const allCommunities: CommunityTypes[] = [];
       snapshot.forEach((childSnapshot) => {
         allCommunities.push(childSnapshot.val() as CommunityTypes);
       });
@@ -99,14 +102,23 @@ export const fetchNonJoinedCommunities = createAsyncThunk<
       }
 
       const userData = userSnapshot.val();
-      const joinedGroupIds: Set<string> = new Set(
-        userData.joinedGroups.map((group: { groupId: string }) => group.groupId)
-      );
 
-      // Filter communities that the user has not joined
-      const nonJoinedCommunities = allCommunities.filter(
-        (community) => !joinedGroupIds.has(community.uid)
-      );
+      // If joinedGroups is missing, consider all communities
+      let nonJoinedCommunities: CommunityTypes[];
+
+      if (!userData || !userData.joinedGroups) {
+        nonJoinedCommunities = allCommunities;
+      } else {
+        // Map the joinedGroups to a Set of community IDs
+        const joinedGroupIds: Set<string> = new Set(
+          userData.joinedGroups.map((group: { groupId: string }) => group.groupId)
+        );
+
+        // Filter out communities that the user has not joined
+        nonJoinedCommunities = allCommunities.filter(
+          (community) => !joinedGroupIds.has(community.uid)
+        );
+      }
 
       // Randomly select three communities
       const randomCommunities = nonJoinedCommunities
@@ -115,6 +127,7 @@ export const fetchNonJoinedCommunities = createAsyncThunk<
 
       return randomCommunities;
     } catch (error: any) {
+      console.error("Error fetching non-joined communities:", error);
       return rejectWithValue(error.message || "Error fetching communities");
     }
   }
