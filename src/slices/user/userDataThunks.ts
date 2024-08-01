@@ -31,6 +31,7 @@ export const updateUserProfile = createAsyncThunk(
 );
 
 //fetch popular users
+
 export const fetchTopUsers = createAsyncThunk<
   TopUserTypes[],
   string, // currentUserId as an argument
@@ -44,12 +45,23 @@ export const fetchTopUsers = createAsyncThunk<
       throw new Error("No users found");
     }
 
+    const followingRef = ref(database, `users/${currentUserId}/following`);
+    const followingSnapshot = await get(followingRef);
+    const followingList: Set<string> = new Set();
+
+    if (followingSnapshot.exists()) {
+      followingSnapshot.forEach((childSnapshot) => {
+        const data = childSnapshot.val();
+        followingList.add(data.userUid);
+      });
+    }
+
     const users: TopUserTypes[] = [];
     snapshot.forEach((childSnapshot) => {
       const data = childSnapshot.val();
       const followersCount = data.followers?.length || 0;
 
-      if (data.uid !== currentUserId) {
+      if (data.uid !== currentUserId && !followingList.has(data.uid)) {
         users.push({
           id: data.uid,
           followersCount,
