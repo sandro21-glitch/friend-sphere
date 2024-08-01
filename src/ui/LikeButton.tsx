@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { BiLike, BiSolidLike } from "react-icons/bi";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import { likePost } from "../slices/posts/postThunks";
 import { setSavedPostLike } from "../slices/posts/postsSlice";
+import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 
 type LikeButtonProps = {
   likedBy: string[];
@@ -28,7 +28,7 @@ const LikeButton = ({ likedBy, postId, communityId }: LikeButtonProps) => {
 
     setLocalLiked(!localLiked);
     setLocalLikedCount(localLiked ? localLikedCount - 1 : localLikedCount + 1);
-    
+
     dispatch(setSavedPostLike({ postId, userId }));
     try {
       await dispatch(likePost({ postId, userId, communityId })).unwrap();
@@ -48,9 +48,9 @@ const LikeButton = ({ likedBy, postId, communityId }: LikeButtonProps) => {
       disabled={liking}
     >
       {localLiked ? (
-        <BiSolidLike className=" text-[1.5rem]" />
+        <FcLike className=" text-[1.5rem]" />
       ) : (
-        <BiLike className=" text-[1.5rem]" />
+        <FcLikePlaceholder className=" text-[1.5rem]" />
       )}
       <span className="text-[16px] font-semibold">{localLikedCount}</span>
     </button>
