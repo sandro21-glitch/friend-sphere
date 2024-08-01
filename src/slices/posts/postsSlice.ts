@@ -64,7 +64,7 @@ interface PostsState {
     fetchingSavedPostsError: string | null;
     fetchingSinglePostError: string | null;
   };
-  currentGroup:string;
+  currentGroup: string;
 }
 [];
 
@@ -94,7 +94,7 @@ const initialState: PostsState = {
     fetchingSavedPostsError: null,
     fetchingSinglePostError: null,
   },
-  currentGroup:''
+  currentGroup: "",
 };
 
 export const postsSlice = createSlice({
@@ -136,9 +136,9 @@ export const postsSlice = createSlice({
     clearGroupPosts: (state) => {
       state.communityPosts = null;
     },
-    setCurrentGroup:(state,action:PayloadAction<string>) => {
-      state.currentGroup = action.payload
-    }
+    setCurrentGroup: (state, action: PayloadAction<string>) => {
+      state.currentGroup = action.payload;
+    },
   },
   extraReducers: (builder) => {
     //add post
@@ -301,7 +301,7 @@ export const postsSlice = createSlice({
         state.error.fetchingSavedPostsError = action.payload
           ? action.payload.toString()
           : "Failed to fetch saved posts";
-        alert(state.error.removingError || "Failed to fetch saved posts");
+        console.error("Error fetching saved posts:", action.error.message);
       });
     //unsave post
     builder.addCase(unsavePostThunk.pending, (state) => {
@@ -338,7 +338,7 @@ export const postsSlice = createSlice({
   },
 });
 
-export const { setSavedPostLike, clearGroupPosts, addPostUi,setCurrentGroup } =
+export const { setSavedPostLike, clearGroupPosts, addPostUi, setCurrentGroup } =
   postsSlice.actions;
 
 export default postsSlice.reducer;
