@@ -22,7 +22,7 @@ const CommentsLink: React.FC<PostLinkProps> = ({
       className="flex items-center gap-1"
     >
       <LiaCommentAlt className="text-[1.3rem]" />
-      <span className="text-[16px] font-semibold ">{postCommentLength}</span>
+      <span className="text-[16px] font-semibold mb-[2.2px]">{postCommentLength}</span>
     </Link>
   );
 };
