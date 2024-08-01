@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BiComment } from "react-icons/bi";
+import { LiaCommentAlt } from "react-icons/lia";
 
 interface PostLinkProps {
   postId: string;
@@ -21,8 +21,8 @@ const CommentsLink: React.FC<PostLinkProps> = ({
       }}
       className="flex items-center gap-1"
     >
-      <BiComment className="text-[1.3rem]" />
-      <span className="text-[16px] font-semibold">{postCommentLength}</span>
+      <LiaCommentAlt className="text-[1.3rem]" />
+      <span className="text-[16px] font-semibold ">{postCommentLength}</span>
     </Link>
   );
 };
