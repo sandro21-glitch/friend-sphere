@@ -7,11 +7,13 @@ type UserFollowingCountTypes = {
   }[];
 };
 
-const UserFollowingCount = ({ following }: UserFollowingCountTypes) => {
+const UserFollowingCount = ({ following = [] }: UserFollowingCountTypes) => {
+  const followingsArray = Object.values(following);
+
   return (
     <li className="flex items-center gap-2 text-md">
       <SlUserFollowing />
-      {following ? `${following.length} following` : "0 following"}
+      {followingsArray ? `${followingsArray.length} following` : "0 following"}
     </li>
   );
 };
