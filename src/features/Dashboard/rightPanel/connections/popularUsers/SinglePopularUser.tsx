@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { TopUserTypes } from "../../../../../slices/user/userTypes";
 import ConnectButton from "../../../../../ui/ConnectButton";
 import {
@@ -7,6 +7,7 @@ import {
 } from "../../../../../hooks/reduxHooks";
 import { followUser } from "../../../../../slices/user/userDataThunks";
 import { useState } from "react";
+import UserProfileLink from "./singlePopularUser/UserProfileLink";
 
 type SinglePopularUserTypes = {
   user: TopUserTypes;
@@ -52,19 +53,7 @@ const SinglePopularUser = ({ user }: SinglePopularUserTypes) => {
         className="flex justify-between items-center border border-slate-100 py-[.25rem] px-[.5rem]
      rounded-md shadow-sm shadow-[#f2f5fc]"
       >
-        <Link to={`user/${id}`} className="flex items-center gap-2">
-          <img
-            src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
-            alt=""
-            className="w-[2rem] h-[2rem]"
-          />
-          <div>
-            <div className="text-[16px] font-medium">{name}</div>
-            <div className="text-[12px] capitalize text-gray-500">
-              followers: {followersCount}
-            </div>
-          </div>
-        </Link>
+        <UserProfileLink id={id} followersCount={followersCount} name={name} />
         <ConnectButton
           name="follow"
           follow
