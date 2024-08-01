@@ -13,7 +13,7 @@ const SavedPosts = () => {
   const {
     error: { fetchingSavedPostsError },
     loading: { fetchingSavedPosts },
-    savedPosts,
+    savedPosts = [],
   } = useAppSelector((store) => store.posts);
 
   useEffect(() => {
