@@ -104,3 +104,41 @@ export const fetchUserById = createAsyncThunk<
     return rejectWithValue(error.message || "Failed to fetch user data");
   }
 });
+
+interface FollowUserTypes {
+  currentUserId: string;
+  followUserId: string;
+  followUserName: string;
+  currentUserName: string;
+}
+// follow user
+export const followUser = createAsyncThunk<string, FollowUserTypes>(
+  "users/followUser",
+  async (
+    { currentUserId, followUserId, followUserName, currentUserName },
+    { rejectWithValue }
+  ) => {
+    try {
+      const updates: any = {};
+
+      // Add the followed user to the current user's following list
+      updates[`/users/${currentUserId}/following/${followUserId}`] = {
+        userUid: followUserId,
+        name: followUserName,
+      };
+
+      // Add the current user to the followed user's followers list
+      updates[`/users/${followUserId}/followers/${currentUserId}`] = {
+        userUid: currentUserId,
+        name: currentUserName,
+      };
+      
+      await update(ref(database), updates);
+
+      // Return the followUserId upon success
+      return followUserId;
+    } catch (error) {
+      return rejectWithValue("Failed to follow user");
+    }
+  }
+);
