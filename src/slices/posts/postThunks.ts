@@ -429,76 +429,80 @@ export const savePostThunk = createAsyncThunk<
 export interface FetchSavedPostsPayload {
   userId: string;
 }
-
 export const fetchSavedPostsThunk = createAsyncThunk<
   SavedPostTypes[],
   FetchSavedPostsPayload,
-  { state: RootState }
->("posts/fetchSavedPosts", async (payload, thunkAPI) => {
-  const { userId } = payload;
+  { rejectValue: string; state: RootState }
+>(
+  'posts/fetchSavedPosts',
+  async ({ userId }, thunkAPI) => {
+    try {
+      // Reference to the user's savedPosts array in Firebase
+      const userSavedPostsRef = ref(database, `users/${userId}`);
+      const userSnapshot = await get(userSavedPostsRef);
 
-  try {
-    // Reference to the user's savedPosts array in Firebase
-    const userSavedPostsRef = ref(database, `users/${userId}`);
-    const userSnapshot = await get(userSavedPostsRef);
-
-    if (!userSnapshot.exists()) {
-      throw new Error("User not found");
-    }
-
-    const userData: UserData = userSnapshot.val();
-    const savedPostsArray: { communityId: string; postId: string }[] =
-      userData.savedPosts || [];
-    const joinedGroups: Set<string> = new Set(
-      userData.joinedGroups.map((group) => group.groupId)
-    );
-
-    const fetchedPosts: SavedPostTypes[] = [];
-
-    // Reference to the communities in Firebase
-    const communitiesRef = ref(database, "communities");
-    const communitiesSnapshot = await get(communitiesRef);
-
-    if (!communitiesSnapshot.exists()) {
-      throw new Error("Communities not found");
-    }
-
-    // Iterate through each saved post and find the matching post in communities
-    for (const savedPost of savedPostsArray) {
-      const { communityId, postId } = savedPost;
-
-      // Check if the communityId is in the user's joined groups
-      if (!joinedGroups.has(communityId)) {
-        continue; // Skip this community if not joined
+      if (!userSnapshot.exists()) {
+        throw new Error("User not found");
       }
 
-      let post: SavedPostTypes | null = null;
+      const userData: UserData = userSnapshot.val();
 
-      communitiesSnapshot.forEach((childSnapshot) => {
-        const community = childSnapshot.val();
-        if (community.uid === communityId) {
-          const posts = community.posts || [];
-          posts.forEach((pst: SavedPostTypes) => {
-            if (pst.postId === postId) {
-              post = { ...pst, communityId };
-            }
-          });
+      // Ensure savedPosts and joinedGroups are initialized properly
+      const savedPostsArray: { communityId: string; postId: string }[] =
+        userData.savedPosts || []; // Default to an empty array if savedPosts is undefined
+      const joinedGroups: Set<string> = new Set(
+        (userData.joinedGroups || []).map((group) => group.groupId) // Default to an empty array if joinedGroups is undefined
+      );
+
+      const fetchedPosts: SavedPostTypes[] = [];
+
+      // Reference to the communities in Firebase
+      const communitiesRef = ref(database, "communities");
+      const communitiesSnapshot = await get(communitiesRef);
+
+      if (!communitiesSnapshot.exists()) {
+        throw new Error("Communities not found");
+      }
+
+      // Iterate through each saved post and find the matching post in communities
+      for (const savedPost of savedPostsArray) {
+        const { communityId, postId } = savedPost;
+
+        // Check if the communityId is in the user's joined groups
+        if (!joinedGroups.has(communityId)) {
+          continue; // Skip this community if not joined
         }
-      });
 
-      if (post) {
-        fetchedPosts.push(post);
+        let post: SavedPostTypes | null = null;
+
+        communitiesSnapshot.forEach((childSnapshot) => {
+          const community = childSnapshot.val();
+          if (community.uid === communityId) {
+            const posts = community.posts || [];
+            posts.forEach((pst: SavedPostTypes) => {
+              if (pst.postId === postId) {
+                post = { ...pst, communityId };
+              }
+            });
+          }
+        });
+
+        if (post) {
+          fetchedPosts.push(post);
+        }
       }
-    }
 
-    return fetchedPosts;
-  } catch (error: any) {
-    console.error("Error fetching saved posts:", error.message);
-    return thunkAPI.rejectWithValue(
-      error.message || "Error fetching saved posts from communities"
-    );
+      // Return the fetched posts, or an empty array if none found
+      return fetchedPosts;
+    } catch (error: any) {
+      console.error("Error fetching saved posts:", error.message);
+      // Return an empty array in case of error for the UI to handle
+      return thunkAPI.rejectWithValue(
+        error.message || "Error fetching saved posts from communities"
+      );
+    }
   }
-});
+);
 
 // unsave post
 interface UnsavePostArgs {
