@@ -1,3 +1,4 @@
+import React from "react";
 
 type UserFollowersCountTypes = {
   followers: {
@@ -6,10 +7,15 @@ type UserFollowersCountTypes = {
   }[];
 };
 
-const UserFollowersCount = ({ followers }: UserFollowersCountTypes) => {
+const UserFollowersCount: React.FC<UserFollowersCountTypes> = ({
+  followers,
+}) => {
+  const followersArray = Object.values(followers);
   return (
     <li className="flex items-center gap-2 text-md font-semibold">
-      {followers ? `${followers.length} followers` : "0 followers"}
+      {followersArray.length > 0
+        ? `${followersArray.length} followers`
+        : "0 followers"}
     </li>
   );
 };
