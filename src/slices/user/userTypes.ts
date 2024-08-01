@@ -65,3 +65,4 @@ export interface UserType {
   interests: string[];
   bio: string;
 }
+
