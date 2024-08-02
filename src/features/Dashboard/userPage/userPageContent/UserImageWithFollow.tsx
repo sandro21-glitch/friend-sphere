@@ -23,9 +23,9 @@ const UserImageWithFollow = ({ name, uid }: UserImageWithFollowProps) => {
         className="w-20 h-20"
       />
       {isFollowing ? (
-        <FollowUserButton name={name} uid={uid} />
-      ) : (
         <UnfollowUserButton name={name} uid={uid} />
+      ) : (
+        <FollowUserButton name={name} uid={uid} />
       )}
     </div>
   );
