@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserData } from "./userTypes";
 import {
   loginDemoUser,
@@ -51,11 +51,14 @@ export const authSlice = createSlice({
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.userData = action.payload.userProfile;
-        state.loading = false;
-        state.error = null;
-      })
+      .addCase(
+        loginUser.fulfilled,
+        (state, action: PayloadAction<{ userProfile: UserData }>) => {
+          state.userData = action.payload.userProfile;
+          state.loading = false;
+          state.error = null;
+        }
+      )
       .addCase(loginUser.rejected, (state, action) => {
         const authError = action.payload as string;
         state.error = authError.replace("Firebase", "") || "Login failed";
