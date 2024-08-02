@@ -154,3 +154,34 @@ export const followUser = createAsyncThunk<string, FollowUserTypes>(
     }
   }
 );
+
+interface UnfollowUserTypes {
+  currentUserId: string;
+  unfollowUserId: string;
+}
+
+//unfollow user
+export const unfollowUser = createAsyncThunk<string, UnfollowUserTypes>(
+  "users/unfollowUser",
+  async (
+    { currentUserId, unfollowUserId },
+    { rejectWithValue }
+  ) => {
+    try {
+      const updates: any = {};
+
+      // Remove the unfollowed user from the current user's following list
+      updates[`/users/${currentUserId}/following/${unfollowUserId}`] = null;
+
+      // Remove the current user from the unfollowed user's followers list
+      updates[`/users/${unfollowUserId}/followers/${currentUserId}`] = null;
+
+      await update(ref(database), updates);
+
+      // Return the unfollowUserId upon success
+      return unfollowUserId;
+    } catch (error) {
+      return rejectWithValue("Failed to unfollow user");
+    }
+  }
+);
