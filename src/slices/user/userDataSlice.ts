@@ -3,6 +3,7 @@ import {
   fetchTopUsers,
   fetchUserById,
   followUser,
+  unfollowUser,
   updateUserProfile,
 } from "./userDataThunks";
 import { TopUserTypes, UserType } from "./userTypes";
@@ -14,12 +15,14 @@ interface UserDataState {
     fetchingTopUsers: boolean;
     fetchingSingleUser: boolean;
     following: boolean;
+    unFollowing: boolean;
   };
   error: {
     updateUserProfile: string | null;
     fetchTopUsers: string | null;
     fetchSingleUserError: string | null;
     followingError: string | null;
+    unFollowingError: string | null;
   };
   popularUsers: TopUserTypes[] | null;
   singleUser: UserType | null;
@@ -31,12 +34,14 @@ const initialState: UserDataState = {
     fetchingTopUsers: false,
     fetchingSingleUser: false,
     following: false,
+    unFollowing: false,
   },
   error: {
     updateUserProfile: null,
     fetchTopUsers: null,
     fetchSingleUserError: null,
     followingError: null,
+    unFollowingError: null,
   },
   popularUsers: null,
   singleUser: null,
@@ -108,6 +113,20 @@ export const userDataSlice = createSlice({
         state.loading.following = false;
         const followingError = action.payload as string;
         state.error.followingError = followingError || "Failed to follow user";
+      });
+    //unfollow user
+    builder
+      .addCase(unfollowUser.pending, (state) => {
+        state.loading.unFollowing = true;
+      })
+      .addCase(unfollowUser.fulfilled, (state) => {
+        state.loading.unFollowing = false;
+      })
+      .addCase(unfollowUser.rejected, (state, action) => {
+        state.loading.unFollowing = false;
+        const unfollowError = action.payload as string;
+        state.error.unFollowingError =
+          unfollowError || "Failed to unfollow user";
       });
   },
 });
