@@ -1,6 +1,6 @@
-import { SlUserFollow, SlUserUnfollow } from "react-icons/sl";
-import Tooltip from "../../../../ui/Tooltip";
 import { useAppSelector } from "../../../../hooks/reduxHooks";
+import FollowUserButton from "./followButtons/FollowUserButton";
+import UnfollowUserButton from "./followButtons/UnfollowUserButton";
 
 type UserImageWithFollowProps = {
   name: string;
@@ -8,7 +8,7 @@ type UserImageWithFollowProps = {
 };
 
 const UserImageWithFollow = ({ name, uid }: UserImageWithFollowProps) => {
-  const { uid: currUserUid, following = [] } =
+  const { following = [] } =
     useAppSelector((store) => store.auth.userData) || {};
 
   const isFollowing = following
@@ -23,17 +23,9 @@ const UserImageWithFollow = ({ name, uid }: UserImageWithFollowProps) => {
         className="w-20 h-20"
       />
       {isFollowing ? (
-        <span className="absolute bottom-0 -right-3 border border-red-600 w-8 h-8 rounded-full cursor-pointer flex items-center justify-center group">
-          <SlUserUnfollow className="text-red-600" />
-          {/* Tooltip */}
-          <Tooltip action="unfollow" message={name} />
-        </span>
+        <FollowUserButton name={name} uid={uid} />
       ) : (
-        <span className="absolute bottom-0 -right-3 border border-azure-blue w-8 h-8 rounded-full cursor-pointer flex items-center justify-center group">
-          <SlUserFollow className="text-azure-blue" />
-          {/* Tooltip */}
-          <Tooltip action="follow" message={name} />
-        </span>
+        <UnfollowUserButton name={name} uid={uid} />
       )}
     </div>
   );
