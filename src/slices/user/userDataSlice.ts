@@ -8,7 +8,7 @@ import {
   updateUserProfile,
 } from "./userDataThunks";
 import { TopUserTypes, UserType } from "./userTypes";
-import { UserPostTypes } from "../posts/postsSlice";
+import { SavedPostTypes } from "../posts/postsSlice";
 // import type { RootState } from "../store";
 
 interface UserDataState {
@@ -30,7 +30,7 @@ interface UserDataState {
   };
   popularUsers: TopUserTypes[] | null;
   singleUser: UserType | null;
-  relevantPosts: UserPostTypes[] | null;
+  relevantPosts: SavedPostTypes[] | null;
 }
 
 const initialState: UserDataState = {
@@ -143,7 +143,7 @@ export const userDataSlice = createSlice({
       })
       .addCase(
         fetchRelevantPosts.fulfilled,
-        (state, action: PayloadAction<UserPostTypes[]>) => {
+        (state, action: PayloadAction<SavedPostTypes[]>) => {
           state.loading.loadingRelevantPosts = false;
           state.relevantPosts = action.payload;
         }
