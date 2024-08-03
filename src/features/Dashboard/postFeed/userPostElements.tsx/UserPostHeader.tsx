@@ -1,3 +1,5 @@
+import { formatDistanceToNow, parseISO } from "date-fns";
+
 type UserPostHeaderTypes = {
   userName: string;
   groupName: string;
@@ -8,6 +10,11 @@ const UserPostHeader = ({
   groupName,
   userName,
 }: UserPostHeaderTypes) => {
+  const parsedDate = parseISO(createdAt);
+
+  // format the distance to now in a human-readable format
+  const timeAgo = formatDistanceToNow(parsedDate, { addSuffix: true });
+
   return (
     <div className="flex justify-between mb-3">
       <div className="flex items-center">
@@ -22,7 +29,9 @@ const UserPostHeader = ({
         </div>
       </div>
       <div>
-        <p>{createdAt}</p>
+        <p className="text-[14px] text-gray-500">
+          {timeAgo.replace("about", " ")}
+        </p>
       </div>
     </div>
   );
