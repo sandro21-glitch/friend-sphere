@@ -4,6 +4,7 @@ type PostHeaderTypes = {
   timeAgo: string;
 };
 const PostHeader = ({ groupName, timeAgo, userName }: PostHeaderTypes) => {
+  
   return (
     <div className="flex justify-between items-start mb-3">
       <div className="flex items-center">
