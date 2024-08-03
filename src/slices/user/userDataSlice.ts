@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  fetchRelevantPosts,
   fetchTopUsers,
   fetchUserById,
   followUser,
@@ -7,6 +8,7 @@ import {
   updateUserProfile,
 } from "./userDataThunks";
 import { TopUserTypes, UserType } from "./userTypes";
+import { UserPostTypes } from "../posts/postsSlice";
 // import type { RootState } from "../store";
 
 interface UserDataState {
@@ -16,6 +18,7 @@ interface UserDataState {
     fetchingSingleUser: boolean;
     following: boolean;
     unFollowing: boolean;
+    loadingRelevantPosts: boolean;
   };
   error: {
     updateUserProfile: string | null;
@@ -23,9 +26,11 @@ interface UserDataState {
     fetchSingleUserError: string | null;
     followingError: string | null;
     unFollowingError: string | null;
+    relevantPostsError: string | null;
   };
   popularUsers: TopUserTypes[] | null;
   singleUser: UserType | null;
+  relevantPosts: UserPostTypes[] | null;
 }
 
 const initialState: UserDataState = {
@@ -35,6 +40,7 @@ const initialState: UserDataState = {
     fetchingSingleUser: false,
     following: false,
     unFollowing: false,
+    loadingRelevantPosts: false,
   },
   error: {
     updateUserProfile: null,
@@ -42,9 +48,11 @@ const initialState: UserDataState = {
     fetchSingleUserError: null,
     followingError: null,
     unFollowingError: null,
+    relevantPostsError: null,
   },
   popularUsers: null,
   singleUser: null,
+  relevantPosts: null,
 };
 
 export const userDataSlice = createSlice({
@@ -127,6 +135,23 @@ export const userDataSlice = createSlice({
         const unfollowError = action.payload as string;
         state.error.unFollowingError =
           unfollowError || "Failed to unfollow user";
+      });
+    //fetch relevant posts
+    builder
+      .addCase(fetchRelevantPosts.pending, (state) => {
+        state.loading.loadingRelevantPosts = true;
+      })
+      .addCase(
+        fetchRelevantPosts.fulfilled,
+        (state, action: PayloadAction<UserPostTypes[]>) => {
+          state.loading.loadingRelevantPosts = false;
+          state.relevantPosts = action.payload;
+        }
+      )
+      .addCase(fetchRelevantPosts.rejected, (state, action) => {
+        state.loading.loadingRelevantPosts = false;
+        const err = action.payload as string;
+        state.error.relevantPostsError = err || "Error fetching relevant posts";
       });
   },
 });
