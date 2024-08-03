@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import FollowingUserPosts from "./FollowingUserPosts";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { fetchRelevantPosts } from "../../../slices/user/userDataThunks";
+import PageDataLoader from "../../../ui/PageDataLoader";
 
 const PostFeed = () => {
   const {
@@ -17,7 +18,7 @@ const PostFeed = () => {
     }
   }, [dispatch, userId]);
 
-  if (loadingRelevantPosts) return <p>Loading...</p>;
+  if (loadingRelevantPosts) return <PageDataLoader />;
 
   if (relevantPosts && relevantPosts?.length < 1) {
     return <p>Posts not found</p>;
