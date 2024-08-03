@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { database } from "../../config/firebase";
 import { get, ref, update } from "firebase/database";
 import { TopUserTypes, UserData, UserType } from "./userTypes";
-import { UserPostTypes } from "../posts/postsSlice";
+import { SavedPostTypes } from "../posts/postsSlice";
 import { CommunityTypes } from "../community/communityTypes";
 
 // Async thunk to update user's bio, location, and interests in Firebase
@@ -194,7 +194,7 @@ interface FetchRelevantPostsPayload {
 }
 
 export const fetchRelevantPosts = createAsyncThunk<
-  UserPostTypes[],
+  SavedPostTypes[],
   FetchRelevantPostsPayload,
   { rejectValue: string }
 >(
@@ -237,7 +237,7 @@ export const fetchRelevantPosts = createAsyncThunk<
         return thunkAPI.rejectWithValue("Communities not found");
       }
 
-      const relevantPosts: UserPostTypes[] = [];
+      const relevantPosts: SavedPostTypes[] = [];
 
       communitiesSnapshot.forEach((childSnapshot) => {
         const community = childSnapshot.val() as CommunityTypes;
@@ -245,10 +245,13 @@ export const fetchRelevantPosts = createAsyncThunk<
         // Check if the community is in the list of joined groups
         if (joinedGroupIds.includes(community.uid)) {
           const posts = community.posts || [];
-          posts.forEach((post: UserPostTypes) => {
+          posts.forEach((post: Omit<SavedPostTypes, 'communityId'>) => {
             // Check if the post is made by a user that is followed
             if (followingUserIds.includes(post.userId)) {
-              relevantPosts.push(post);
+              relevantPosts.push({
+                ...post,
+                communityId: community.uid // Add communityId to the post
+              });
             }
           });
         }
