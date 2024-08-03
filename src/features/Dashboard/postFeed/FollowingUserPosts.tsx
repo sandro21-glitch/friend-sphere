@@ -1,34 +1,49 @@
-import { UserPostTypes } from "../../../slices/posts/postsSlice";
+import { SavedPostTypes } from "../../../slices/posts/postsSlice";
+import CommentsLink from "../../../ui/CommentsLink";
+import LikeButton from "../../../ui/LikeButton";
+import UserPostHeader from "./userPostElements.tsx/UserPostHeader";
+import UserPostText from "./userPostElements.tsx/UserPostText";
 
 type FollowingUserPostTypes = {
-  relevantPosts: UserPostTypes[] | null;
+  relevantPosts: SavedPostTypes[] | null;
 };
 
 const FollowingUserPosts = ({ relevantPosts }: FollowingUserPostTypes) => {
   return (
     <ul className="flex flex-col gap-5">
       {relevantPosts?.map((post) => {
-        const { userName, groupName, createdAt } = post;
+        const {
+          userName,
+          groupName,
+          createdAt,
+          userPost,
+          likedBy,
+          postComments,
+          postId,
+          communityId,
+        } = post;
         return (
           <li
             key={post.postId}
             className="bg-white p-5 border rounded-md hover:shadow-md transition-shadow ease-in duration-200"
           >
-            <div className="flex justify-between">
-              <div className="flex items-center">
-                <img
-                  src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
-                  alt="user"
-                  className="w-[3rem] h-[3rem] mr-2"
-                />
-                <div>
-                  <h5 className="font-bold text-[1.1rem]">{userName}</h5>
-                  <p className="text-[.8rem] text-gray-500">{groupName}</p>
-                </div>
-              </div>
-              <div>
-                <p>{createdAt}</p>
-              </div>
+            <UserPostHeader
+              userName={userName}
+              groupName={groupName}
+              createdAt={createdAt}
+            />
+            <UserPostText userPost={userPost} />
+            <div className="flex items-center gap-4">
+              <LikeButton
+                likedBy={likedBy || []}
+                postId={postId}
+                communityId={communityId}
+              />
+              <CommentsLink
+                communityId={communityId}
+                postCommentLength={postComments?.length || 0}
+                postId={postId}
+              />
             </div>
           </li>
         );
