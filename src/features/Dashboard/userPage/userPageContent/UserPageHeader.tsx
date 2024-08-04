@@ -6,13 +6,25 @@ type UserPageHeaderTypes = {
   location: string;
   bio: string;
   uid: string;
+  isAdmin: boolean;
 };
 
-const UserPageHeader = ({ name, location, bio,uid }: UserPageHeaderTypes) => {
+const UserPageHeader = ({
+  name,
+  location,
+  bio,
+  uid,
+  isAdmin,
+}: UserPageHeaderTypes) => {
   return (
     <div className="flex flex-col items-center mb-10">
       <UserImageWithFollow name={name} uid={uid} />
-      <UserIntroduction location={location} name={name} bio={bio} />
+      <UserIntroduction
+        location={location}
+        name={name}
+        bio={bio}
+        isAdmin={isAdmin}
+      />
     </div>
   );
 };
