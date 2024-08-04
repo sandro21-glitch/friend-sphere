@@ -12,6 +12,7 @@ import {
   clearGroupPosts,
   setCurrentGroup,
 } from "../../../slices/posts/postsSlice";
+import FollowingUsersGroupPosts from "./followingUserGroupPosts/FollowingUsersGroupPosts";
 
 const SingleCommunityPage: React.FC = () => {
   const {
@@ -82,8 +83,14 @@ const SingleCommunityPage: React.FC = () => {
   return (
     <DashboardPage>
       <GroupHeader postPage={postPage} setPostPage={setPostPage} />
-      <GroupPostForm groupId={uid} name={name} />
-      <GroupPosts communityId={uid} offset={offset} setOffset={setOffset} />
+      {postPage === "all" ? (
+        <>
+          <GroupPostForm groupId={uid} name={name} />
+          <GroupPosts communityId={uid} offset={offset} setOffset={setOffset} />
+        </>
+      ) : (
+        <FollowingUsersGroupPosts />
+      )}
     </DashboardPage>
   );
 };
