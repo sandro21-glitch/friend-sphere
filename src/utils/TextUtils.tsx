@@ -13,7 +13,7 @@ export const parseBioText = (text: string) => {
         href={part}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-1 text-blue-500"
+        className="inline-flex items-center gap-1 text-blue-500"
       >
         {getIconForUrl(part)}
       </a>
