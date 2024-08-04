@@ -29,12 +29,18 @@ const User = () => {
     return <ErrorMessage message={fetchSingleUserError || "user not found"} />;
   if (!singleUser) return null;
 
-  const { name, location,bio,uid } = singleUser;
+  const { name, location, bio, uid, isAdmin } = singleUser;
 
   return (
     <DashboardPage>
       <div className="p-5 flex flex-col justify-center items-center my-10">
-        <UserPageHeader name={name} location={location} bio={bio} uid={uid} />
+        <UserPageHeader
+          name={name}
+          location={location}
+          bio={bio}
+          uid={uid}
+          isAdmin={isAdmin}
+        />
         <UserInfo singleUser={singleUser} />
       </div>
     </DashboardPage>
