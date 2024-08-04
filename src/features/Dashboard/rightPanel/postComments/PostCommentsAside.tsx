@@ -27,7 +27,7 @@ const PostCommentsAside = () => {
               <SinglePostComment key={index} comment={comment} />
             ))
         ) : (
-          <p>No comments available</p>
+          <p className="text-center italic text-gray-500">Be the first to comment</p>
         )}
       </ul>
     </div>
