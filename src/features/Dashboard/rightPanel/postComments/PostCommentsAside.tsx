@@ -2,16 +2,14 @@ import { useAppSelector } from "../../../../hooks/reduxHooks";
 import PageDataLoader from "../../../../ui/PageDataLoader";
 import SinglePostComment from "./SinglePostComment";
 
-
 const PostCommentsAside = () => {
   const { singlePost } = useAppSelector((store) => store.posts);
   const { fetchingSinglePost } = useAppSelector((store) => store.posts.loading);
 
-
   if (fetchingSinglePost) {
     return <PageDataLoader />;
   }
-  const postComments = singlePost?.postComments || []
+  const postComments = singlePost?.postComments || [];
 
   return (
     <div className="p-5">
@@ -27,7 +25,9 @@ const PostCommentsAside = () => {
               <SinglePostComment key={index} comment={comment} />
             ))
         ) : (
-          <p className="text-center italic text-gray-500 text-[14px]">Be the first to comment</p>
+          <p className="text-center italic text-gray-500 text-[14px]">
+            Be the first to comment
+          </p>
         )}
       </ul>
     </div>
