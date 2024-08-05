@@ -3,6 +3,7 @@ import {
   addCommentToPost,
   addPostToCommunity,
   fetchCommunityPosts,
+  fetchFollowingUsersCommunityPosts,
   fetchSavedPostsThunk,
   fetchSinglePost,
   likePost,
@@ -52,6 +53,7 @@ interface PostsState {
     unsaving: boolean;
     fetchingSavedPosts: boolean;
     fetchingSinglePost: boolean;
+    fetchingFollowedUserPosts: boolean;
   };
   error: {
     fetchingError: string | null;
@@ -63,6 +65,7 @@ interface PostsState {
     unsavingError: string | null;
     fetchingSavedPostsError: string | null;
     fetchingSinglePostError: string | null;
+    fetchingFollowedUserPostsError: string | null;
   };
   currentGroup: string;
 }
@@ -82,6 +85,7 @@ const initialState: PostsState = {
     unsaving: false,
     fetchingSavedPosts: false,
     fetchingSinglePost: false,
+    fetchingFollowedUserPosts: false,
   },
   error: {
     fetchingError: null,
@@ -93,6 +97,7 @@ const initialState: PostsState = {
     unsavingError: null,
     fetchingSavedPostsError: null,
     fetchingSinglePostError: null,
+    fetchingFollowedUserPostsError: null,
   },
   currentGroup: "",
 };
@@ -334,6 +339,20 @@ export const postsSlice = createSlice({
         state.error.fetchingSinglePostError = action.payload
           ? action.payload.toString()
           : "Failed to fetch post data";
+      });
+    builder
+      .addCase(fetchFollowingUsersCommunityPosts.pending, (state) => {
+        state.loading.fetchingFollowedUserPosts = true;
+      })
+      .addCase(fetchFollowingUsersCommunityPosts.fulfilled, (state, action) => {
+        state.loading.fetchingFollowedUserPosts = false;
+        console.log(action.payload);
+      })
+      .addCase(fetchFollowingUsersCommunityPosts.rejected, (state, action) => {
+        state.loading.fetchingFollowedUserPosts = false;
+        state.error.fetchingFollowedUserPostsError = action.payload
+          ? action.payload.toString()
+          : "Failed to fetch following users post data";
       });
   },
 });
