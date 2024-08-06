@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  fetchFollowingUsers,
   fetchRelevantPosts,
   fetchTopUsers,
   fetchUserById,
@@ -7,7 +8,7 @@ import {
   unfollowUser,
   updateUserProfile,
 } from "./userDataThunks";
-import { TopUserTypes, UserType } from "./userTypes";
+import { FollowingUser, TopUserTypes, UserType } from "./userTypes";
 import { SavedPostTypes } from "../posts/postsSlice";
 // import type { RootState } from "../store";
 
@@ -19,6 +20,7 @@ interface UserDataState {
     following: boolean;
     unFollowing: boolean;
     loadingRelevantPosts: boolean;
+    fetchingFollowingUsers: boolean;
   };
   error: {
     updateUserProfile: string | null;
@@ -27,10 +29,12 @@ interface UserDataState {
     followingError: string | null;
     unFollowingError: string | null;
     relevantPostsError: string | null;
+    fetchFollowingUsersError: string | null;
   };
   popularUsers: TopUserTypes[] | null;
   singleUser: UserType | null;
   relevantPosts: SavedPostTypes[] | null;
+  followingUsers: FollowingUser[] | null;
 }
 
 const initialState: UserDataState = {
@@ -41,6 +45,7 @@ const initialState: UserDataState = {
     following: false,
     unFollowing: false,
     loadingRelevantPosts: false,
+    fetchingFollowingUsers: false,
   },
   error: {
     updateUserProfile: null,
@@ -49,10 +54,12 @@ const initialState: UserDataState = {
     followingError: null,
     unFollowingError: null,
     relevantPostsError: null,
+    fetchFollowingUsersError: null,
   },
   popularUsers: null,
   singleUser: null,
   relevantPosts: null,
+  followingUsers: null,
 };
 
 export const userDataSlice = createSlice({
@@ -152,6 +159,25 @@ export const userDataSlice = createSlice({
         state.loading.loadingRelevantPosts = false;
         const err = action.payload as string;
         state.error.relevantPostsError = err || "Error fetching relevant posts";
+      });
+    //following users
+    builder
+      .addCase(fetchFollowingUsers.pending, (state) => {
+        state.loading.fetchingFollowingUsers = true;
+      })
+      .addCase(
+        fetchFollowingUsers.fulfilled,
+        (state, action: PayloadAction<FollowingUser[]>) => {
+          state.loading.fetchingFollowingUsers = false;
+          state.followingUsers = action.payload;
+        }
+      )
+      .addCase(fetchFollowingUsers.rejected, (state, action) => {
+        state.loading.fetchingFollowingUsers = false;
+        const err = action.payload as string;
+        console.log(err,'test');
+        state.error.fetchFollowingUsersError =
+          err || "Error fetching following users";
       });
   },
 });
