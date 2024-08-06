@@ -66,3 +66,9 @@ export interface UserType {
   bio: string;
 }
 
+export interface FollowingUser {
+  name: string;
+  location: string;
+  registeredDate: string;
+  uid: string;
+}
