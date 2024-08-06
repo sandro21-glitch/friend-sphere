@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { fetchFollowingUsersCommunityPosts } from "../../../../slices/posts/postThunks";
-import PageLoader from "../../../../ui/PageLoader";
 import EmptyPosts from "./EmptyPosts";
 import SingleFollowingUserPost from "./SingleFollowingUserPost";
 
@@ -34,9 +33,10 @@ const FollowingUsersGroupPosts = ({
 
   if (fetchingFollowedUserPosts)
     return (
-      <section className="col-span-2 min-h-full h-full mt-5 bg-white flex items-center justify-center">
-        <PageLoader />
-      </section>
+      <div className="py-5 px-2 text-center flex items-center justify-center gap-3">
+        <p className="text-gray-500 italic">Loading posts</p>
+        <div className="w-5 h-5 border-8 border-dashed rounded-full animate-spin border-blue-600"></div>
+      </div>
     );
 
   if (fetchingFollowedUserPostsError) {
