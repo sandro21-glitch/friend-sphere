@@ -1,20 +1,56 @@
-import { useAppSelector } from "../../../../hooks/reduxHooks";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
+import { fetchFollowingUsersCommunityPosts } from "../../../../slices/posts/postThunks";
+import PageLoader from "../../../../ui/PageLoader";
+import EmptyPosts from "./EmptyPosts";
 
-const FollowingUsersGroupPosts = () => {
-  const currUserFollowings = useAppSelector(
-    (store) => store.auth.userData?.following || []
-  );
+type FollowginUsersGroupPostTypes = {
+  groupById: string;
+};
 
-  const followingsArray = Object.values(currUserFollowings);
+const FollowingUsersGroupPosts = ({
+  groupById,
+}: FollowginUsersGroupPostTypes) => {
+  const {
+    loading: { fetchingFollowedUserPosts },
+    error: { fetchingFollowedUserPostsError },
+    followedUserGroupPosts,
+  } = useAppSelector((store) => store.posts);
 
-  const communityPosts = useAppSelector(
-    (store) => store.posts.communityPosts || []
-  );
+  const dispatch = useAppDispatch();
 
-  // filter posts based on followings
-  const followingUserPosts = communityPosts.filter((post) =>
-    followingsArray.some((following) => following.userUid === post.userId)
-  );
+  useEffect(() => {
+    if (groupById) {
+      dispatch(
+        fetchFollowingUsersCommunityPosts({
+          communityId: groupById,
+          offset: undefined,
+          limit: 10,
+        })
+      );
+    }
+  }, [dispatch, groupById]);
+
+  if (fetchingFollowedUserPosts)
+    return (
+      <section className="col-span-2 min-h-full h-full mt-5 bg-white flex items-center justify-center">
+        <PageLoader />
+      </section>
+    );
+
+  if (fetchingFollowedUserPostsError) {
+    return (
+      <section className="col-span-2 min-h-full h-full mt-5 bg-white">
+        {fetchingFollowedUserPostsError || "Something went wrong"}
+      </section>
+    );
+  }
+
+  if (followedUserGroupPosts && followedUserGroupPosts.length < 1) {
+    return (
+      <EmptyPosts />
+    );
+  }
 
   return <div>FollowingUsersGroupPosts</div>;
 };
