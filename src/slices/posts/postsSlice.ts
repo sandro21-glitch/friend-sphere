@@ -351,7 +351,6 @@ export const postsSlice = createSlice({
         (state, action: PayloadAction<{ posts: SavedPostTypes[] }>) => {
           state.loading.fetchingFollowedUserPosts = false;
           state.followedUserGroupPosts = action.payload.posts;
-          console.log(action.payload.posts);
         }
       )
       .addCase(fetchFollowingUsersCommunityPosts.rejected, (state, action) => {
