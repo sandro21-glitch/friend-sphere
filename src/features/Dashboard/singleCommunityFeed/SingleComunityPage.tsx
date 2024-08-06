@@ -89,7 +89,7 @@ const SingleCommunityPage: React.FC = () => {
           <GroupPosts communityId={uid} offset={offset} setOffset={setOffset} />
         </>
       ) : (
-        <FollowingUsersGroupPosts />
+        <FollowingUsersGroupPosts groupById={groupById?.uid} />
       )}
     </DashboardPage>
   );
