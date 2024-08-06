@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import SingleGroupPost from "./SingleGroupPost";
-import { fetchCommunityPosts, FetchCommunityPostsResult } from "../../../../slices/posts/postThunks";
+import {
+  fetchCommunityPosts,
+  FetchCommunityPostsResult,
+} from "../../../../slices/posts/postThunks";
 import LoadPostsBtn from "./LoadPostsBtn";
 
 type GroupPostTypes = {
@@ -24,10 +27,10 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
       dispatch(
         fetchCommunityPosts({ communityId, offset: undefined, limit: 10 })
       )
-      .unwrap()
-      .then(() => {
-        setInitialLoad(false); 
-      });
+        .unwrap()
+        .then(() => {
+          setInitialLoad(false);
+        });
     }
   }, [dispatch, communityId]);
 
@@ -48,11 +51,13 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
   };
 
   // sort posts by `createdAt` in descending order (newest first)
-  const sortedPosts = posts ? [...posts].sort((a, b) => {
-    const dateA = new Date(a.createdAt).getTime();
-    const dateB = new Date(b.createdAt).getTime();
-    return dateB - dateA;
-  }) : [];
+  const sortedPosts = posts
+    ? [...posts].sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return dateB - dateA;
+      })
+    : [];
 
   if (initialLoad) {
     return (
@@ -77,14 +82,16 @@ const GroupPosts = ({ communityId, offset, setOffset }: GroupPostTypes) => {
     <div className="py-5 px-2">
       <ul className="flex flex-col gap-5">
         {sortedPosts.map((post) => (
-            <SingleGroupPost
-              key={post.postId}
-              post={post}
-              communityId={communityId}
-            />
-          ))}
+          <SingleGroupPost
+            key={post.postId}
+            post={post}
+            communityId={communityId}
+          />
+        ))}
       </ul>
-      <LoadPostsBtn loadPosts={loadMorePosts} fetching={fetching} />
+      {sortedPosts.length >= 10 && (
+        <LoadPostsBtn loadPosts={loadMorePosts} fetching={fetching} />
+      )}
     </div>
   );
 };
