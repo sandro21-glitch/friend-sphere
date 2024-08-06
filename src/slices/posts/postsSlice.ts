@@ -43,7 +43,7 @@ interface PostsState {
   communityPosts: UserPostTypes[] | null;
   savedPosts: SavedPostTypes[] | null;
   singlePost: UserPostTypes | null;
-  followedUserGroupPosts: UserPostTypes[] | null;
+  followedUserGroupPosts: SavedPostTypes[] | null;
   loading: {
     fetching: boolean;
     adding: boolean;
@@ -348,9 +348,10 @@ export const postsSlice = createSlice({
       })
       .addCase(
         fetchFollowingUsersCommunityPosts.fulfilled,
-        (state, action: PayloadAction<{ posts: UserPostTypes[] }>) => {
+        (state, action: PayloadAction<{ posts: SavedPostTypes[] }>) => {
           state.loading.fetchingFollowedUserPosts = false;
           state.followedUserGroupPosts = action.payload.posts;
+          console.log(action.payload.posts);
         }
       )
       .addCase(fetchFollowingUsersCommunityPosts.rejected, (state, action) => {
