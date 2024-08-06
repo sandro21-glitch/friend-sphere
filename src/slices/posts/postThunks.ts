@@ -614,16 +614,16 @@ export interface FetchFollowingUsersCommunityPostsPayload {
 }
 
 export interface FetchFollowingUsersCommunityPostsResult {
-  posts: UserPostTypes[];
+  posts: SavedPostTypes[];
 }
 export const fetchFollowingUsersCommunityPosts = createAsyncThunk<
-  FetchFollowingUsersCommunityPostsResult,
+  { posts: SavedPostTypes[] }, // Return type with posts
   FetchFollowingUsersCommunityPostsPayload,
   { rejectValue: string }
 >(
-  "posts/fetchFollowingUsersCommunityPosts",
+  'posts/fetchFollowingUsersCommunityPosts',
   async (
-    { communityId, offset = "", limit = 10 },
+    { communityId, offset = '', limit = 10 },
     { getState, rejectWithValue }
   ) => {
     try {
@@ -633,7 +633,7 @@ export const fetchFollowingUsersCommunityPosts = createAsyncThunk<
         .userData;
 
       if (!userData) {
-        return { communityId, posts: [] }; // Handle the case where userData is undefined
+        return { posts: [] }; // Handle the case where userData is undefined
       }
 
       // Ensure following is an array of objects
@@ -642,22 +642,22 @@ export const fetchFollowingUsersCommunityPosts = createAsyncThunk<
         : [];
 
       if (following.length === 0) {
-        return { communityId, posts: [] }; // Handle the case where following is an empty array
+        return { posts: [] }; // Handle the case where following is an empty array
       }
 
       // Extract following user IDs
       const followingUserIds = following.map((user) => user.userUid);
 
       // Fetch all communities
-      const communitiesRef = ref(database, "communities");
+      const communitiesRef = ref(database, 'communities');
       const snapshot = await get(communitiesRef);
 
       if (!snapshot.exists()) {
-        return rejectWithValue("Communities not found");
+        return rejectWithValue('Communities not found');
       }
 
       let communityKey: string | null = null;
-      const communityPosts: UserPostTypes[] = [];
+      const communityPosts: SavedPostTypes[] = [];
 
       snapshot.forEach((childSnapshot) => {
         const community = childSnapshot.val() as CommunityTypes;
@@ -667,19 +667,16 @@ export const fetchFollowingUsersCommunityPosts = createAsyncThunk<
       });
 
       if (!communityKey) {
-        return rejectWithValue("Community not found");
+        return rejectWithValue('Community not found');
       }
 
       // Fetch posts from the found community
-      const communityPostsRef = ref(
-        database,
-        `communities/${communityKey}/posts`
-      );
+      const communityPostsRef = ref(database, `communities/${communityKey}/posts`);
       const postsSnapshot = await get(communityPostsRef);
 
       // Handle the case where no posts exist
       if (!postsSnapshot.exists()) {
-        return { communityId, posts: [] }; // Return an empty array if no posts are found
+        return { posts: [] }; // Return an empty array if no posts are found
       }
 
       // Process the posts of the specified community
@@ -696,15 +693,14 @@ export const fetchFollowingUsersCommunityPosts = createAsyncThunk<
                   postedAt: comment.postedAt || new Date().toISOString(),
                 }))
               : null,
+            communityId, // Include communityId in each post
           });
         }
       });
 
       // Sort posts by createdAt in descending order
       const sortedPosts = communityPosts.sort((a, b) => {
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       });
 
       // Apply offset and limit
@@ -713,9 +709,10 @@ export const fetchFollowingUsersCommunityPosts = createAsyncThunk<
         : 0;
       const limitedPosts = sortedPosts.slice(startIndex, startIndex + limit);
 
-      return { communityId, posts: limitedPosts };
+      // Return posts with each including communityId
+      return { posts: limitedPosts };
     } catch (error: any) {
-      return rejectWithValue(error.message || "Error fetching community posts");
+      return rejectWithValue(error.message || 'Error fetching community posts');
     }
   }
 );
