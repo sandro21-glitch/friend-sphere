@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
 import { fetchFollowingUsersCommunityPosts } from "../../../../slices/posts/postThunks";
 import PageLoader from "../../../../ui/PageLoader";
 import EmptyPosts from "./EmptyPosts";
+import SingleFollowingUserPost from "./SingleFollowingUserPost";
 
 type FollowginUsersGroupPostTypes = {
   groupById: string;
@@ -47,12 +48,16 @@ const FollowingUsersGroupPosts = ({
   }
 
   if (followedUserGroupPosts && followedUserGroupPosts.length < 1) {
-    return (
-      <EmptyPosts />
-    );
+    return <EmptyPosts />;
   }
 
-  return <div>FollowingUsersGroupPosts</div>;
+  return (
+    <ul className="p-5 flex flex-col gap-5">
+      {followedUserGroupPosts?.map((post) => {
+        return <SingleFollowingUserPost key={post.postId} post={post} />;
+      })}
+    </ul>
+  );
 };
 
 export default FollowingUsersGroupPosts;
