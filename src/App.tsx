@@ -14,6 +14,7 @@ import SingleComunityPage from "./features/Dashboard/singleCommunityFeed/SingleC
 import PostComments from "./features/Dashboard/postComments/PostComments";
 import SavedPosts from "./features/Dashboard/saved/SavedPosts";
 import User from "./features/Dashboard/userPage/User";
+import FollowingPeople from "./features/Dashboard/followingPeople/FollowingPeople";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
               {
                 path: "user/:userId",
                 element: <User />,
+              },
+              {
+                path: "following",
+                element: <FollowingPeople />,
               },
             ],
           },
