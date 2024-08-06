@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { database } from "../../config/firebase";
 import { get, ref, update } from "firebase/database";
-import { TopUserTypes, UserData, UserType } from "./userTypes";
+import { FollowingUser, TopUserTypes, UserData, UserType } from "./userTypes";
 import { SavedPostTypes } from "../posts/postsSlice";
 import { CommunityTypes } from "../community/communityTypes";
 
@@ -146,7 +146,7 @@ export const followUser = createAsyncThunk<string, FollowUserTypes>(
         userUid: currentUserId,
         name: currentUserName,
       };
-      
+
       await update(ref(database), updates);
 
       // Return the followUserId upon success
@@ -165,10 +165,7 @@ interface UnfollowUserTypes {
 //unfollow user
 export const unfollowUser = createAsyncThunk<string, UnfollowUserTypes>(
   "users/unfollowUser",
-  async (
-    { currentUserId, unfollowUserId },
-    { rejectWithValue }
-  ) => {
+  async ({ currentUserId, unfollowUserId }, { rejectWithValue }) => {
     try {
       const updates: any = {};
 
@@ -188,7 +185,6 @@ export const unfollowUser = createAsyncThunk<string, UnfollowUserTypes>(
   }
 );
 
-
 interface FetchRelevantPostsPayload {
   userId: string;
 }
@@ -197,72 +193,117 @@ export const fetchRelevantPosts = createAsyncThunk<
   SavedPostTypes[],
   FetchRelevantPostsPayload,
   { rejectValue: string }
->(
-  "posts/fetchRelevantPosts",
-  async ({ userId }, thunkAPI) => {
+>("posts/fetchRelevantPosts", async ({ userId }, thunkAPI) => {
+  try {
+    // Fetch user data
+    const userRef = ref(database, `users/${userId}`);
+    const userSnapshot = await get(userRef);
+
+    if (!userSnapshot.exists()) {
+      return thunkAPI.rejectWithValue("User data not found");
+    }
+
+    const userData = userSnapshot.val() as UserType;
+
+    // Handle `following` which could be an object or an array
+    let followingUserIds: string[] = [];
+    if (Array.isArray(userData.following)) {
+      followingUserIds = userData.following
+        .map((f: { userUid: string }) => f.userUid)
+        .filter(Boolean);
+    } else if (userData.following && typeof userData.following === "object") {
+      followingUserIds = Object.values(
+        userData.following as { [key: string]: { userUid: string } }
+      )
+        .map((f) => f.userUid)
+        .filter(Boolean);
+    } else {
+      return thunkAPI.rejectWithValue("Unexpected format for `following`");
+    }
+
+    const joinedGroupIds = (userData.joinedGroups || [])
+      .map((g) => g.groupId)
+      .filter(Boolean);
+
+    if (followingUserIds.length === 0 || joinedGroupIds.length === 0) {
+      return [];
+    }
+
+    // Fetch all communities
+    const communitiesRef = ref(database, "communities");
+    const communitiesSnapshot = await get(communitiesRef);
+
+    if (!communitiesSnapshot.exists()) {
+      return thunkAPI.rejectWithValue("Communities not found");
+    }
+
+    const relevantPosts: SavedPostTypes[] = [];
+
+    communitiesSnapshot.forEach((childSnapshot) => {
+      const community = childSnapshot.val() as CommunityTypes;
+
+      // Check if the community is in the list of joined groups
+      if (joinedGroupIds.includes(community.uid)) {
+        const posts = community.posts || [];
+        posts.forEach((post: Omit<SavedPostTypes, "communityId">) => {
+          // Check if the post is made by a user that is followed
+          if (followingUserIds.includes(post.userId)) {
+            relevantPosts.push({
+              ...post,
+              communityId: community.uid, // Add communityId to the post
+            });
+          }
+        });
+      }
+    });
+
+    // Sort posts by creation date if needed (newest first)
+    relevantPosts.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    return relevantPosts;
+  } catch (error) {
+    return thunkAPI.rejectWithValue("Error fetching relevant posts");
+  }
+});
+
+//fetch user following users
+
+export const fetchFollowingUsers = createAsyncThunk<FollowingUser[], string>(
+  "users/fetchFollowingUsers",
+  async (userId: string, { rejectWithValue }) => {
     try {
-      // Fetch user data
-      const userRef = ref(database, `users/${userId}`);
-      const userSnapshot = await get(userRef);
 
-      if (!userSnapshot.exists()) {
-        return thunkAPI.rejectWithValue("User data not found");
-      }
+      const userFollowingsRef = ref(database, `users/${userId}/following`);
+      const snapshot = await get(userFollowingsRef);
 
-      const userData = userSnapshot.val() as UserType;
-
-      // Handle `following` which could be an object or an array
-      let followingUserIds: string[] = [];
-      if (Array.isArray(userData.following)) {
-        followingUserIds = userData.following.map((f: { userUid: string }) => f.userUid).filter(Boolean);
-      } else if (userData.following && typeof userData.following === 'object') {
-        followingUserIds = Object.values(userData.following as { [key: string]: { userUid: string } })
-          .map(f => f.userUid)
-          .filter(Boolean);
-      } else {
-        return thunkAPI.rejectWithValue("Unexpected format for `following`");
-      }
-
-      const joinedGroupIds = (userData.joinedGroups || []).map(g => g.groupId).filter(Boolean);
-
-      if (followingUserIds.length === 0 || joinedGroupIds.length === 0) {
+      if (!snapshot.exists()) {
         return [];
       }
 
-      // Fetch all communities
-      const communitiesRef = ref(database, "communities");
-      const communitiesSnapshot = await get(communitiesRef);
+      const followings = snapshot.val();
+      const followingsDetails: FollowingUser[] = [];
 
-      if (!communitiesSnapshot.exists()) {
-        return thunkAPI.rejectWithValue("Communities not found");
+      // Iterate over the object entries
+      for (const [followingUserId] of Object.entries(followings)) {
+        const followingUserRef = ref(database, `users/${followingUserId}`);
+        const followingSnapshot = await get(followingUserRef);
+
+        if (followingSnapshot.exists()) {
+          const { name, location, registeredDate, uid } =
+            followingSnapshot.val();
+          followingsDetails.push({ name, location, registeredDate, uid });
+        }
       }
 
-      const relevantPosts: SavedPostTypes[] = [];
-
-      communitiesSnapshot.forEach((childSnapshot) => {
-        const community = childSnapshot.val() as CommunityTypes;
-
-        // Check if the community is in the list of joined groups
-        if (joinedGroupIds.includes(community.uid)) {
-          const posts = community.posts || [];
-          posts.forEach((post: Omit<SavedPostTypes, 'communityId'>) => {
-            // Check if the post is made by a user that is followed
-            if (followingUserIds.includes(post.userId)) {
-              relevantPosts.push({
-                ...post,
-                communityId: community.uid // Add communityId to the post
-              });
-            }
-          });
-        }
-      });
-
-      // Sort posts by creation date if needed (newest first)
-      relevantPosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-      return relevantPosts;
-    } catch (error) {
-      return thunkAPI.rejectWithValue("Error fetching relevant posts");
+      return followingsDetails;
+    } catch (error: any) {
+      console.error("Fetch error:", error);
+      return rejectWithValue(
+        error.message || "Failed to fetch following users"
+      );
     }
   }
 );
