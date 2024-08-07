@@ -1,5 +1,6 @@
 import { SavedPostTypes } from "../../../slices/posts/postsSlice";
 import CommentsLink from "../../../ui/CommentsLink";
+import ErrorMessage from "../../../ui/ErrorMessage";
 import LikeButton from "../../../ui/LikeButton";
 import UserPostHeader from "./userPostElements.tsx/UserPostHeader";
 import UserPostText from "./userPostElements.tsx/UserPostText";
@@ -9,6 +10,12 @@ type FollowingUserPostTypes = {
 };
 
 const FollowingUserPosts = ({ relevantPosts }: FollowingUserPostTypes) => {
+  if (!relevantPosts || relevantPosts.length < 1) {
+    return (
+      <ErrorMessage message="It seems your followed users haven't posted anything recently. Check back later!" />
+    );
+  }
+
   return (
     <ul className="flex flex-col gap-5">
       {relevantPosts?.map((post) => {
