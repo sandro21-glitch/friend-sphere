@@ -4,11 +4,14 @@ type PostTextTypes = {
 
 const PostCommentText = ({ userPost }: PostTextTypes) => {
   const parsePost = (post: string) => {
-    const parts = post.split(/(\s+)/).map((part, index) => {
-      if (part.startsWith("#")) {
+    // Split the post text into parts based on the asterisks
+    const parts = post.split(/(\*[^*]+\*)/).map((part, index) => {
+      if (part.startsWith("*") && part.endsWith("*")) {
+        // Remove the asterisks and render the text in bold
+        const boldText = part.slice(1, -1); // Remove surrounding asterisks
         return (
-          <span key={index} className="text-azure-blue font-bold">
-            {part}
+          <span key={index} className="font-bold">
+            {boldText}
           </span>
         );
       }
