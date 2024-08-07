@@ -45,7 +45,6 @@ const FollowingPeople = () => {
           {followingUsers.map((user, index) => {
             return <SingleFollowingUser key={index} user={user} />;
           })}
-         
         </ul>
       </div>
     </DashboardPage>
