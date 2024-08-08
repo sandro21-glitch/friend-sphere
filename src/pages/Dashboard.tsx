@@ -9,6 +9,7 @@ import { database } from "../config/firebase";
 import { onValue, ref } from "firebase/database";
 import { setUser } from "../slices/user/authSlice";
 import { fetchNonJoinedCommunities } from "../slices/community/communityThunks";
+import { UserData, UserType } from "../slices/user/userTypes";
 
 const Dashboard = () => {
   const dispatch = useAppDispatch();
@@ -21,14 +22,23 @@ const Dashboard = () => {
       const userRef = ref(database, `users/${userData.uid}`);
       const unsubscribe = onValue(userRef, (snapshot) => {
         if (snapshot.exists()) {
-          dispatch(setUser(snapshot.val()));
+          const userData = snapshot.val() as UserData;
+  
+          // Filter out the password if it somehow exists in the data
+          const { password, ...filteredUserData } = userData;
+  
+          console.log(filteredUserData); // The password should not be logged
+  
+          dispatch(setUser(filteredUserData as UserType));
         } else {
           console.log("No data available");
         }
       });
+  
       return () => unsubscribe();
     }
   }, [userData?.uid, dispatch]);
+  
 
   // fetch non-joined communities when path changes but avoid unnecessary fetches
   useEffect(() => {
