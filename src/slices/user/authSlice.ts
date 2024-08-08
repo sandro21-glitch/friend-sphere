@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserData } from "./userTypes";
+import { UserType } from "./userTypes";
 import {
   loginDemoUser,
   loginUser,
@@ -10,7 +10,7 @@ import {
 // import type { RootState } from "../store";
 
 interface AuthState {
-  userData: UserData | null;
+  userData: UserType | null;
   loading: boolean | null;
   error: string | null;
 }
@@ -32,11 +32,14 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     //register
     builder
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.userData = action.payload;
-        state.loading = false;
-        state.error = null;
-      })
+      .addCase(
+        registerUser.fulfilled,
+        (state, action: PayloadAction<UserType>) => {
+          state.userData = action.payload;
+          state.loading = false;
+          state.error = null;
+        }
+      )
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
       })
@@ -53,7 +56,7 @@ export const authSlice = createSlice({
       })
       .addCase(
         loginUser.fulfilled,
-        (state, action: PayloadAction<{ userProfile: UserData }>) => {
+        (state, action: PayloadAction<{ userProfile: UserType }>) => {
           state.userData = action.payload.userProfile;
           state.loading = false;
           state.error = null;
