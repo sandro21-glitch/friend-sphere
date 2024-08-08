@@ -23,22 +23,17 @@ const Dashboard = () => {
       const unsubscribe = onValue(userRef, (snapshot) => {
         if (snapshot.exists()) {
           const userData = snapshot.val() as UserData;
-  
-          // Filter out the password if it somehow exists in the data
           const { password, ...filteredUserData } = userData;
-  
-          console.log(filteredUserData); // The password should not be logged
-  
+
           dispatch(setUser(filteredUserData as UserType));
         } else {
           console.log("No data available");
         }
       });
-  
+
       return () => unsubscribe();
     }
   }, [userData?.uid, dispatch]);
-  
 
   // fetch non-joined communities when path changes but avoid unnecessary fetches
   useEffect(() => {
@@ -51,7 +46,6 @@ const Dashboard = () => {
       }
     }
   }, [location.pathname, userData?.uid, dispatch]);
-
 
   return (
     <main className="relative bg-dashboard-bg">
