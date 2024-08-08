@@ -27,6 +27,13 @@ const UserCommunitiesList = () => {
       <ErrorMessage message={error || "something went wrong... try again"} />
     );
 
+  if (!fullGroupList || fullGroupList.length < 1) {
+    return (
+      <ErrorMessage
+        message={error || "You haven't joined any communities yet."}
+      />
+    );
+  }
   return (
     <ul className="flex flex-col gap-3">
       {fullGroupList?.map((groupData) => {
