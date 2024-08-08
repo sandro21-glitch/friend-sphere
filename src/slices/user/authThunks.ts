@@ -4,7 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { UserData, userFormData } from "./userTypes";
+import { userFormData, UserType } from "./userTypes";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // Define async thunk to register user
@@ -26,10 +26,9 @@ export const registerUser = createAsyncThunk(
 
       const { uid } = userCredential.user;
 
-      const userProfile: UserData = {
+      const userProfile: UserType = {
         uid, // UID from Firebase Authentication
         email,
-        password,
         name,
         followers: [],
         following: [],
@@ -68,8 +67,7 @@ export const loginUser = createAsyncThunk(
       if (!email) {
         throw new Error("Email cannot be null");
       }
-
-      // Fetch the user's profile data
+      // Fetch the user's profile data without the password
       const userRef = ref(database, `users/${uid}`);
       const userSnapshot = await get(userRef);
 
@@ -77,7 +75,7 @@ export const loginUser = createAsyncThunk(
         throw new Error("User profile does not exist");
       }
 
-      const userProfile = userSnapshot.val();
+      const userProfile = userSnapshot.val() as UserType;
 
       return { userProfile };
     } catch (error: any) {
@@ -86,7 +84,6 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-//login as demo user
 export const loginDemoUser = createAsyncThunk(
   "auth/loginDemoUser",
   async (_, { rejectWithValue }) => {
@@ -100,8 +97,7 @@ export const loginDemoUser = createAsyncThunk(
       if (!email) {
         throw new Error("Email cannot be null");
       }
-
-      // Fetch the user's profile data
+      // Fetch the user's profile data without the password
       const userRef = ref(database, `users/${uid}`);
       const userSnapshot = await get(userRef);
 
@@ -109,7 +105,7 @@ export const loginDemoUser = createAsyncThunk(
         throw new Error("User profile does not exist");
       }
 
-      const userProfile = userSnapshot.val();
+      const userProfile = userSnapshot.val() as UserType;
 
       return { userProfile };
     } catch (error: any) {
