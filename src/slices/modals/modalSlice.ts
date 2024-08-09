@@ -32,6 +32,7 @@ interface ModalState {
   joinCommunity: joinCommunityTypes;
   leaveCommunity: LeaveCommunityTypes;
   deletePostModal: DeletePostModal;
+  isNavOpen: boolean;
 }
 
 const initialState: ModalState = {
@@ -49,6 +50,7 @@ const initialState: ModalState = {
     isModalOpen: false,
     dataIds: null,
   },
+  isNavOpen: window.innerWidth >= 1024,
 };
 
 export const modalSlice = createSlice({
@@ -76,6 +78,9 @@ export const modalSlice = createSlice({
       state.deletePostModal.isModalOpen = action.payload.isModalOpen;
       state.deletePostModal.dataIds = action.payload.dataIds;
     },
+    setIsNavOpen: (state, action: PayloadAction<boolean>) => {
+      state.isNavOpen = action.payload;
+    },
   },
 });
 
@@ -84,7 +89,8 @@ export const {
   setUpdateProfileModal,
   setJoinCommunityModal,
   setLeaveCommunity,
-  setDeletePostModal
+  setDeletePostModal,
+  setIsNavOpen,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;
