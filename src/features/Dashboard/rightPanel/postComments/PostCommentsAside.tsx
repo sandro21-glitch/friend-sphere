@@ -12,7 +12,10 @@ const PostCommentsAside = () => {
   const postComments = singlePost?.postComments || [];
 
   return (
-    <div className="p-5">
+    <div
+      className="p-5 bg-white col-span-1 h-[85vh]
+     sticky top-[5rem] border rounded-md"
+    >
       <h4 className="border-b-2 text-[1rem] pb-2 text-center font-medium mb-5">
         Recent Comments
       </h4>
