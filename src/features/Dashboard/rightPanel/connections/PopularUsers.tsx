@@ -1,4 +1,5 @@
 import { useAppSelector } from "../../../../hooks/reduxHooks";
+import SmallSpinner from "../../../../ui/SmallSpinner";
 import PopularUsersList from "./popularUsers/PopularUsersList";
 const PopularUsers = () => {
   const {
@@ -7,7 +8,11 @@ const PopularUsers = () => {
   } = useAppSelector((store) => store.userData);
 
   if (fetchingTopUsers) {
-    return <p>loading...</p>;
+    return (
+      <div className="flex items-center justify-center w-full">
+        <SmallSpinner />
+      </div>
+    );
   }
 
   return (
