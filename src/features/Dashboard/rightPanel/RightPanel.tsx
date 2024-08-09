@@ -29,7 +29,7 @@ const RightPanel = () => {
   }, [dispatch]);
 
   return (
-    <div className="bg-white col-span-1 h-[85vh] sticky top-[5rem] border rounded-md">
+    <>
       {isSingleCommunityPage ? (
         <GroupInfo id={id} />
       ) : isPostCommentsPage ? (
@@ -37,7 +37,7 @@ const RightPanel = () => {
       ) : (
         <Connections />
       )}
-    </div>
+    </>
   );
 };
 
