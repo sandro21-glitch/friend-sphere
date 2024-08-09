@@ -1,6 +1,7 @@
 import UserMenuPopup from "../features/Dialogs/menuPopup/UserMenuPopup";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import { setUserProfileModal } from "../slices/modals/modalSlice";
+import HamburgerMenu from "./HamburgerMenu";
 import Input from "./Input";
 import Logo from "./Logo";
 import { FaUserCircle } from "react-icons/fa";
@@ -13,8 +14,9 @@ const Navbar = () => {
 
   return (
     <header className="p-[.5rem] border-b bg-white sticky inset-0 z-[999999]">
-      <nav className=" section-center section-x flex items-center justify-between gap-10 relative">
+      <nav className="section-center section-x flex items-center justify-between gap-10 relative">
         <Logo height="2.5rem" />
+        <HamburgerMenu />
         <Input
           id="search"
           name="search"
