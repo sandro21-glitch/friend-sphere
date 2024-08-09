@@ -51,7 +51,7 @@ const Dashboard = () => {
     <main className="relative bg-dashboard-bg">
       <Navbar />
       <section
-        className="section-center section-x grid grid-cols-4 gap-10"
+        className="section-center section-x grid grid-cols-1 lg:grid-cols-4 gap-10"
         style={{ marginTop: "1rem" }}
       >
         <LeftPanel />
