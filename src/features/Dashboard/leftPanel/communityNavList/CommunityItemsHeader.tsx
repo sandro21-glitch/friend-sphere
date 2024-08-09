@@ -7,7 +7,7 @@ const CommunityItemsHeader = () => {
 
   return (
     <div className="flex items-center justify-between mb-5">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 text-[16px]">
         <HiOutlineUserGroup className="text-[20px]" />
         Communities
       </div>
