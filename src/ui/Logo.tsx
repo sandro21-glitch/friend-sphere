@@ -7,7 +7,7 @@ type LogoTypes = {
 
 const Logo = ({ height }: LogoTypes) => {
   return (
-    <Link to="/home" className="flex justify-center cursor-pointer">
+    <Link to="/home" className="hidden lg:flex justify-center cursor-pointer ">
       <img src={logo} alt="logo" loading="lazy" style={{ height: height }} />
     </Link>
   );
