@@ -40,7 +40,7 @@ const EditProfilePopup = () => {
   return (
     <form
       onSubmit={handleUpdateProfile}
-      className="w-full max-w-[36rem] mx-auto bg-white p-6 rounded shadow-lg"
+      className="w-[95vw] max-w-[36rem] mx-auto bg-white  p-6 rounded shadow-lg"
     >
       <h2 className="text-[18px] font-medium mb-5">Update Profile</h2>
       <Bio bio={bio} setBio={setBio} />
