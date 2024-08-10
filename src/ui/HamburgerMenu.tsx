@@ -4,6 +4,7 @@ import { useAppDispatch } from "../hooks/reduxHooks";
 import { setIsNavOpen } from "../slices/modals/modalSlice";
 
 const HamburgerMenu = () => {
+  // Start with the menu closed by default
   const [isOpen, setOpen] = useState<boolean>(window.innerWidth >= 1024);
   const dispatch = useAppDispatch();
 
@@ -27,7 +28,7 @@ const HamburgerMenu = () => {
         dispatch(setIsNavOpen(false));
       }
 
-      // update previous width
+      // Update previous width
       setPrevWidth(currentWidth);
     };
 
@@ -37,6 +38,14 @@ const HamburgerMenu = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [prevWidth, dispatch]);
+
+  useEffect(() => {
+    // Close the navigation menu when the component mounts on mobile screens
+    if (window.innerWidth < 1024) {
+      setOpen(false);
+      dispatch(setIsNavOpen(false));
+    }
+  }, [dispatch]);
 
   return (
     <div className="lg:hidden flex items-center justify-center">
