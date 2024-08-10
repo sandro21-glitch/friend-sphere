@@ -38,7 +38,7 @@ const SummaryDate: React.FC = () => {
 
   return (
     <div className="flex justify-between items-center">
-      <h3 className="text-[20px]">Profile Summary</h3>
+      <h3 className="text-[16px] lg:text-[20px]">Profile Summary</h3>
       <p className="text-[14px]">
         Joined {daysSinceRegistration} days ago ({formattedDate})
       </p>
