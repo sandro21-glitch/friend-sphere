@@ -6,7 +6,7 @@ type DashboardPageTypes = {
 
 const DashboardPage = ({ children }: DashboardPageTypes) => {
   return (
-    <section className="col-span-2 min-h-[85vh] w-full mt-5 bg-white rounded-lg border">
+    <section className="col-span-2 h-fit lg:min-h-[85vh] w-full mt-5 bg-white rounded-lg border">
       {children}
     </section>
   );
