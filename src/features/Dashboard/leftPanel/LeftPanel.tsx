@@ -7,7 +7,7 @@ const LeftPanel = () => {
 
   return (
     <div
-      className={`col-span-1 h-[85vh] fixed z-[99999] w-[65%] sm:w-[50%]
+      className={`col-span-1 h-[85vh] fixed z-[99999] lg:z-auto w-[65%] sm:w-[50%]
        lg:w-auto left-0 lg:sticky lg:left-auto top-[5rem]
        border rounded-md py-5 bg-white ${isNavOpen ? "block" : "hidden"}`}
     >
