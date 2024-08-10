@@ -1,9 +1,11 @@
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/reduxHooks";
+import { setIsNavOpen } from "../../../../slices/modals/modalSlice";
 const CommunityItemsHeader = () => {
   const communityLength =
     useAppSelector((store) => store.communities.userGroups)?.length || 0;
+  const dispatch = useAppDispatch();
 
   return (
     <div className="flex items-center justify-between mb-5">
@@ -12,7 +14,11 @@ const CommunityItemsHeader = () => {
         Communities
       </div>
       <div className="relative">
-        <Link to="/communities" className="text-azure-blue text-[13px]">
+        <Link
+          to="/communities"
+          onClick={() => dispatch(setIsNavOpen(false))}
+          className="text-azure-blue text-[13px]"
+        >
           See all
         </Link>
         <span
