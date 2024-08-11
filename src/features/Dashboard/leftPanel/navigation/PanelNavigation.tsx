@@ -6,13 +6,21 @@ import { setIsNavOpen } from "../../../../slices/modals/modalSlice";
 const PanelNavigation = () => {
   const dispatch = useAppDispatch();
 
+  const handleCloseNav = () => {
+    const currentWidth = window.innerWidth;
+
+    if (currentWidth < 1024) {
+      dispatch(setIsNavOpen(false));
+    }
+  };
+
   return (
     <ul className="flex flex-col gap-3">
       {panelItems.map((item, index) => {
         return (
           <li
             key={index}
-            onClick={() => dispatch(setIsNavOpen(false))}
+            onClick={handleCloseNav}
             className="hover:text-azure-blue transition-colors ease-in duration-150"
           >
             <Link
