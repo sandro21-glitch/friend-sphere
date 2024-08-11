@@ -11,10 +11,19 @@ type SingleCommunityListItemTypes = {
 
 const SingleCommunityListItem = ({ item }: SingleCommunityListItemTypes) => {
   const dispatch = useAppDispatch();
+
+  const handleCloseNav = () => {
+    const currentWidth = window.innerWidth;
+
+    if (currentWidth < 1024) {
+      dispatch(setIsNavOpen(false));
+    }
+  };
+
   return (
     <li
       key={item.uid}
-      onClick={() => dispatch(setIsNavOpen(false))}
+      onClick={handleCloseNav}
       className="text-gray-600 hover:text-azure-blue text-[16px] transition-colors ease-in duration-150"
     >
       <Link to={`community/${item.name}`} state={{ id: item.uid }}>
