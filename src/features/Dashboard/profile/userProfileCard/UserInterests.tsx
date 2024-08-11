@@ -7,7 +7,7 @@ const UserInterests = () => {
     <div>
       <p className="text-[16px] font-semibold mb-1">Interests</p>
       {userData?.interests ? (
-        <ul className="flex items-center gap-2">
+        <ul className="flex flex-wrap items-center gap-2">
           {userData?.interests.map((interest, index) => {
             return (
               <li
