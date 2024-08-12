@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useAppSelector } from "../../../hooks/reduxHooks";
 import PanelCommunities from "./communityNavList/PanelCommunities";
 import PanelNavigation from "./navigation/PanelNavigation";
@@ -5,7 +6,20 @@ import SuggestedGroupsMobile from "./SuggestedGroupsMobile";
 
 const LeftPanel = () => {
   const { isNavOpen } = useAppSelector((store) => store.modals);
-  
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div
       className={`col-span-1 h-[85vh] fixed z-[99999] lg:z-auto w-[65%] sm:w-[50%]
@@ -16,8 +30,12 @@ const LeftPanel = () => {
         <PanelNavigation />
         <hr />
         <PanelCommunities />
-        <hr />
-        <SuggestedGroupsMobile />
+        {windowWidth < 1024 && (
+          <>
+            <hr />
+            <SuggestedGroupsMobile />
+          </>
+        )}
       </div>
     </div>
   );
