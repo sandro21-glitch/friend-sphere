@@ -16,6 +16,7 @@ import SavedPosts from "./features/Dashboard/saved/SavedPosts";
 import User from "./features/Dashboard/userPage/User";
 import FollowingPeople from "./features/Dashboard/followingPeople/FollowingPeople";
 import { Toaster } from "react-hot-toast";
+import SuggestedGroups from "./features/Dashboard/suggestedCommunities/SuggestedGroups";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
               {
                 path: "following",
                 element: <FollowingPeople />,
+              },
+              {
+                path: "allgroup",
+                element: <SuggestedGroups />,
               },
             ],
           },
