@@ -6,6 +6,7 @@ import {
   registerUser,
   signOutUser,
 } from "./authThunks";
+import toast from "react-hot-toast";
 // import type { PayloadAction } from '@reduxjs/toolkit'
 // import type { RootState } from "../store";
 
@@ -47,6 +48,7 @@ export const authSlice = createSlice({
         const authError = action.payload as string;
         state.error =
           authError.replace("Firebase", "") || "Registration failed";
+        toast.error(authError.replace("Firebase", "") || "Registration failed");
         state.loading = false;
       });
     //login
@@ -66,6 +68,7 @@ export const authSlice = createSlice({
         const authError = action.payload as string;
         state.error = authError.replace("Firebase", "") || "Login failed";
         state.loading = false;
+        toast.error(authError.replace("Firebase", "") || "Login failed");
       });
     //LOGIN DEMO USER
     builder
@@ -81,6 +84,7 @@ export const authSlice = createSlice({
         const authError = action.payload as string;
         state.error = authError.replace("Firebase", "") || "Login failed";
         state.loading = false;
+        toast.error(authError.replace("Firebase", "") || "Login failed");
       })
       // Sign Out User
       .addCase(signOutUser.pending, (state) => {
@@ -93,7 +97,9 @@ export const authSlice = createSlice({
       })
       .addCase(signOutUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as string) || "something went wrong";
+        const errorMsg = (action.payload as string) || "something went wrong";
+        state.error = errorMsg;
+        toast.error(errorMsg);
       });
   },
 });
