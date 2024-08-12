@@ -15,6 +15,7 @@ import PostComments from "./features/Dashboard/postComments/PostComments";
 import SavedPosts from "./features/Dashboard/saved/SavedPosts";
 import User from "./features/Dashboard/userPage/User";
 import FollowingPeople from "./features/Dashboard/followingPeople/FollowingPeople";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -80,7 +81,29 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <>
+        <RouterProvider router={router} />
+        <Toaster
+          position="top-center"
+          gutter={12}
+          containerStyle={{ margin: "8px", zIndex: "9999999" }}
+          toastOptions={{
+            success: {
+              duration: 3000,
+            },
+            error: {
+              duration: 5000,
+            },
+            style: {
+              fontSize: "16px",
+              maxWidth: "500px",
+              padding: "16px 24px",
+              backgroundColor: "white",
+              color: "black",
+            },
+          }}
+        />
+      </>
     </Provider>
   );
 };
