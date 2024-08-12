@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../hooks/reduxHooks";
 import PanelCommunities from "./communityNavList/PanelCommunities";
 import PanelNavigation from "./navigation/PanelNavigation";
+import { MdGroups } from "react-icons/md";
 
 const LeftPanel = () => {
   const { isNavOpen } = useAppSelector((store) => store.modals);
@@ -15,6 +17,14 @@ const LeftPanel = () => {
         <PanelNavigation />
         <hr />
         <PanelCommunities />
+        <hr />
+        <Link
+          to={"allgroup"}
+          className="flex items-center gap-2 text-[16px] text-azure-blue cursor-pointer"
+        >
+          <MdGroups className="text-black" />
+          See all communities
+        </Link>
       </div>
     </div>
   );
