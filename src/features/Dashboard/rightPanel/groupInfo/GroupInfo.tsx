@@ -2,8 +2,8 @@ import { RiGroup3Fill } from "react-icons/ri";
 import { useAppSelector } from "../../../../hooks/reduxHooks";
 import GroupRules from "./GroupRules";
 import LeaveGroup from "./LeaveGroup";
-import PageDataLoader from "../../../../ui/PageDataLoader";
 import "../../../../ui/customScrollbar.css";
+import PageLoader from "../../../../ui/PageLoader";
 type GroupInfoTypes = {
   id: string;
 };
@@ -13,7 +13,13 @@ const GroupInfo = ({ id }: GroupInfoTypes) => {
   const { loading } = useAppSelector((store) => store.communities.singleGroup);
 
   if (loading) {
-    return <PageDataLoader />;
+    return (
+      <article className="col-span-1 min-h-[85vh] w-full mt-5 bg-white">
+        <div className="flex items-center justify-center h-full">
+          <PageLoader />
+        </div>
+      </article>
+    );
   }
 
   const { banner, description, members, name, rules = [] } = groupInfo || {};
