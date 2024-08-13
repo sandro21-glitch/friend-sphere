@@ -12,6 +12,7 @@ import PostCommentText from "./PostCommentText";
 import DashboardPage from "../../../ui/DashboardPage";
 import PageDataLoader from "../../../ui/PageDataLoader";
 import ErrorMessage from "../../../ui/ErrorMessage";
+import PageLoader from "../../../ui/PageLoader";
 
 const PostComments = () => {
   const {
@@ -34,7 +35,13 @@ const PostComments = () => {
   }, [postId, communityId, dispatch, currUser]);
 
   if (fetchingSinglePost) {
-    return <PageDataLoader />;
+    return (
+      <article className="col-span-2 min-h-[85vh] w-full mt-5 bg-white">
+        <div className="flex items-center justify-center h-full">
+          <PageLoader />
+        </div>
+      </article>
+    );
   }
   if (fetchingSinglePostError) {
     return (
