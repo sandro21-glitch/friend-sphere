@@ -1,16 +1,28 @@
 import { Link } from "react-router-dom";
 import { CommunitySearchResult } from "../../../../slices/search/searchSlice";
+import { useAppSelector } from "../../../../hooks/reduxHooks";
 
 interface CommunityResultTypes {
   communities: CommunitySearchResult[];
+  onCommunityClick: () => void;
 }
-const CommunityResults = ({ communities }: CommunityResultTypes) => {
+const CommunityResults = ({
+  communities,
+  onCommunityClick,
+}: CommunityResultTypes) => {
+  const userGroups = useAppSelector((store) => store.communities.userGroups);
+
+  // Filter communities to only show those included in userGroups
+  const filteredCommunities = communities.filter((community) =>
+    userGroups?.find((g) => g.uid === community.uid)
+  );
+
   return (
     <div>
       <h3 className="text-lg font-semibold mb-1">Communities</h3>
       <ul>
-        {communities.map((community) => (
-          <li key={community.uid}>
+        {filteredCommunities.map((community) => (
+          <li key={community.uid} onClick={onCommunityClick}>
             <Link
               to={`community/${community.name}`}
               state={{ id: community.uid }}
