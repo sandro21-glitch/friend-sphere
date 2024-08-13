@@ -12,7 +12,6 @@ type PostCommentFormProps = {
 const PostCommentForm = ({
   communityId,
   postId,
-  post,
 }: PostCommentFormProps) => {
   const [userComment, setUserComment] = useState<string>("");
   const commenting = useAppSelector((store) => store.posts.loading.commenting);
