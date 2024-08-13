@@ -2,22 +2,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { searchAll } from "./searchThunks";
 
 // Define the types for the search results
-interface UserSearchResult {
+export interface UserSearchResult {
   uid: string;
   name: string;
-  email?: string;
+  email: string;
 }
 
-interface CommunitySearchResult {
+export interface CommunitySearchResult {
   uid: string;
   name: string;
   description: string;
   banner: string;
 }
 
-interface PostSearchResult {
+export interface PostSearchResult {
   postId: string;
   userPost: string;
+  userName: string;
+  communityName: string;
+  communityId: string;
 }
 
 // Define the type for the initial state
@@ -38,7 +41,6 @@ const initialState: SearchState = {
   error: null,
 };
 
-// Create the search slice
 export const searchSlice = createSlice({
   name: "search",
   initialState,
@@ -65,7 +67,6 @@ export const searchSlice = createSlice({
           state.posts = action.payload.posts;
         }
       )
-      // Handle rejected state for searchAll
       .addCase(searchAll.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Error occurred during search";
