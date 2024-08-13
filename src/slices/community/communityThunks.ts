@@ -111,7 +111,9 @@ export const fetchNonJoinedCommunities = createAsyncThunk<
       } else {
         // Map the joinedGroups to a Set of community IDs
         const joinedGroupIds: Set<string> = new Set(
-          userData.joinedGroups.map((group: { groupId: string }) => group.groupId)
+          userData.joinedGroups.map(
+            (group: { groupId: string }) => group.groupId
+          )
         );
 
         // Filter out communities that the user has not joined
@@ -339,3 +341,4 @@ export const fetchJoinedGroupSummaries = createAsyncThunk<
     }
   }
 );
+
