@@ -3,7 +3,11 @@ import CommunityResults from "./results/CommunityResults";
 import PostResults from "./results/PostResults";
 import UserResults from "./results/UserResults";
 
-const SearchResultsPanel = () => {
+interface SearchResultsPanelProps {
+  onResultClick: () => void;
+}
+
+const SearchResultsPanel: React.FC<SearchResultsPanelProps> = ({ onResultClick }) => {
   const { communities, error, posts, status, users } = useAppSelector(
     (store) => store.search
   );
@@ -31,21 +35,34 @@ const SearchResultsPanel = () => {
     >
       <div className="space-y-4 ">
         {/* Users */}
-        {users.length > 0 && <UserResults users={users} />}
+        {users.length > 0 && (
+          <UserResults
+            users={users}
+            onUserClick={onResultClick}
+          />
+        )}
 
         {/* Communities */}
         {communities.length > 0 && (
-          <CommunityResults communities={communities} />
+          <CommunityResults
+            communities={communities}
+            onCommunityClick={onResultClick}
+          />
         )}
 
         {/* Posts */}
-        {posts.length > 0 && <PostResults posts={posts} />}
+        {posts.length > 0 && (
+          <PostResults
+            posts={posts}
+            onPostClick={onResultClick}
+          />
+        )}
 
         {/* if no results found */}
         {users.length === 0 &&
           communities.length === 0 &&
           posts.length === 0 && (
-            <div className="text-gray-500">No results found</div>
+            <div className="text-gray-500 py-5">No results found</div>
           )}
       </div>
     </div>
