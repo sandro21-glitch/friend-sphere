@@ -10,7 +10,6 @@ import PostCommentForm from "./PostCommentForm";
 import PostCommentsHeader from "./PostCommentsHeader";
 import PostCommentText from "./PostCommentText";
 import DashboardPage from "../../../ui/DashboardPage";
-import PageDataLoader from "../../../ui/PageDataLoader";
 import ErrorMessage from "../../../ui/ErrorMessage";
 import PageLoader from "../../../ui/PageLoader";
 
