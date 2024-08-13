@@ -16,13 +16,10 @@ type SavedPostActionsTypes = {
 
 const SavedPostActions = ({
   communityId,
-  groupName,
   likedBy,
   postCommentLength,
   postId,
-  timeAgo,
-  userName,
-  userPost,
+
   userId,
 }: SavedPostActionsTypes) => {
   return (
@@ -34,14 +31,9 @@ const SavedPostActions = ({
           postId={postId}
         />
         <CommentsLink
-          likedBy={likedBy}
           postCommentLength={postCommentLength}
           postId={postId}
           communityId={communityId}
-          timeAgo={timeAgo}
-          userName={userName}
-          groupName={groupName}
-          userPost={userPost}
         />
       </div>
       <RemovePostBtn
