@@ -13,18 +13,31 @@ const LeftPanel = () => {
       setWindowWidth(window.innerWidth);
     };
 
+    const disableScrollClose = (event: Event) => {
+      // Prevent state changes due to scroll when nav is open
+      if (isNavOpen) {
+        event.stopPropagation();
+      }
+    };
+
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", disableScrollClose, true);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", disableScrollClose, true);
     };
-  }, []);
+  }, [isNavOpen]);
 
   return (
     <div
-      className={`col-span-1 h-[85vh] fixed z-[99999] lg:z-auto w-[65%] sm:w-[50%]
-       lg:w-auto left-0 lg:sticky lg:left-auto top-[5rem]
-       border rounded-md py-5 bg-white ${isNavOpen ? "block" : "hidden"}`}
+      className={`col-span-1 fixed z-[99999] lg:z-auto w-[65%] sm:w-[50%] lg:w-auto left-0 lg:sticky lg:left-auto top-[5rem] border rounded-md py-5 bg-white ${
+        isNavOpen ? "block" : "hidden"
+      }`}
+      style={{
+        height: "85vh",
+        overflowY: "auto",
+      }}
     >
       <div className="px-5">
         <PanelNavigation />
