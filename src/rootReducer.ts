@@ -4,6 +4,7 @@ import modalReducer from "./slices/modals/modalSlice";
 import userDataReducer from "./slices/user/userDataSlice";
 import communitiesReducer from "./slices/community/communitySlice";
 import postsReducer from "./slices/posts/postsSlice";
+import searchReducer from "./slices/search/searchSlice";
 
 const appReducer = combineReducers({
   auth: authReducer,
@@ -11,6 +12,7 @@ const appReducer = combineReducers({
   modals: modalReducer,
   communities: communitiesReducer,
   posts: postsReducer,
+  search: searchReducer,
 });
 
 const rootReducer = (
