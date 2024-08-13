@@ -23,7 +23,7 @@ const SingleUserCommunityItem = ({
           loading="lazy"
         />
         <div>
-          <h3 className="font-semibold text-[1.5rem] cursor-pointer">{name}</h3>
+          <h3 className="font-semibold text-[1.3rem] md:text-[1.5rem] cursor-pointer">{name}</h3>
           <p className="text-gray-500">{membersLength} members</p>
         </div>
       </Link>
