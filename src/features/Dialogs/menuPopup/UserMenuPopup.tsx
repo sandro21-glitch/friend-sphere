@@ -1,20 +1,37 @@
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { setUserProfileModal } from "../../../slices/modals/modalSlice";
 import LogoutBtn from "./LogoutBtn";
 
-const UserMenuPopup = () => {
+const UserMenuPopup: React.FC = () => {
   const { userData } = useAppSelector((store) => store.auth);
-
   const dispatch = useAppDispatch();
+  
+  const popupRef = useRef<HTMLDivElement>(null);
+
   const handleClosePopup = () => {
     dispatch(setUserProfileModal(false));
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        handleClosePopup();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div
-      onClick={handleClosePopup}
-      className="absolute right-5 top-full pt-3 w-[18rem] z-[99999]  select-none"
+      ref={popupRef}
+      className="absolute right-5 top-full pt-3 w-[18rem] z-[99999] select-none"
     >
       <div className="border p-2 bg-white rounded-md flex flex-col items-center">
         <Link to="/profile">
