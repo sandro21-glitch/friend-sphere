@@ -20,18 +20,19 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const searchResultsRef = useRef<HTMLDivElement>(null);
 
-  // Function to handle clicks outside of the search results panel
+  // function to handle clicks outside of the search results panel
   const handleClickOutside = (event: MouseEvent) => {
-    if (searchResultsRef.current && !searchResultsRef.current.contains(event.target as Node)) {
-      setSearchQuery(""); // Clear search query
+    if (
+      searchResultsRef.current &&
+      !searchResultsRef.current.contains(event.target as Node)
+    ) {
+      setSearchQuery("");
     }
   };
 
   useEffect(() => {
-    // Add event listener for clicks outside of the search results panel
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Cleanup event listener
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -42,7 +43,6 @@ const Navbar = () => {
     }
   }, [dispatch, searchQuery]);
 
-  // Handle result click to clear search query and close panel
   const handleResultClick = () => {
     setSearchQuery("");
   };
@@ -52,7 +52,10 @@ const Navbar = () => {
       <nav className="section-center section-x flex items-center justify-between gap-10 relative">
         <Logo height="2.5rem" />
         <HamburgerMenu />
-        <div className="w-full max-w-[660px] static md:relative" ref={searchResultsRef}>
+        <div
+          className="w-full max-w-[660px] static md:relative"
+          ref={searchResultsRef}
+        >
           <Input
             id="search"
             name="search"
