@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../../../hooks/reduxHooks";
-import PageDataLoader from "../../../../ui/PageDataLoader";
+import PageLoader from "../../../../ui/PageLoader";
 import SinglePostComment from "./SinglePostComment";
 
 const PostCommentsAside = () => {
@@ -7,7 +7,13 @@ const PostCommentsAside = () => {
   const { fetchingSinglePost } = useAppSelector((store) => store.posts.loading);
 
   if (fetchingSinglePost) {
-    return <PageDataLoader />;
+    return (
+      <article className="col-span-1 min-h-[85vh] w-full mt-5 bg-white">
+        <div className="flex items-center justify-center h-full">
+          <PageLoader />
+        </div>
+      </article>
+    );
   }
   const postComments = singlePost?.postComments || [];
 
