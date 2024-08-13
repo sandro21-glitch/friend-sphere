@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import UserMenuPopup from "../features/Dialogs/menuPopup/UserMenuPopup";
 import SearchResultsPanel from "../features/Dialogs/searchPanel/SearchResultsPanel";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
@@ -8,6 +8,7 @@ import Input from "./Input";
 import Logo from "./Logo";
 import { FaUserCircle } from "react-icons/fa";
 import { searchAll } from "../slices/search/searchThunks";
+
 const Navbar = () => {
   const { userProfileModal } = useAppSelector((store) => store.modals);
   const dispatch = useAppDispatch();
@@ -17,6 +18,23 @@ const Navbar = () => {
 
   const { status } = useAppSelector((store) => store.search);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const searchResultsRef = useRef<HTMLDivElement>(null);
+
+  // Function to handle clicks outside of the search results panel
+  const handleClickOutside = (event: MouseEvent) => {
+    if (searchResultsRef.current && !searchResultsRef.current.contains(event.target as Node)) {
+      setSearchQuery(""); // Clear search query
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener for clicks outside of the search results panel
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Cleanup event listener
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (searchQuery) {
@@ -24,12 +42,17 @@ const Navbar = () => {
     }
   }, [dispatch, searchQuery]);
 
+  // Handle result click to clear search query and close panel
+  const handleResultClick = () => {
+    setSearchQuery("");
+  };
+
   return (
     <header className="p-[.5rem] border-b bg-white sticky inset-0 z-[999999]">
       <nav className="section-center section-x flex items-center justify-between gap-10 relative">
         <Logo height="2.5rem" />
         <HamburgerMenu />
-        <div className="w-full max-w-[660px] static md:relative">
+        <div className="w-full max-w-[660px] static md:relative" ref={searchResultsRef}>
           <Input
             id="search"
             name="search"
@@ -39,7 +62,9 @@ const Navbar = () => {
             placeholder="Search for people, posts or communities"
             className="w-full py-2 rounded-full text-[14px]"
           />
-          {searchQuery && status !== "loading" && <SearchResultsPanel />}
+          {searchQuery && status !== "loading" && (
+            <SearchResultsPanel onResultClick={handleResultClick} />
+          )}
         </div>
         <FaUserCircle
           className="min-w-7 min-h-7 cursor-pointer text-gray-400"
