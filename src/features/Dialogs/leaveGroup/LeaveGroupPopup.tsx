@@ -2,7 +2,7 @@ import LeaveGroupActions from "./LeaveGroupActions";
 
 const LeaveGroupPopup = () => {
   return (
-    <div className="w-full max-w-[24rem] p-5 bg-white rounded-md ">
+    <div className="w-[95vw] max-w-[24rem] p-5 bg-white rounded-md ">
       <h4 className="text-[1.2rem] text-center mb-3 font-semibold">
         Leave Community
       </h4>
