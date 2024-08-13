@@ -2,7 +2,7 @@ import DeletePostActions from "./DeletePostActions";
 import { IoWarningOutline } from "react-icons/io5";
 const DeletePostPopup = () => {
   return (
-    <div className="w-full max-w-[24rem] min-w-[24rem] p-5 bg-white rounded-md ">
+    <div className="w-[95vw] max-w-[24rem] min-w-[24rem] p-5 bg-white rounded-md ">
       <div className="w-full rounded-full flex items-center justify-center text-center mb-7">
         <div className="bg-red-200 p-1 rounded-full w-8 h-8 flex items-center justify-center">
           <IoWarningOutline className="text-[1.2rem]" />
