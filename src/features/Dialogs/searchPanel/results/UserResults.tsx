@@ -3,15 +3,16 @@ import { UserSearchResult } from "../../../../slices/search/searchSlice";
 
 export interface UserResultsType {
   users: UserSearchResult[];
+  onUserClick: () => void;
 }
 
-const UserResults = ({ users }: UserResultsType) => {
+const UserResults = ({ users, onUserClick }: UserResultsType) => {
   return (
     <div>
       <h3 className="text-lg font-semibold mb-2">Users</h3>
       <ul>
         {users.map((user) => (
-          <li key={user.uid}>
+          <li key={user.uid} onClick={onUserClick}>
             <Link to={`user/${user.uid}`} className="block mb-2 border-b pb-2">
               <div className="flex items-center gap-2">
                 <img
