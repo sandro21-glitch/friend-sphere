@@ -13,7 +13,7 @@ const JoinCommunityPopup = () => {
     joinCommunity.communityData;
 
   return (
-    <div className="w-full max-w-[28rem] h-auto bg-white p-5 flex justify-center flex-col items-center rounded-md">
+    <div className="w-[95vw] max-w-[28rem] h-auto bg-white p-5 flex justify-center flex-col items-center rounded-md">
       <JoinCommunityPopupHeader
         communityName={communityName}
         membersCount={membersCount}
