@@ -3,6 +3,7 @@ import FollowingUserPosts from "./FollowingUserPosts";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { fetchRelevantPosts } from "../../../slices/user/userDataThunks";
 import PageDataLoader from "../../../ui/PageDataLoader";
+import NoPosts from "./NoPosts";
 
 const PostFeed = () => {
   const {
@@ -21,9 +22,8 @@ const PostFeed = () => {
   if (loadingRelevantPosts) return <PageDataLoader />;
 
   if (relevantPosts && relevantPosts?.length < 1) {
-    return <p>Posts not found</p>;
+    return <NoPosts />;
   }
-
 
   return (
     <section className="col-span-2 min-h-full h-full mt-5">
