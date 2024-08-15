@@ -5,7 +5,7 @@ import Tooltip from "../../../../ui/Tooltip";
 
 const EditProfileBtn = () => {
   const dispatch = useAppDispatch();
-  
+
   return (
     <div className="flex justify-end w-full mb-5 relative group">
       <div
