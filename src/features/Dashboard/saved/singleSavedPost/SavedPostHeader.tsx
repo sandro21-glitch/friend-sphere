@@ -11,6 +11,7 @@ const SavedPostHeader = ({ groupName, userName,timeAgo }: SavedPostHeaderTypes) 
           src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
           alt="user img"
           className="w-14 h-14 rounded-full"
+          loading="lazy"
         />
         <div className="leading-5">
           <p className="font-semibold text-[18px]">{userName}</p>
