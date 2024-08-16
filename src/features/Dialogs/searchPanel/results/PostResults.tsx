@@ -36,6 +36,7 @@ const PostResults = ({ posts, onPostClick }: PostResultTypes) => {
                     src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
                     alt="user image"
                     className="w-10 h-10"
+                    loading="lazy"
                   />
                   <div>
                     <p className="text-[13px] text-gray-500">
