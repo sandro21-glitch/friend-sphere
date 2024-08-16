@@ -44,6 +44,7 @@ const PostCommentsHeader = ({
               src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
               alt="user image"
               className="w-14 h-14 mr-1"
+              loading="lazy"
             />
           </Link>
           <div className="flex flex-col leading-5">
