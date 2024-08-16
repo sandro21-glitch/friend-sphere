@@ -22,6 +22,7 @@ const UserPostHeader = ({
           src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
           alt="user"
           className="w-[3rem] h-[3rem] mr-2"
+          loading="lazy"
         />
         <div>
           <h5 className="font-bold text-[1.1rem]">{userName}</h5>
