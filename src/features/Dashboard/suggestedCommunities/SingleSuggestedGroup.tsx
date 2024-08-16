@@ -33,6 +33,7 @@ const SingleSuggestedGroup = ({ group }: SingleSuggestedGroupTypes) => {
           src={group.banner}
           alt="group image"
           className="w-10 h-10 rounded-full"
+          loading="lazy"
         />
         <div>
           <h5 className="text-[16px] font-semibold">{group.name}</h5>
