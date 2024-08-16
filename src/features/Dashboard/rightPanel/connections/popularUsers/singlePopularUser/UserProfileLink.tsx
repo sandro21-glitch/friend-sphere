@@ -17,6 +17,7 @@ const UserProfileLink = ({
         src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
         alt=""
         className="w-[2rem] h-[2rem]"
+        loading="lazy"
       />
       <div>
         <div className="text-[16px] font-medium">{name}</div>
