@@ -14,6 +14,7 @@ const ProfileHeader: React.FC = () => {
         src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
         alt="user image"
         className="w-[5.5rem] h-[5.5rem] mb-5"
+        loading="lazy"
       />
       <div className="flex items-center flex-col">
         <h2 className="text-[1.1rem] mb-1 font-semibold">{userData?.name}</h2>
