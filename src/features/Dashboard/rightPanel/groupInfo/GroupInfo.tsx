@@ -37,6 +37,7 @@ const GroupInfo = ({ id }: GroupInfoTypes) => {
         src={banner}
         alt={name}
         className="h-[10rem] w-full object-cover rounded-md mb-3"
+        loading="lazy"
       />
       <p className="text-[16px] mb-3">{description}</p>
       <LeaveGroup groupId={id} />
