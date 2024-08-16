@@ -7,7 +7,7 @@ import LogoutBtn from "./LogoutBtn";
 const UserMenuPopup: React.FC = () => {
   const { userData } = useAppSelector((store) => store.auth);
   const dispatch = useAppDispatch();
-  
+
   const popupRef = useRef<HTMLDivElement>(null);
 
   const handleClosePopup = () => {
@@ -16,13 +16,16 @@ const UserMenuPopup: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         handleClosePopup();
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -39,6 +42,7 @@ const UserMenuPopup: React.FC = () => {
             src="https://raw.githubusercontent.com/nz-m/public-files/main/dp.jpg"
             alt="user image"
             className="w-14 h-14 mb-2 cursor-pointer"
+            loading="lazy"
           />
         </Link>
         <Link to="/profile" className="text-center">
